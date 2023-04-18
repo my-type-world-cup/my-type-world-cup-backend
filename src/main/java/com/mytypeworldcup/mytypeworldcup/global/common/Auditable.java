@@ -1,4 +1,4 @@
-package com.mytypeworldcup.mytypeworldcup.model.entity;
+package com.mytypeworldcup.mytypeworldcup.global.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
