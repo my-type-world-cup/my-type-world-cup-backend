@@ -5,6 +5,7 @@ import com.mytypeworldcup.mytypeworldcup.global.auth.*;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -40,6 +41,11 @@ public class SecurityConfiguration {
                 .apply(new CustomFilterConfigurer()).and()
                 .authorizeHttpRequests(
                         authorize -> authorize
+                                .requestMatchers(HttpMethod.GET, "/v11/members").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/v11/users").hasRole("USER")
+                                .requestMatchers(HttpMethod.GET, "/v11/admin").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/v11/loginUser").hasAnyRole("USER", "ADMIN")
+
                                 .anyRequest().permitAll())
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer, memberService)));
@@ -61,6 +67,7 @@ public class SecurityConfiguration {
         return source;
     }
 
+    // JwtAuthenticationFilter 등록 역할
     public class CustomFilterConfigurer extends AbstractHttpConfigurer<CustomFilterConfigurer, HttpSecurity> {
         @Override
         public void configure(HttpSecurity builder) throws Exception {
