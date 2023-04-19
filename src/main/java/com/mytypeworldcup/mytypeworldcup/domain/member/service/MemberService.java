@@ -2,7 +2,7 @@ package com.mytypeworldcup.mytypeworldcup.domain.member.service;
 
 import com.mytypeworldcup.mytypeworldcup.domain.member.dao.MemberRepository;
 import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
-import com.mytypeworldcup.mytypeworldcup.global.security.CustomAuthorityUtils;
+import com.mytypeworldcup.mytypeworldcup.global.auth.CustomAuthorityUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

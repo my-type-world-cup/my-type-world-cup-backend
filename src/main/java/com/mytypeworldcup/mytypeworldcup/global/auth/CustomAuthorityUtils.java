@@ -1,4 +1,4 @@
-package com.mytypeworldcup.mytypeworldcup.global.security;
+package com.mytypeworldcup.mytypeworldcup.global.auth;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;

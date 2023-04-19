@@ -1,7 +1,7 @@
 package com.mytypeworldcup.mytypeworldcup.global.config;
 
 import com.mytypeworldcup.mytypeworldcup.domain.member.service.MemberService;
-import com.mytypeworldcup.mytypeworldcup.global.security.*;
+import com.mytypeworldcup.mytypeworldcup.global.auth.*;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
