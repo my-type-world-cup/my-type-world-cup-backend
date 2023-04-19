@@ -2,16 +2,15 @@ package com.mytypeworldcup.mytypeworldcup.domain.member.entity;
 
 import com.mytypeworldcup.mytypeworldcup.global.common.Auditable;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
 @Getter
-@Setter
 @Entity
 public class Member extends Auditable {
     @Id
@@ -26,7 +25,13 @@ public class Member extends Auditable {
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
-    public Member(String email) {
+    @Builder
+    public Member(String email, String nickname) {
         this.email = email;
+        this.nickname = nickname;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 }
