@@ -1,6 +1,6 @@
 package com.mytypeworldcup.mytypeworldcup.domain.member.exception;
 
-import com.mytypeworldcup.mytypeworldcup.global.exception.ExceptionCode;
+import com.mytypeworldcup.mytypeworldcup.global.error.ExceptionCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

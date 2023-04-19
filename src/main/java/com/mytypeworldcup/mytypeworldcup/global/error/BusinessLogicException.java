@@ -1,4 +1,4 @@
-package com.mytypeworldcup.mytypeworldcup.global.exception;
+package com.mytypeworldcup.mytypeworldcup.global.error;
 
 import lombok.Getter;
 
