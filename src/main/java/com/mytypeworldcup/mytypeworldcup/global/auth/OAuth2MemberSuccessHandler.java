@@ -38,41 +38,41 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
                         .nickname((String) oAuth2User.getAttributes().get("name"))
                         .build()
         );
-        redirect(request, response, member.getEmail(), member.getRoles());
+        redirect(request, response, member.getNickname(), member.getEmail(), member.getRoles());
     }
 
     private void redirect(HttpServletRequest request,
                           HttpServletResponse response,
-                          String username,
+                          String nickName,
+                          String email,
                           List<String> authorities) throws IOException {
-        String accessToken = delegateAccessToken(username, authorities);
-        String refreshToken = delegateRefreshToken(username);
+        String accessToken = delegateAccessToken(nickName, email, authorities);
+        String refreshToken = delegateRefreshToken(email);
 
         String uri = createURI(accessToken, refreshToken).toString();
         getRedirectStrategy().sendRedirect(request, response, uri);
     }
 
-    private String delegateAccessToken(String username, List<String> authorities) {
+    private String delegateAccessToken(String nickname, String email, List<String> authorities) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("username", username);
+        claims.put("nickname", nickname);
+        claims.put("username", email);
         claims.put("roles", authorities);
 
-        String subject = username;
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
 
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
 
-        String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
+        String accessToken = jwtTokenizer.generateAccessToken(claims, email, expiration, base64EncodedSecretKey);
 
         return accessToken;
     }
 
-    private String delegateRefreshToken(String username) {
-        String subject = username;
+    private String delegateRefreshToken(String email) {
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
 
-        String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
+        String refreshToken = jwtTokenizer.generateRefreshToken(email, expiration, base64EncodedSecretKey);
 
         return refreshToken;
     }
@@ -89,7 +89,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
                 .newInstance()
                 .scheme("http")
                 .host("localhost")
-//                .port(80)
+                .port(8080)
                 .path("/receive-token.html")
                 .queryParams(queryParams)
                 .build()
