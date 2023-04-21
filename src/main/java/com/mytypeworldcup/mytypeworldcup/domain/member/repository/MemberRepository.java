@@ -1,4 +1,4 @@
-package com.mytypeworldcup.mytypeworldcup.domain.member.dao;
+package com.mytypeworldcup.mytypeworldcup.domain.member.repository;
 
 import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;

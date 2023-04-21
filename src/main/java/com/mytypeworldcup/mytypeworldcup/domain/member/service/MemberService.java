@@ -1,12 +1,11 @@
 package com.mytypeworldcup.mytypeworldcup.domain.member.service;
 
-import com.mytypeworldcup.mytypeworldcup.domain.member.dao.MemberRepository;
 import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
 import com.mytypeworldcup.mytypeworldcup.domain.member.exception.MemberExceptionCode;
-import com.mytypeworldcup.mytypeworldcup.global.auth.oauth2.dto.ProviderType;
+import com.mytypeworldcup.mytypeworldcup.domain.member.repository.MemberRepository;
 import com.mytypeworldcup.mytypeworldcup.global.error.BusinessLogicException;
 import com.mytypeworldcup.mytypeworldcup.global.util.CustomAuthorityUtils;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +15,7 @@ import java.util.Optional;
 
 @Transactional
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
@@ -36,6 +35,8 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
+
+    /*
     public Member findMember(String email, ProviderType providerType) {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         if (optionalMember.isPresent()) {
@@ -54,6 +55,18 @@ public class MemberService {
             return memberRepository.save(member);
         }
     }
+     */
+
+    @Transactional(readOnly = true)
+    public Long findMemberIdByEmail(String email) {
+        return findVerifiedMemberByEmail(email).getId();
+    }
+
+    @Transactional(readOnly = true)
+    private Member findVerifiedMemberByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessLogicException(MemberExceptionCode.MEMBER_NOT_FOUND));
+    }
 
     @Transactional(readOnly = true)
     private void verifyExistsEmail(String email) {
@@ -62,4 +75,5 @@ public class MemberService {
             throw new BusinessLogicException(MemberExceptionCode.MEMBER_EXISTS);
         }
     }
+
 }
