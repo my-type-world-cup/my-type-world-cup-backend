@@ -1,7 +1,10 @@
 package com.mytypeworldcup.mytypeworldcup.domain.worldcup.service;
 
+import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupMapper;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupPostDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupResponseDto;
+import com.mytypeworldcup.mytypeworldcup.domain.worldcup.entity.WorldCup;
+import com.mytypeworldcup.mytypeworldcup.domain.worldcup.repository.WorldCupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +13,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class WorldCupService {
+
+    private final WorldCupMapper worldCupMapper;
+    private final WorldCupRepository worldCupRepository;
+
     public WorldCupResponseDto createWorldCup(WorldCupPostDto worldCupPostDto) {
-        return null;
+        // PostDto -> WorldCup
+        WorldCup worldCup = worldCupMapper.worldCupPostDtoToWorldCup(worldCupPostDto);
+
+        // WorldCup Save
+        WorldCup savedWorldCup = worldCupRepository.save(worldCup);
+
+        // WorldCup -> ResponseDto
+        return worldCupMapper.worldCupToWorldCupResponseDto(savedWorldCup);
     }
+
 }

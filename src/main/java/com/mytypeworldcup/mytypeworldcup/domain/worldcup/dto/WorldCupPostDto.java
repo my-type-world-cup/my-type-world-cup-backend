@@ -1,6 +1,7 @@
 package com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto;
 
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidatePostDto;
+import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
@@ -47,4 +48,14 @@ public class WorldCupPostDto {
                 .forEach(candidatePostDto -> candidatePostDto.setWorldCupId(worldCupId));
     }
 
+    public Member getMember() {
+        if (memberId == null) {
+            return null;
+        }
+
+        Member member = new Member();
+        member.setId(memberId);
+
+        return member;
+    }
 }

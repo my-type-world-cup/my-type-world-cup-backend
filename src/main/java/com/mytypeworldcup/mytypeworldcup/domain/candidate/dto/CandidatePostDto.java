@@ -1,5 +1,6 @@
 package com.mytypeworldcup.mytypeworldcup.domain.candidate.dto;
 
+import com.mytypeworldcup.mytypeworldcup.domain.worldcup.entity.WorldCup;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +18,17 @@ public class CandidatePostDto {
     public CandidatePostDto(String name, String image) {
         this.name = name;
         this.image = image;
+    }
+
+    public WorldCup getWorldCup() {
+        if (worldCupId == null) {
+            return null;
+        }
+
+        WorldCup worldCup = new WorldCup();
+        worldCup.setId(worldCupId);
+
+        return worldCup;
     }
 
 }
