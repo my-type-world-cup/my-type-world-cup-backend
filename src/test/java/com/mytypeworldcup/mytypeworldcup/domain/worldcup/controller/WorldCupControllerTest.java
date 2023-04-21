@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidatePostDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateService;
+import com.mytypeworldcup.mytypeworldcup.domain.member.service.MemberService;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupPostDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
@@ -40,6 +41,8 @@ public class WorldCupControllerTest {
     private WorldCupService worldCupService;
     @MockBean
     private CandidateService candidateService;
+    @MockBean
+    private MemberService memberService;
 
     @Test
     @DisplayName("월드컵 등록-정상통과")
@@ -90,9 +93,10 @@ public class WorldCupControllerTest {
                 .description(request.getDescription())
                 .visibility(request.getVisibility())
                 .password(request.getPassword())
-                .memberId(request.getMemberId())
+                .memberId(memberId)
                 .build();
 
+        given(memberService.findMemberIdByEmail(Mockito.anyString())).willReturn(memberId);
         given(worldCupService.createWorldCup(Mockito.any(WorldCupPostDto.class))).willReturn(response);
         given(candidateService.createCandidates(Mockito.anyList())).willReturn(candidateResponseDtos);
 
