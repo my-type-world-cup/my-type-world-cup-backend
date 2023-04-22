@@ -7,6 +7,7 @@ import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupPostDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupSimpleResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
+import com.mytypeworldcup.mytypeworldcup.global.common.PageResponseDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,27 @@ public class WorldCupController {
         worldCupResponseDto.setCandidateResponseDtos(candidateResponseDtos);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(worldCupResponseDto);
+    }
+
+    @GetMapping("/worldcups")
+    public ResponseEntity getWorldCups(@Positive @RequestParam(required = false, defaultValue = "1") int page,
+                                       @Positive @RequestParam(required = false, defaultValue = "10") int size,
+                                       @RequestParam(required = false, defaultValue = "playCount") String sort,
+                                       @RequestParam(required = false, defaultValue = "DESC") Sort.Direction direction,
+                                       @RequestParam(required = false) String keyword) {
+        /**
+         * 파라미터 설명
+         * page = 원하는 페이지 !!자체적으로 -1해서 계산함!!
+         * size = 페이지당 볼 게시물 수
+         * sort = playCount(인기순), createdAt(생성일순), commentCount(댓글순)
+         * direction = DESC(내림차순), ASC(오름차순)
+         * keyword = 검색어 (title, description 에서 검색)
+         **/
+
+        PageRequest pageRequest = PageRequest.of(page - 1, size, direction, sort);
+        Page<WorldCupSimpleResponseDto> responseDtos = worldCupService.searchWorldCups(pageRequest, keyword);
+
+        return ResponseEntity.ok(new PageResponseDto(responseDtos));
     }
 
 }
