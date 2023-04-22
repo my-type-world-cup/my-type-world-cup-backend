@@ -34,7 +34,10 @@ public class WorldCupRepositoryCustomImpl implements WorldCupRepositoryCustom {
                         worldCup.title,
                         worldCup.description))
                 .from(worldCup)
-                .where(containsKeyword(keyword));
+                .where(
+                        containsKeyword(keyword)
+                                .and(worldCup.visibility.eq(true))
+                );
 
         // 정렬 조건 세팅 및 패치
         List<WorldCupSimpleResponseDto> result = query
