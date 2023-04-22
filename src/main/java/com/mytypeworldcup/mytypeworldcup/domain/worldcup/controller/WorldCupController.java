@@ -50,7 +50,7 @@ public class WorldCupController {
 
     @GetMapping("/worldcups")
     public ResponseEntity getWorldCups(@Positive @RequestParam(required = false, defaultValue = "1") int page,
-                                       @Positive @RequestParam(required = false, defaultValue = "10") int size,
+                                       @Positive @RequestParam(required = false, defaultValue = "5") int size,
                                        @RequestParam(required = false, defaultValue = "playCount") String sort,
                                        @RequestParam(required = false, defaultValue = "DESC") Sort.Direction direction,
                                        @RequestParam(required = false) String keyword) {
