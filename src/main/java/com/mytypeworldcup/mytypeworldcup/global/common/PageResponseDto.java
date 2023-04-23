@@ -17,7 +17,7 @@ public class PageResponseDto<T> {
                 .builder()
                 .first(data.isFirst())
                 .page(data.getNumber() + 1) // 0부터 시작
-                .size(data.getTotalPages())
+                .size(data.getSize())
                 .totalElements(data.getTotalElements())
                 .totalPages(data.getTotalPages())
                 .last(data.isLast())
