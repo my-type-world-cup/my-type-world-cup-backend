@@ -56,16 +56,20 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(
                         authorize -> authorize
+                                // Member
+                                .requestMatchers(HttpMethod.GET, "/login/**", "/oauth2/**").permitAll() // 네이티브 로그인
+                                .requestMatchers(HttpMethod.GET, "/members").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/v11/users").hasRole("ROLE_USER")
+                                .requestMatchers(HttpMethod.GET, "/v11/admin").hasRole("ROLE_ADMIN")
+
 
                                 // WorldCup
                                 .requestMatchers(HttpMethod.POST, "worldcups").authenticated()
 
 
-                                .requestMatchers(HttpMethod.GET, "/members").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/v11/users").hasRole("ROLE_USER")
-                                .requestMatchers(HttpMethod.GET, "/v11/admin").hasRole("ROLE_ADMIN")
                                 .anyRequest().permitAll()
                 )
+
 
 //                .requestMatchers("/").permitAll()
 //                .requestMatchers("/login").permitAll()
@@ -78,7 +82,10 @@ public class SecurityConfig {
 //                .logoutSuccessUrl("/").permitAll()
 //                .and()
 //
+                // OAuth2.0 로그인 설정
                 .oauth2Login()
+
+                .defaultSuccessUrl("/members/success") // 임시 리다이렉트
                 .userInfoEndpoint()
                 .userService(oAuth2UserService)
         ;
@@ -110,7 +117,7 @@ public class SecurityConfig {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer);
-            jwtAuthenticationFilter.setFilterProcessesUrl("/members/login");
+            jwtAuthenticationFilter.setFilterProcessesUrl("/login/native");
 
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
