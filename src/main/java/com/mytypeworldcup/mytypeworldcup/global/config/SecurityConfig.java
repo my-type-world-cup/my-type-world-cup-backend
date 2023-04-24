@@ -56,6 +56,11 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(
                         authorize -> authorize
+
+                                // WorldCup
+                                .requestMatchers(HttpMethod.POST, "worldcups").authenticated()
+
+
                                 .requestMatchers(HttpMethod.GET, "/members").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/v11/users").hasRole("ROLE_USER")
                                 .requestMatchers(HttpMethod.GET, "/v11/admin").hasRole("ROLE_ADMIN")
@@ -105,7 +110,7 @@ public class SecurityConfig {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer);
-            jwtAuthenticationFilter.setFilterProcessesUrl("/v11/auth/login");
+            jwtAuthenticationFilter.setFilterProcessesUrl("/members/login");
 
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
