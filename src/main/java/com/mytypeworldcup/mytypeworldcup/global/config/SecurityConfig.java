@@ -34,6 +34,7 @@ public class SecurityConfig {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
     private final CustomOAuth2UserService oAuth2UserService;
+    private String redirectUrl = "http://localhost:3000";
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -85,7 +86,8 @@ public class SecurityConfig {
                 // OAuth2.0 로그인 설정
                 .oauth2Login()
 
-                .defaultSuccessUrl("/members/success") // 임시 리다이렉트
+                .defaultSuccessUrl(redirectUrl) // 임시 리다이렉트
+
                 .userInfoEndpoint()
                 .userService(oAuth2UserService)
         ;

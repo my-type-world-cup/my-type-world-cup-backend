@@ -1,12 +1,12 @@
 package com.mytypeworldcup.mytypeworldcup.domain.worldcup.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidatePostDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateService;
 import com.mytypeworldcup.mytypeworldcup.domain.member.service.MemberService;
+import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.GetWorldCupResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupPostDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupSimpleResponseDto;
@@ -181,4 +181,34 @@ public class WorldCupControllerTest {
         Assertions.assertEquals(expected, actual);
     }
 
+    @DisplayName("특정 월드컵 요청")
+    @Test
+    void getWorldCup() throws Exception {
+        // given
+        long worldCupId = 1L;
+        GetWorldCupResponseDto response = GetWorldCupResponseDto
+                .builder()
+                .id(worldCupId)
+                .title("테스트 타이틀")
+                .description("테스트 디스크립션")
+                .visibility(true)
+                .build();
+
+        given(worldCupService.findWorldCup(anyLong())).willReturn(response);
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                get("/worldcups/" + worldCupId)
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        // then
+        actions.andExpect(status().isOk());
+
+        String expected = gson.toJson(response);
+        String actual = actions.andReturn().getResponse().getContentAsString();
+
+        Assertions.assertEquals(expected, actual);
+
+    }
 }
