@@ -3,6 +3,7 @@ package com.mytypeworldcup.mytypeworldcup.domain.worldcup.entity;
 import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
 import com.mytypeworldcup.mytypeworldcup.global.common.Auditable;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,9 +27,15 @@ public class WorldCup extends Auditable {
     // 월드컵의 설명
     private String description;
 
-    // 공개 or 비공개 여부
+    /**
+     * visibility 와 password 둘다필요한가 ??
+     */
+    // 공개 or 비공개 여부 true=공개
     @Column(nullable = false)
-    private Boolean visibility = true;
+    private Boolean visibility;
+
+    // 비밀번호 -> 공개일경우 해당 필드 null, 비공개일경우 Null이 아님
+    private String password;
 
     // 해당 월드컵이 실행된 횟수
     @Column(nullable = false)
@@ -40,4 +47,28 @@ public class WorldCup extends Auditable {
     private Member member;
 
 //                candidates 보류
+
+    @Builder
+    public WorldCup(String title,
+                    String description,
+                    Boolean visibility,
+                    String password,
+                    Member member) {
+        this.title = title;
+        this.description = description;
+        this.visibility = visibility;
+        this.password = password;
+        this.member = member;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getMemberId() {
+        if (member == null) {
+            return null;
+        }
+        return member.getId();
+    }
 }

@@ -3,6 +3,7 @@ package com.mytypeworldcup.mytypeworldcup.domain.candidate.entity;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.entity.WorldCup;
 import com.mytypeworldcup.mytypeworldcup.global.common.Auditable;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -47,4 +48,16 @@ public class Candidate extends Auditable {
     @ManyToOne
     @JoinColumn(name = "WORLD_CUP_ID", nullable = false, updatable = false)
     private WorldCup worldCup;
+
+    @Builder
+    public Candidate(String name, String image, WorldCup worldCup) {
+        this.name = name;
+        this.image = image;
+        this.worldCup = worldCup;
+    }
+
+    public Long getWorldCupId() {
+        return worldCup.getId();
+    }
+
 }
