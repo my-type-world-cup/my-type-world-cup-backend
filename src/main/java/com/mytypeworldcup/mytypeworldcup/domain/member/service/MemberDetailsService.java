@@ -1,11 +1,11 @@
 package com.mytypeworldcup.mytypeworldcup.domain.member.service;
 
-import com.mytypeworldcup.mytypeworldcup.domain.member.dao.MemberRepository;
 import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
 import com.mytypeworldcup.mytypeworldcup.domain.member.exception.MemberExceptionCode;
+import com.mytypeworldcup.mytypeworldcup.domain.member.repository.MemberRepository;
 import com.mytypeworldcup.mytypeworldcup.global.error.BusinessLogicException;
 import com.mytypeworldcup.mytypeworldcup.global.util.CustomAuthorityUtils;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MemberDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final CustomAuthorityUtils authorityUtils;

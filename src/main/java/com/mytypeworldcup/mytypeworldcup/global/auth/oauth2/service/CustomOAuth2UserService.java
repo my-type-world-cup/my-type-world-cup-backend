@@ -1,8 +1,8 @@
 package com.mytypeworldcup.mytypeworldcup.global.auth.oauth2.service;
 
-import com.mytypeworldcup.mytypeworldcup.domain.member.dao.MemberRepository;
 import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
 import com.mytypeworldcup.mytypeworldcup.domain.member.exception.MemberExceptionCode;
+import com.mytypeworldcup.mytypeworldcup.domain.member.repository.MemberRepository;
 import com.mytypeworldcup.mytypeworldcup.global.auth.jwt.JwtTokenizer;
 import com.mytypeworldcup.mytypeworldcup.global.auth.oauth2.dto.ProviderType;
 import com.mytypeworldcup.mytypeworldcup.global.error.BusinessLogicException;
