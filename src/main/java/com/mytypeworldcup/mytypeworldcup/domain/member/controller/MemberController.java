@@ -57,7 +57,7 @@ public class MemberController {
     }
 
 
-//    @GetMapping("/hello-oauth2")
+    //    @GetMapping("/hello-oauth2")
 //    public ResponseEntity home(Authentication authentication) {
 //        var authorizedClient = authorizedClientService.loadAuthorizedClient("google", authentication.getName());
 //
@@ -70,6 +70,10 @@ public class MemberController {
 //
 //        return new ResponseEntity("hello-oauth2", HttpStatus.OK);
 //    }
+    @GetMapping("/members/success")
+    public ResponseEntity successTest() {
+        return ResponseEntity.ok("임시 로그인 완료 페이지 입니다.");
+    }
 
     @GetMapping("/v11/members")
     public ResponseEntity 모두사용가능() {
