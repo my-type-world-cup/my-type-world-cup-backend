@@ -3,6 +3,7 @@ package com.mytypeworldcup.mytypeworldcup.domain.candidate.service;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateMapper;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidatePostDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateResponseDto;
+import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.entity.Candidate;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.repository.CandidateRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,4 +37,7 @@ public class CandidateService {
                 .toList();
     }
 
+    public List<CandidateSimpleResponseDto> findCandidatesForGameStart(Long worldCupId, Integer teamCount) {
+        return candidateRepository.findByIdWithTeamCount(worldCupId, teamCount);
+    }
 }
