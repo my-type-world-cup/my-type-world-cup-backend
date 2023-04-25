@@ -2,7 +2,6 @@ package com.mytypeworldcup.mytypeworldcup.global.auth.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mytypeworldcup.mytypeworldcup.domain.member.dto.LoginDto;
-import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,14 +41,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication authResult) throws ServletException, IOException {
-        Member member = (Member) authResult.getPrincipal();  // Member 엔티티 클래스의 객체를 얻음
+        /** 토큰을 생성하는 일을 MemberAuthenticationSuccessHandler 에게 위임 */
+//        Member member = (Member) authResult.getPrincipal();  // Member 엔티티 클래스의 객체를 얻음
 
-        String accessToken = jwtTokenizer.delegateAccessToken(member);   // 액세스토큰생성
-        String refreshToken = jwtTokenizer.delegateRefreshToken(member); // 리프레쉬 토큰 생성
+//        String accessToken = jwtTokenizer.delegateAccessToken(member);   // 액세스토큰생성
+//        String refreshToken = jwtTokenizer.delegateRefreshToken(member); // 리프레쉬 토큰 생성
 
-        response.setHeader("Authorization", "Bearer " + accessToken);
-        response.setHeader("Refresh", refreshToken);
+//        response.setHeader("Authorization", "Bearer " + accessToken);
+//        response.setHeader("Refresh", refreshToken);
 
-        this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult);
+//        System.out.println("jwt어센티케이션필터 인증성공!!!");
+
+        this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult); //MemberAuthenticationSuccessHandler 로 이동
     }
 }
