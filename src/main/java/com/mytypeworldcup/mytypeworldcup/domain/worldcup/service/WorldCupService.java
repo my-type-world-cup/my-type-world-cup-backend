@@ -54,7 +54,7 @@ public class WorldCupService {
 
     @Transactional(readOnly = true)
     private WorldCup findVerifiedWorldCup(long worldCupId) {
-        Optional<WorldCup> optionalWorldCup = worldCupRepository.findById(worldCupId);
-        return optionalWorldCup.orElseThrow(() -> new BusinessLogicException(WorldCupExceptionCode.WORLD_CUP_NOT_FOUND));
+        return worldCupRepository.findById(worldCupId)
+                .orElseThrow(() -> new BusinessLogicException(WorldCupExceptionCode.WORLD_CUP_NOT_FOUND));
     }
 }
