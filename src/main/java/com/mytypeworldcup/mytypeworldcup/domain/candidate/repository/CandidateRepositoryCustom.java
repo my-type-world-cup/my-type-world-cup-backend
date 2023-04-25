@@ -5,5 +5,5 @@ import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleRes
 import java.util.List;
 
 public interface CandidateRepositoryCustom {
-    List<CandidateSimpleResponseDto> findByIdWithTeamCount(Long worldCupId, Integer teamCount);
+    List<CandidateSimpleResponseDto> findRandomCandidatesByWorldCupIdLimitTeamCount(Long worldCupId, Integer teamCount);
 }

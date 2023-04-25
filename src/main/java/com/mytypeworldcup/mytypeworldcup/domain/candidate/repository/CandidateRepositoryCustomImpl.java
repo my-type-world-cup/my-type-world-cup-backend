@@ -15,7 +15,7 @@ public class CandidateRepositoryCustomImpl implements CandidateRepositoryCustom 
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<CandidateSimpleResponseDto> findByIdWithTeamCount(Long worldCupId, Integer teamCount) {
+    public List<CandidateSimpleResponseDto> findRandomCandidatesByWorldCupIdLimitTeamCount(Long worldCupId, Integer teamCount) {
         return queryFactory
                 .select(new QCandidateSimpleResponseDto(
                         candidate.id,

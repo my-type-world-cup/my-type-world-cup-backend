@@ -88,8 +88,8 @@ public class WorldCupController {
         String password = worldCupRequestDto.getPassword();
 
         worldCupService.verifyPassword(worldCupId, password);
-        List<CandidateSimpleResponseDto> candidateSimpleResponseDtos = candidateService.findCandidatesForGameStart(worldCupId, teamCount);
+        List<CandidateSimpleResponseDto> responseDtos = candidateService.findRandomCandidates(worldCupId, teamCount);
 
-        return ResponseEntity.ok(candidateSimpleResponseDtos);
+        return ResponseEntity.ok(responseDtos);
     }
 }

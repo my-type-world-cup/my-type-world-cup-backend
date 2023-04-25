@@ -1,5 +1,6 @@
 package com.mytypeworldcup.mytypeworldcup.domain.candidate.controller;
 
+import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateService;
 import com.mytypeworldcup.mytypeworldcup.global.util.ImageCrawler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +16,11 @@ import java.util.List;
 @Validated
 public class CandidateController {
     private final ImageCrawler imageCrawler;
+    private final CandidateService candidateService;
 
     @GetMapping("/candidates/images/search")
     public ResponseEntity getImagesByKeyword(@RequestParam String keyword) {
         List<String> imageUrls = imageCrawler.getImageUrls(keyword);
         return ResponseEntity.ok(imageUrls);
     }
-
 }

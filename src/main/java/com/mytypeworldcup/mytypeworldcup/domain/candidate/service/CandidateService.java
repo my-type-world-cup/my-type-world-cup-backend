@@ -37,7 +37,8 @@ public class CandidateService {
                 .toList();
     }
 
-    public List<CandidateSimpleResponseDto> findCandidatesForGameStart(Long worldCupId, Integer teamCount) {
-        return candidateRepository.findByIdWithTeamCount(worldCupId, teamCount);
+    @Transactional(readOnly = true)
+    public List<CandidateSimpleResponseDto> findRandomCandidates(Long worldCupId, Integer teamCount) {
+        return candidateRepository.findRandomCandidatesByWorldCupIdLimitTeamCount(worldCupId, teamCount);
     }
 }
