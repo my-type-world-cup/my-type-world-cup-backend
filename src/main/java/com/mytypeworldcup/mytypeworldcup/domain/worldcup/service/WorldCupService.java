@@ -5,6 +5,7 @@ import com.mytypeworldcup.mytypeworldcup.domain.worldcup.entity.WorldCup;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.exception.WorldCupExceptionCode;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.repository.WorldCupRepository;
 import com.mytypeworldcup.mytypeworldcup.global.error.BusinessLogicException;
+import com.mytypeworldcup.mytypeworldcup.global.error.CommonExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,9 +45,16 @@ public class WorldCupService {
     }
 
     @Transactional(readOnly = true)
+    public void verifyPassword(Long worldCupId, String password) {
+        WorldCup worldCup = findVerifiedWorldCup(worldCupId);
+        if (worldCup.getPassword() != password) {
+            throw new BusinessLogicException(CommonExceptionCode.UNAUTHORIZED);
+        }
+    }
+
+    @Transactional(readOnly = true)
     private WorldCup findVerifiedWorldCup(long worldCupId) {
         Optional<WorldCup> optionalWorldCup = worldCupRepository.findById(worldCupId);
         return optionalWorldCup.orElseThrow(() -> new BusinessLogicException(WorldCupExceptionCode.WORLD_CUP_NOT_FOUND));
     }
-
 }
