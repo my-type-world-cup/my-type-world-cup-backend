@@ -158,7 +158,7 @@ public class WorldCupControllerTest {
 
         Page<WorldCupSimpleResponseDto> responseDtos = new PageImpl<>(data);
 
-        given(worldCupService.searchWorldCups(any(Pageable.class), anyString())).willReturn(responseDtos);
+        given(worldCupService.searchWorldCups(any(Pageable.class), anyString(), isNull())).willReturn(responseDtos);
 
         // when
         ResultActions actions = mockMvc.perform(
