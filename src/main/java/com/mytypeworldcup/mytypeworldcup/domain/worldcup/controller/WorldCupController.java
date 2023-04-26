@@ -65,7 +65,7 @@ public class WorldCupController {
                                        @RequestParam(required = false, defaultValue = "DESC") Sort.Direction direction,
                                        @RequestParam(required = false) String keyword) {
         PageRequest pageRequest = PageRequest.of(page - 1, size, direction, sort);
-        Page<WorldCupSimpleResponseDto> responseDtos = worldCupService.searchWorldCups(pageRequest, keyword);
+        Page<WorldCupSimpleResponseDto> responseDtos = worldCupService.searchWorldCups(pageRequest, keyword, null);
 
         return ResponseEntity.ok(new PageResponseDto(responseDtos));
     }
@@ -73,5 +73,20 @@ public class WorldCupController {
     @GetMapping("/worldcups/{worldCupId}")
     public ResponseEntity getWorldCup(@Positive @PathVariable long worldCupId) {
         return ResponseEntity.ok(worldCupService.findWorldCup(worldCupId));
+    }
+
+    @GetMapping("/my/worldcups")
+    public ResponseEntity getMyWorldCups(Authentication authentication,
+                                         @Positive @RequestParam(required = false, defaultValue = "1") int page,
+                                         @Positive @RequestParam(required = false, defaultValue = "5") int size,
+                                         @RequestParam(required = false, defaultValue = "playCount") String sort,
+                                         @RequestParam(required = false, defaultValue = "DESC") Sort.Direction direction,
+                                         @RequestParam(required = false) String keyword) {
+        Long memberId = memberService.findMemberIdByEmail(authentication.getName());
+
+        PageRequest pageRequest = PageRequest.of(page - 1, size, direction, sort);
+        Page<WorldCupSimpleResponseDto> responseDtos = worldCupService.searchWorldCups(pageRequest, keyword, memberId);
+
+        return ResponseEntity.ok(new PageResponseDto(responseDtos));
     }
 }
