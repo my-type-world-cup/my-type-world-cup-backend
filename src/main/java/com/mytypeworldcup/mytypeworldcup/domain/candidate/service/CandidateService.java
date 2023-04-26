@@ -52,8 +52,9 @@ public class CandidateService {
             candidate.updateMatchUpWorldCupCount(); // 월드컵 출전 횟수 업데이트 : 무조건 1증가
             candidate.updateMatchUpGameCount(matchUpGameCount); // 경기 출전 횟수 업데이트
             candidate.updateWinCount(winCount); // 경기에서 승리 횟수 업데이트
-            if (matchUpGameCount == winCount) { // 최종 우승여부 판단 : 최종 우승시 1 증가
-                candidate.updateFinalWinCount();
+            if (matchUpGameCount == winCount) { // 최종 우승 시
+                candidate.updateFinalWinCount(); // finalWinCount += 1
+                candidate.getWorldCup().updatePlayCount(); // worldCup.playCount += 1
             }
 
         }

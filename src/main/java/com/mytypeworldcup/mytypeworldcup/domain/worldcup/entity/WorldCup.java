@@ -71,4 +71,8 @@ public class WorldCup extends Auditable {
         }
         return member.getId();
     }
+
+    public void updatePlayCount() {
+        this.playCount++;
+    }
 }

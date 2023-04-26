@@ -57,7 +57,7 @@ public class Candidate extends Auditable {
     }
 
     public Long getWorldCupId() {
-        return worldCup.getId();
+        return this.worldCup.getId();
     }
 
     public void updateFinalWinCount() {
