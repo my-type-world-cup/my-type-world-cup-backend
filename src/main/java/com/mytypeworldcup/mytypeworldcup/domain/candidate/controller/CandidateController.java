@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,7 +32,11 @@ public class CandidateController {
     @PatchMapping("/candidates")
     public ResponseEntity patchMatchResults(@RequestBody List<CandidatePatchDto> candidatePatchDtos) {
         candidateService.updateMatchResults(candidatePatchDtos);
-        return ResponseEntity.ok("업데이트가 정상적으로 처리되었습니다.");
+
+        Map<String, Integer> result = new HashMap<>();
+        result.put("updatedCandidates", candidatePatchDtos.size());
+
+        return ResponseEntity.ok(result);
     }
 
 }
