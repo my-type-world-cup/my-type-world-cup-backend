@@ -72,8 +72,8 @@ public class WorldCupController {
         return ResponseEntity.ok(new PageResponseDto(responseDtos));
     }
 
-    @GetMapping("/worldcups/{worldcup-id}")
-    public ResponseEntity getWorldCup(@Positive @PathVariable("worldcup-id") long worldCupId) {
+    @GetMapping("/worldcups/{worldCupId}")
+    public ResponseEntity getWorldCup(@Positive @PathVariable long worldCupId) {
         return ResponseEntity.ok(worldCupService.findWorldCup(worldCupId));
     }
 
