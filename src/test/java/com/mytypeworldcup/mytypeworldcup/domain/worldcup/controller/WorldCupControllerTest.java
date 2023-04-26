@@ -192,6 +192,7 @@ public class WorldCupControllerTest {
                 .title("테스트 타이틀")
                 .description("테스트 디스크립션")
                 .visibility(true)
+                .candidatesCount(10)
                 .build();
 
         given(worldCupService.findWorldCup(anyLong())).willReturn(response);
