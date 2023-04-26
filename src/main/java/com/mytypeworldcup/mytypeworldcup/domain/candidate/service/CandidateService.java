@@ -67,4 +67,9 @@ public class CandidateService {
                 .orElseThrow(() -> new BusinessLogicException(CandidateExceptionCode.CANDIDATE_NOT_FOUND));
     }
 
+    public List<CandidateResponseDto> findCandidatesByWorldCupId(Long worldCupId) {
+        List<Candidate> candidates = candidateRepository.findAllByWorldCup_Id(worldCupId);
+        return candidateMapper.candidatesToCandidateResponseDtos(candidates);
+    }
+
 }
