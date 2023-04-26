@@ -66,6 +66,7 @@ public class SecurityConfig {
 
                                 // WorldCup
                                 .requestMatchers(HttpMethod.POST, "worldcups").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/my/worldcups").authenticated()
 
 
                                 .anyRequest().permitAll()
