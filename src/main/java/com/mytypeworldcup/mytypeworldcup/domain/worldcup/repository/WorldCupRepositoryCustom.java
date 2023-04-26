@@ -5,5 +5,5 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface WorldCupRepositoryCustom {
-    Page<WorldCupSimpleResponseDto> getWorldCupsWithCandidates(Pageable pageable, String keyword);
+    Page<WorldCupSimpleResponseDto> getWorldCupsWithCandidates(Pageable pageable, String keyword, Long memberId);
 }

@@ -26,7 +26,8 @@ public class WorldCupRepositoryCustomImpl implements WorldCupRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<WorldCupSimpleResponseDto> getWorldCupsWithCandidates(Pageable pageable, String keyword) {
+    public Page<WorldCupSimpleResponseDto> getWorldCupsWithCandidates(Pageable pageable, String keyword, Long memberId) {
+        //TODO 추후에 dto 새로 만들어서 한번에 받아오는거 실험해보자...!
         // 메인 쿼리
         JPAQuery<WorldCupSimpleResponseDto> query = queryFactory
                 .select(new QWorldCupSimpleResponseDto(
@@ -35,8 +36,8 @@ public class WorldCupRepositoryCustomImpl implements WorldCupRepositoryCustom {
                         worldCup.description))
                 .from(worldCup)
                 .where(
-                        containsKeyword(keyword)
-                                .and(worldCup.visibility.eq(true))
+                        getExpressionByMemberId(memberId)
+                                .and(containsKeyword(keyword))
                 );
 
         // 정렬 조건 세팅 및 패치
@@ -65,6 +66,7 @@ public class WorldCupRepositoryCustomImpl implements WorldCupRepositoryCustom {
         return PageableExecutionUtils.getPage(result, pageable, query::fetchCount);
     }
 
+    // where 절 조건
     private BooleanExpression containsKeyword(String keyword) {
         if (keyword == null) {
             return null;
@@ -73,6 +75,13 @@ public class WorldCupRepositoryCustomImpl implements WorldCupRepositoryCustom {
                 .or(worldCup.description.contains(keyword));
     }
 
+    private BooleanExpression getExpressionByMemberId(Long memberId) {
+        return memberId == null
+                ? worldCup.visibility.eq(true) // memberId가 없으면 일반적인 검색이므로 공개된 월드컵 조건 리턴
+                : worldCup.member.id.eq(memberId); // memberId가 있으면 내가만든월드컵 검색이므로 eq.memberId 조건 리턴
+    }
+
+    // 정렬조건
     private OrderSpecifier getOrderSpecifier(Pageable pageable) {
         Sort.Order direction = pageable.getSort().get().collect(Collectors.toList()).get(0);
 
