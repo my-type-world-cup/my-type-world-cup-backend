@@ -12,8 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -34,8 +32,8 @@ public class WorldCupService {
     }
 
     @Transactional(readOnly = true)
-    public Page<WorldCupSimpleResponseDto> searchWorldCups(Pageable pageable, String keyword) {
-        return worldCupRepository.getWorldCupsWithCandidates(pageable, keyword);
+    public Page<WorldCupSimpleResponseDto> searchWorldCups(Pageable pageable, String keyword, Long memberId) {
+        return worldCupRepository.getWorldCupsWithCandidates(pageable, keyword, memberId);
     }
 
     @Transactional(readOnly = true)
