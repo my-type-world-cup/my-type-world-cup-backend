@@ -1,11 +1,9 @@
 package com.mytypeworldcup.mytypeworldcup.domain.worldcup.controller;
 
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateResponseDto;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateService;
 import com.mytypeworldcup.mytypeworldcup.domain.member.service.MemberService;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupPostDto;
-import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupRequestDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupSimpleResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
@@ -75,21 +73,5 @@ public class WorldCupController {
     @GetMapping("/worldcups/{worldCupId}")
     public ResponseEntity getWorldCup(@Positive @PathVariable long worldCupId) {
         return ResponseEntity.ok(worldCupService.findWorldCup(worldCupId));
-    }
-
-    /**
-     * 본격적인 월드컵 시작을 위해 월드컵에 사용될 Candidate들을 요청하는 메서드<p>
-     * 비밀번호를 입력받아야 하므로 POST 를 사용하였음
-     */
-    @PostMapping("/worldcups/candidates")
-    public ResponseEntity postForGameStart(@RequestBody WorldCupRequestDto worldCupRequestDto) {
-        Long worldCupId = worldCupRequestDto.getWorldCupId();
-        Integer teamCount = worldCupRequestDto.getTeamCount();
-        String password = worldCupRequestDto.getPassword();
-
-        worldCupService.verifyPassword(worldCupId, password);
-        List<CandidateSimpleResponseDto> responseDtos = candidateService.findRandomCandidates(worldCupId, teamCount);
-
-        return ResponseEntity.ok(responseDtos);
     }
 }
