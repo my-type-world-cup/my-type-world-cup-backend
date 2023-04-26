@@ -32,15 +32,15 @@ public class Candidate extends Auditable {
     @Column(nullable = false)
     private Integer finalWinCount = 0;
 
-    // 승리 횟수 - 해당 선수가 출전한 전체 1:1 대결 중 승리한 횟수를 의미함
+    // 경기 승리 횟수 - 해당 선수가 출전한 전체 1:1 대결 중 승리한 횟수를 의미함
     @Column(nullable = false)
     private Integer winCount = 0;
 
     // 월드컵에 출전한 횟수
     @Column(nullable = false)
-    private Integer matchCount = 0;
+    private Integer matchUpWorldCupCount = 0;
 
-    // 상대와 매치된 횟수 - 해당 후보가 출전된 전체 1:1 대결 수
+    // 경기 출전 횟수 - 해당 후보가 출전된 전체 1:1 대결 수
     @Column(nullable = false)
     private Integer matchUpGameCount = 0;
 
@@ -60,4 +60,19 @@ public class Candidate extends Auditable {
         return worldCup.getId();
     }
 
+    public void updateFinalWinCount() {
+        this.finalWinCount++;
+    }
+
+    public void updateWinCount(int winCount) {
+        this.winCount += winCount;
+    }
+
+    public void updateMatchUpWorldCupCount() {
+        this.matchUpWorldCupCount++;
+    }
+
+    public void updateMatchUpGameCount(int matchUpGameCount) {
+        this.matchUpGameCount += matchUpGameCount;
+    }
 }
