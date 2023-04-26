@@ -1,11 +1,10 @@
 package com.mytypeworldcup.mytypeworldcup.domain.candidate.service;
 
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateMapper;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidatePostDto;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateResponseDto;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleResponseDto;
+import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.*;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.entity.Candidate;
+import com.mytypeworldcup.mytypeworldcup.domain.candidate.exception.CandidateExceptionCode;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.repository.CandidateRepository;
+import com.mytypeworldcup.mytypeworldcup.global.error.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,4 +40,30 @@ public class CandidateService {
     public List<CandidateSimpleResponseDto> findRandomCandidates(Long worldCupId, Integer teamCount) {
         return candidateRepository.findRandomCandidatesByWorldCupIdLimitTeamCount(worldCupId, teamCount);
     }
+
+    public void updateMatchResults(List<CandidatePatchDto> candidatePatchDtos) {
+        for (CandidatePatchDto candidatePatchDto : candidatePatchDtos) {
+
+            Candidate candidate = findVerifiedCandidate(candidatePatchDto.getId());
+
+            int matchUpGameCount = candidatePatchDto.getMatchUpGameCount();
+            int winCount = candidatePatchDto.getWinCount();
+
+            candidate.updateMatchUpWorldCupCount(); // 월드컵 출전 횟수 업데이트 : 무조건 1증가
+            candidate.updateMatchUpGameCount(matchUpGameCount); // 경기 출전 횟수 업데이트
+            candidate.updateWinCount(winCount); // 경기에서 승리 횟수 업데이트
+            if (matchUpGameCount == winCount) { // 최종 우승여부 판단 : 최종 우승시 1 증가
+                candidate.updateFinalWinCount();
+            }
+
+        }
+        return;
+    }
+
+    @Transactional(readOnly = true)
+    private Candidate findVerifiedCandidate(Long candidateId) {
+        return candidateRepository.findById(candidateId)
+                .orElseThrow(() -> new BusinessLogicException(CandidateExceptionCode.CANDIDATE_NOT_FOUND));
+    }
+
 }
