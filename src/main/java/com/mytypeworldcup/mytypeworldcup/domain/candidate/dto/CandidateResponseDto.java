@@ -10,7 +10,7 @@ public class CandidateResponseDto {
     private String image;
     private Integer finalWinCount;
     private Integer winCount;
-    private Integer matchCount;
+    private Integer matchUpWorldCupCount;
     private Integer matchUpGameCount;
     private Long worldCupId;
 
@@ -20,7 +20,7 @@ public class CandidateResponseDto {
                                 String image,
                                 Integer finalWinCount,
                                 Integer winCount,
-                                Integer matchCount,
+                                Integer matchUpWorldCupCount,
                                 Integer matchUpGameCount,
                                 Long worldCupId) {
         this.id = id;
@@ -28,7 +28,7 @@ public class CandidateResponseDto {
         this.image = image;
         this.finalWinCount = finalWinCount;
         this.winCount = winCount;
-        this.matchCount = matchCount;
+        this.matchUpWorldCupCount = matchUpWorldCupCount;
         this.matchUpGameCount = matchUpGameCount;
         this.worldCupId = worldCupId;
     }

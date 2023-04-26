@@ -80,7 +80,7 @@ public class WorldCupControllerTest {
                     .image(candidatePostDto.getImage())
                     .finalWinCount(0)
                     .winCount(0)
-                    .matchCount(0)
+                    .matchUpWorldCupCount(0)
                     .matchUpGameCount(0)
                     .worldCupId(worldCupId)
                     .build();
