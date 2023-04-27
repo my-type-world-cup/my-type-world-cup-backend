@@ -26,15 +26,9 @@ public class CommentController {
     @PostMapping("/comments")
     public ResponseEntity postComment(Authentication authentication,
                                       @Valid @RequestBody CommentPostDto commentPostDto) {
-        // postDto.nickname == null 일 경우 로그인한 이용자로 간주
-        // null이 아니면 로그인하지 않은 이용자로 memberId 세팅을 생략
-        if (commentPostDto.getNickname() == null) {
-            try {
+        if (authentication != null) { // 로그인 했을 경우
                 Long memberId = memberService.findMemberIdByEmail(authentication.getName()); // 현재 로그인한 멤버 확인
                 commentPostDto.setMemberId(memberId);
-            } catch (NullPointerException ne) {
-                throw new BusinessLogicException(CommentExceptionCode.MISSING_USER_INFO);
-            }
         }
 
         worldCupService.findWorldCup(commentPostDto.getWorldCupId()); // 월드컵 존재여부 확인
