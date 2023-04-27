@@ -6,6 +6,8 @@ import com.mytypeworldcup.mytypeworldcup.domain.candidate.exception.CandidateExc
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.repository.CandidateRepository;
 import com.mytypeworldcup.mytypeworldcup.global.error.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,9 +69,8 @@ public class CandidateService {
                 .orElseThrow(() -> new BusinessLogicException(CandidateExceptionCode.CANDIDATE_NOT_FOUND));
     }
 
-    public List<CandidateResponseDto> findCandidatesByWorldCupId(Long worldCupId) {
-        List<Candidate> candidates = candidateRepository.findAllByWorldCup_Id(worldCupId);
-        return candidateMapper.candidatesToCandidateResponseDtos(candidates);
+    public Page<CandidateResponseDto> findCandidatesByWorldCupId(Pageable pageable, String keyword, Long worldCupId) {
+        return candidateRepository.searchAllByWorldCupId(pageable, keyword, worldCupId);
     }
 
 }
