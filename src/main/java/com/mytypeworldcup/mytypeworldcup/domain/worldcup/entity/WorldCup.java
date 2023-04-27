@@ -1,6 +1,7 @@
 package com.mytypeworldcup.mytypeworldcup.domain.worldcup.entity;
 
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.entity.Candidate;
+import com.mytypeworldcup.mytypeworldcup.domain.comment.entity.Comment;
 import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
 import com.mytypeworldcup.mytypeworldcup.global.common.Auditable;
 import jakarta.persistence.*;
@@ -52,6 +53,9 @@ public class WorldCup extends Auditable {
 
     @OneToMany(mappedBy = "worldCup", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Candidate> candidates = new ArrayList<>();
+
+    @OneToMany(mappedBy = "worldCup", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Comment> comments = new ArrayList<>();
 
     @Builder
     public WorldCup(String title,
