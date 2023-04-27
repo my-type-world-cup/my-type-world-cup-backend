@@ -38,6 +38,15 @@ public class CommentPostDto {
         return member;
     }
 
+    public String getNickname() {
+        if (this.memberId != null) { // 멤버가 존재하면 닉네임 설정 하지 않음
+            return null;
+        } else if (this.nickname != null) { // 닉네임을 입력했으면 닉네임을 리턴
+            return this.nickname;
+        }
+        return "익명"; // 멤버도 없고, 닉네임도 없으면 기본 닉네임으로 설정
+    }
+
     public WorldCup getWorldCup() {
         WorldCup worldCup = new WorldCup();
         worldCup.setId(this.worldCupId);
