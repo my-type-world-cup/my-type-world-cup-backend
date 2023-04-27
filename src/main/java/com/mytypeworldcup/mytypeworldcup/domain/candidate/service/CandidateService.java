@@ -69,6 +69,7 @@ public class CandidateService {
                 .orElseThrow(() -> new BusinessLogicException(CandidateExceptionCode.CANDIDATE_NOT_FOUND));
     }
 
+    @Transactional(readOnly = true)
     public Page<CandidateResponseDto> findCandidatesByWorldCupId(Pageable pageable, String keyword, Long worldCupId) {
         return candidateRepository.searchAllByWorldCupId(pageable, keyword, worldCupId);
     }

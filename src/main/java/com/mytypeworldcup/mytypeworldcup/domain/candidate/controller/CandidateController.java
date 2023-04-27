@@ -6,9 +6,13 @@ import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleRes
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateService;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
 import com.mytypeworldcup.mytypeworldcup.global.auth.oauth2.dto.PasswordDto;
+import com.mytypeworldcup.mytypeworldcup.global.common.PageResponseDto;
 import com.mytypeworldcup.mytypeworldcup.global.util.ImageCrawler;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -60,16 +64,23 @@ public class CandidateController {
     }
 
     /**
-     * 특정 WorldCup 에 속한 모든 Candidate 들을 요청<P>
+     * 특정 WorldCup 에 속한 모든 Candidate 들을 요청(랭킹,수정페이지에서 사용예정)<P>
      * 비밀번호를 입력받아야 하므로 POST 를 사용하였음
      */
     @PostMapping("/worldcups/{worldCupId}/candidates")
-    public ResponseEntity requestCandidatesByWorldCupId(@Positive @PathVariable Long worldCupId,
+    public ResponseEntity requestCandidatesByWorldCupId(@Positive @RequestParam(required = false, defaultValue = "1") int page,
+                                                        @Positive @RequestParam(required = false, defaultValue = "5") int size,
+                                                        @RequestParam(required = false, defaultValue = "winCount") String sort,
+                                                        @RequestParam(required = false, defaultValue = "DESC") Sort.Direction direction,
+                                                        @RequestParam(required = false) String keyword,
+                                                        @Positive @PathVariable Long worldCupId,
                                                         @RequestBody PasswordDto passwordDto) {
         worldCupService.verifyPassword(worldCupId, passwordDto.getPassword());
-        List<CandidateResponseDto> responseDtos = candidateService.findCandidatesByWorldCupId(worldCupId);
 
-        return ResponseEntity.ok(responseDtos);
+        PageRequest pageRequest = PageRequest.of(page - 1, size, direction, sort);
+        Page<CandidateResponseDto> responseDtos = candidateService.findCandidatesByWorldCupId(pageRequest, keyword, worldCupId);
+
+        return ResponseEntity.ok(new PageResponseDto(responseDtos));
     }
 
 }
