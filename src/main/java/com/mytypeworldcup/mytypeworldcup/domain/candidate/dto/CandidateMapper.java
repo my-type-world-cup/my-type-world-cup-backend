@@ -3,8 +3,6 @@ package com.mytypeworldcup.mytypeworldcup.domain.candidate.dto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.entity.Candidate;
 import org.mapstruct.Mapper;
 
-import java.util.List;
-
 @Mapper(componentModel = "spring")
 public interface CandidateMapper {
 
@@ -12,5 +10,4 @@ public interface CandidateMapper {
 
     CandidateResponseDto candidateToCandidateResponseDto(Candidate candidate);
 
-    List<CandidateResponseDto> candidatesToCandidateResponseDtos(List<Candidate> candidates);
 }

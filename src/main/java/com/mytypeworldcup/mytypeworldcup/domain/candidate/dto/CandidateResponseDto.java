@@ -1,5 +1,6 @@
 package com.mytypeworldcup.mytypeworldcup.domain.candidate.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,6 +16,7 @@ public class CandidateResponseDto {
     private Long worldCupId;
 
     @Builder
+    @QueryProjection
     public CandidateResponseDto(Long id,
                                 String name,
                                 String image,
