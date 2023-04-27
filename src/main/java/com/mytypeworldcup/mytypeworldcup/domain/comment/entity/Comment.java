@@ -45,10 +45,10 @@ public class Comment extends Auditable {
     }
 
     public String getNickname() {
-        if (this.nickname == null) {
-            return this.member.getNickname();
+        if (this.member == null) {
+            return this.nickname;
         }
-        return this.nickname;
+        return this.member.getNickname();
     }
 
     public Long getWorldCupId() {
