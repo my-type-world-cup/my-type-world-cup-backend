@@ -4,6 +4,7 @@ import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleRes
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.QCandidateSimpleResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.QWorldCupSimpleResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupSimpleResponseDto;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -42,7 +43,7 @@ public class WorldCupRepositoryCustomImpl implements WorldCupRepositoryCustom {
 
         // 정렬 조건 세팅 및 패치
         List<WorldCupSimpleResponseDto> result = query
-                .orderBy(getOrderSpecifier(pageable))
+                .orderBy(pageableToOrderSpecifier(pageable))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -82,19 +83,23 @@ public class WorldCupRepositoryCustomImpl implements WorldCupRepositoryCustom {
     }
 
     // 정렬조건
-    private OrderSpecifier getOrderSpecifier(Pageable pageable) {
-        Sort.Order direction = pageable.getSort().get().collect(Collectors.toList()).get(0);
+    private OrderSpecifier pageableToOrderSpecifier(Pageable pageable) {
+        Sort.Order sortOrder = pageable.getSort().get().collect(Collectors.toList()).get(0);
 
-        Order order = direction.getDirection().isAscending()
-                ? Order.ASC
-                : Order.DESC;
+        Order order = sortOrder.getDirection().isAscending() ? Order.ASC : Order.DESC;
+        Expression sort = propertyToSortExpression(sortOrder.getProperty());
 
-        switch (direction.getProperty()) {
-            case "createdAt":
-                return new OrderSpecifier(order, worldCup.createdAt);
-            default: // "playCount"
-                return new OrderSpecifier(order, worldCup.playCount);
-        }
+        return new OrderSpecifier(order, sort);
     }
 
+    private Expression propertyToSortExpression(String property) {
+        switch (property) {
+            case "commentCount":
+                return worldCup.comments.size();
+            case "createdAt":
+                return worldCup.createdAt;
+            default:
+                return worldCup.playCount;
+        }
+    }
 }
