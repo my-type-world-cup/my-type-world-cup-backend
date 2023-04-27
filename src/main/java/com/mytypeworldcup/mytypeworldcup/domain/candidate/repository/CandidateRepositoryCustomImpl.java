@@ -4,12 +4,11 @@ import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateResponseD
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.QCandidateResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.QCandidateSimpleResponseDto;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.entity.Candidate;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -83,8 +82,28 @@ public class CandidateRepositoryCustomImpl implements CandidateRepositoryCustom 
         Sort.Order sortOrder = pageable.getSort().get().collect(Collectors.toList()).get(0);
 
         Order order = sortOrder.getDirection().isAscending() ? Order.ASC : Order.DESC;
-        PathBuilder<Object> sort = new PathBuilder<>(Candidate.class, "candidate").get(sortOrder.getProperty());
+        Expression sort = propertyToSortExpression(sortOrder.getProperty());
 
         return new OrderSpecifier(order, sort);
     }
+
+    private Expression propertyToSortExpression(String property) {
+        switch (property) {
+            case "winRatio": // 1대1 승률
+                return candidate.winCount.divide(candidate.matchUpGameCount);
+            case "finalWinRatio": // 최종 우승 비율
+                return candidate.finalWinCount.divide(candidate.matchUpWorldCupCount);
+            case "name": // 이름 순
+                return candidate.name;
+            case "matchUpWorldCupCount": // 월드컵 참가 횟수
+                return candidate.matchUpWorldCupCount;
+            case "matchUpGameCount": //  1대1 매칭 횟수
+                return candidate.matchUpGameCount;
+            case "finalWinCount": // 최종 우승 횟수
+                return candidate.finalWinCount;
+            default: // 1대1 이긴 횟수
+                return candidate.winCount;
+        }
+    }
+
 }
