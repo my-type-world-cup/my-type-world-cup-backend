@@ -65,7 +65,7 @@ public class WorldCupController {
                                        @RequestParam(required = false, defaultValue = "DESC") Sort.Direction direction,
                                        @RequestParam(required = false) String keyword) {
         PageRequest pageRequest = PageRequest.of(page - 1, size, direction, sort);
-        Page<WorldCupSimpleResponseDto> responseDtos = worldCupService.searchWorldCups(pageRequest, keyword, null);
+        Page<WorldCupSimpleResponseDto> responseDtos = worldCupService.searchWorldCups(null, keyword, pageRequest);
 
         return ResponseEntity.ok(new PageResponseDto(responseDtos));
     }
@@ -85,7 +85,7 @@ public class WorldCupController {
         Long memberId = memberService.findMemberIdByEmail(authentication.getName());
 
         PageRequest pageRequest = PageRequest.of(page - 1, size, direction, sort);
-        Page<WorldCupSimpleResponseDto> responseDtos = worldCupService.searchWorldCups(pageRequest, keyword, memberId);
+        Page<WorldCupSimpleResponseDto> responseDtos = worldCupService.searchWorldCups(memberId, keyword, pageRequest);
 
         return ResponseEntity.ok(new PageResponseDto(responseDtos));
     }

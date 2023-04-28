@@ -27,7 +27,7 @@ public class WorldCupRepositoryCustomImpl implements WorldCupRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<WorldCupSimpleResponseDto> getWorldCupsWithCandidates(Pageable pageable, String keyword, Long memberId) {
+    public Page<WorldCupSimpleResponseDto> getWorldCupsWithCandidates(Long memberId, String keyword, Pageable pageable) {
         //TODO 추후에 dto 새로 만들어서 한번에 받아오는거 실험해보자...!
         // 메인 쿼리
         JPAQuery<WorldCupSimpleResponseDto> query = queryFactory
@@ -98,7 +98,7 @@ public class WorldCupRepositoryCustomImpl implements WorldCupRepositoryCustom {
                 return worldCup.comments.size();
             case "createdAt":
                 return worldCup.createdAt;
-            default:
+            default: // playCount
                 return worldCup.playCount;
         }
     }

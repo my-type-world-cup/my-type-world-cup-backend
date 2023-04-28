@@ -32,8 +32,8 @@ public class WorldCupService {
     }
 
     @Transactional(readOnly = true)
-    public Page<WorldCupSimpleResponseDto> searchWorldCups(Pageable pageable, String keyword, Long memberId) {
-        return worldCupRepository.getWorldCupsWithCandidates(pageable, keyword, memberId);
+    public Page<WorldCupSimpleResponseDto> searchWorldCups(Long memberId, String keyword, Pageable pageable) {
+        return worldCupRepository.getWorldCupsWithCandidates(memberId, keyword, pageable);
     }
 
     @Transactional(readOnly = true)

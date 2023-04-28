@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
@@ -41,9 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(WorldCupController.class)
 @MockBean(JpaMetamodelMappingContext.class)
-@AutoConfigureMockMvc // ???
 @WithMockUser(roles = {"USER", "ADMIN"})
-
 public class WorldCupControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -158,7 +155,7 @@ public class WorldCupControllerTest {
 
         Page<WorldCupSimpleResponseDto> responseDtos = new PageImpl<>(data);
 
-        given(worldCupService.searchWorldCups(any(Pageable.class), anyString(), isNull())).willReturn(responseDtos);
+        given(worldCupService.searchWorldCups(isNull(), anyString(), any(Pageable.class))).willReturn(responseDtos);
 
         // when
         ResultActions actions = mockMvc.perform(
