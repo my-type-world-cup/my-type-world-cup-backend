@@ -11,6 +11,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -20,17 +24,21 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CommentController.class)
 @MockBean(JpaMetamodelMappingContext.class)
+@WithMockUser
 class CommentControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -65,7 +73,7 @@ class CommentControllerTest {
                 .createdAt(LocalDateTime.now())
                 .modifiedAt(LocalDateTime.now())
                 .candidateName(requestBody.getCandidateName())
-                .nickname("익명")
+                .nickname(null)
                 .memberId(null)
                 .worldCupId(requestBody.getWorldCupId())
                 .build();
@@ -101,8 +109,6 @@ class CommentControllerTest {
 
     @Test
     @DisplayName("댓글 쓰기 - 로그인 했을 경우")
-    @WithMockUser
-        // 로그인 한 상황 가정
     void postComment_Member() throws Exception {
         // given
         Long memberId = 1L;
@@ -153,5 +159,88 @@ class CommentControllerTest {
 
         verify(memberService).findMemberIdByEmail(anyString());
         verify(worldCupService).findWorldCup(anyLong());
+    }
+
+    @Test
+    @DisplayName("특정 월드컵에 속한 댓글 가져오기")
+    void getCommentsByWorldCupId() throws Exception {
+        // given
+        Long worldCupId = 1L;
+        int page = 1;
+        int size = 5;
+        String sort = "likesCount";
+        Sort.Direction direction = Sort.Direction.DESC;
+
+        CommentResponseDto comment1 = CommentResponseDto
+                .builder()
+                .id(1L)
+                .content("카리나가 짱이지!")
+                .candidateName("카리나")
+                .likesCount(100)
+                .createdAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now())
+                .memberId(5L)
+                .nickname("카리나가좋아요")
+                .worldCupId(1L)
+                .build();
+        CommentResponseDto comment2 = CommentResponseDto
+                .builder()
+                .id(2L)
+                .content("윈터가 짱이지!")
+                .candidateName("윈터")
+                .likesCount(78)
+                .createdAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now())
+                .memberId(3L)
+                .nickname("윈터짱짱걸")
+                .worldCupId(1L)
+                .build();
+
+        List<CommentResponseDto> comments = Arrays.asList(comment1, comment2);
+
+        Page<CommentResponseDto> responseDtos = new PageImpl<>(comments);
+
+        given(commentService.findCommentsByWorldCupId(anyLong(), any(Pageable.class))).willReturn(responseDtos);
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                get("/worldcups/{worldCupId}/comments", worldCupId)
+                        .param("page", String.valueOf(page))
+                        .param("size", String.valueOf(size))
+                        .param("sort", sort)
+                        .param("direction", direction.toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").isArray())
+                .andExpect(jsonPath("$.data[0].id").value(comment1.getId()))
+                .andExpect(jsonPath("$.data[0].content").value(comment1.getContent()))
+                .andExpect(jsonPath("$.data[0].candidateName").value(comment1.getCandidateName()))
+                .andExpect(jsonPath("$.data[0].likesCount").value(comment1.getLikesCount()))
+                .andExpect(jsonPath("$.data[0].createdAt").value(comment1.getCreatedAt().toString()))
+                .andExpect(jsonPath("$.data[0].modifiedAt").value(comment1.getModifiedAt().toString()))
+                .andExpect(jsonPath("$.data[0].memberId").value(comment1.getMemberId()))
+                .andExpect(jsonPath("$.data[0].nickname").value(comment1.getNickname()))
+                .andExpect(jsonPath("$.data[0].worldCupId").value(comment1.getWorldCupId()))
+                .andExpect(jsonPath("$.data[1].id").value(comment2.getId()))
+                .andExpect(jsonPath("$.data[1].content").value(comment2.getContent()))
+                .andExpect(jsonPath("$.data[1].candidateName").value(comment2.getCandidateName()))
+                .andExpect(jsonPath("$.data[1].likesCount").value(comment2.getLikesCount()))
+                .andExpect(jsonPath("$.data[1].createdAt").value(comment2.getCreatedAt().toString()))
+                .andExpect(jsonPath("$.data[1].modifiedAt").value(comment2.getModifiedAt().toString()))
+                .andExpect(jsonPath("$.data[1].memberId").value(comment2.getMemberId()))
+                .andExpect(jsonPath("$.data[1].nickname").value(comment2.getNickname()))
+                .andExpect(jsonPath("$.data[1].worldCupId").value(comment2.getWorldCupId()))
+                .andExpect(jsonPath("$.pageInfo.first").value(responseDtos.isFirst()))
+                .andExpect(jsonPath("$.pageInfo.page").value(responseDtos.getNumber() + 1))
+                .andExpect(jsonPath("$.pageInfo.size").value(responseDtos.getSize()))
+                .andExpect(jsonPath("$.pageInfo.totalElements").value(responseDtos.getTotalElements()))
+                .andExpect(jsonPath("$.pageInfo.totalPages").value(responseDtos.getTotalPages()))
+                .andExpect(jsonPath("$.pageInfo.last").value(responseDtos.isLast()));
+
+        verify(commentService).findCommentsByWorldCupId(anyLong(), any(Pageable.class));
     }
 }
