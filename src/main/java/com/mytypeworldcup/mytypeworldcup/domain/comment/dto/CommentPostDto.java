@@ -18,15 +18,12 @@ public class CommentPostDto {
     private Long memberId;
 
     private Long worldCupId;
-    private String nickname;
 
     @Builder
     public CommentPostDto(String content,
-                          Long worldCupId,
-                          String nickname) {
+                          Long worldCupId) {
         this.content = content;
         this.worldCupId = worldCupId;
-        this.nickname = nickname;
     }
 
     public Member getMember() {
@@ -36,15 +33,6 @@ public class CommentPostDto {
         Member member = new Member();
         member.setId(this.memberId);
         return member;
-    }
-
-    public String getNickname() {
-        if (this.memberId != null) { // 멤버가 존재하면 닉네임 설정 하지 않음
-            return null;
-        } else if (this.nickname != null) { // 닉네임을 입력했으면 닉네임을 리턴
-            return this.nickname;
-        }
-        return "익명"; // 멤버도 없고, 닉네임도 없으면 기본 닉네임으로 설정
     }
 
     public WorldCup getWorldCup() {

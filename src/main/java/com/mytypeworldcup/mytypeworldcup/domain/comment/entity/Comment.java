@@ -23,17 +23,16 @@ public class Comment extends Auditable {
     @JoinColumn(name = "MEMBER_ID", nullable = true, updatable = false)
     private Member member;
 
-    private String nickname;
-
     @ManyToOne
     @JoinColumn(name = "WORLD_CUP_ID", nullable = false, updatable = false)
     private WorldCup worldCup;
 
     @Builder
-    public Comment(String content, Member member, String nickname, WorldCup worldCup) {
+    public Comment(String content,
+                   Member member,
+                   WorldCup worldCup) {
         this.content = content;
         this.member = member;
-        this.nickname = nickname;
         this.worldCup = worldCup;
     }
 
@@ -46,7 +45,7 @@ public class Comment extends Auditable {
 
     public String getNickname() {
         if (this.member == null) {
-            return this.nickname;
+            return "익명";
         }
         return this.member.getNickname();
     }
