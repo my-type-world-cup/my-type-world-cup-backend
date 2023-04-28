@@ -5,13 +5,12 @@ import com.mytypeworldcup.mytypeworldcup.domain.worldcup.entity.WorldCup;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.exception.WorldCupExceptionCode;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.repository.WorldCupRepository;
 import com.mytypeworldcup.mytypeworldcup.global.error.BusinessLogicException;
+import com.mytypeworldcup.mytypeworldcup.global.error.CommonExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -33,8 +32,8 @@ public class WorldCupService {
     }
 
     @Transactional(readOnly = true)
-    public Page<WorldCupSimpleResponseDto> searchWorldCups(Pageable pageable, String keyword) {
-        return worldCupRepository.getWorldCupsWithCandidates(pageable, keyword);
+    public Page<WorldCupSimpleResponseDto> searchWorldCups(Long memberId, String keyword, Pageable pageable) {
+        return worldCupRepository.getWorldCupsWithCandidates(memberId, keyword, pageable);
     }
 
     @Transactional(readOnly = true)
@@ -44,9 +43,16 @@ public class WorldCupService {
     }
 
     @Transactional(readOnly = true)
-    private WorldCup findVerifiedWorldCup(long worldCupId) {
-        Optional<WorldCup> optionalWorldCup = worldCupRepository.findById(worldCupId);
-        return optionalWorldCup.orElseThrow(() -> new BusinessLogicException(WorldCupExceptionCode.WORLD_CUP_NOT_FOUND));
+    public void verifyPassword(Long worldCupId, String password) {
+        WorldCup worldCup = findVerifiedWorldCup(worldCupId);
+        if (worldCup.getPassword() != password) {
+            throw new BusinessLogicException(CommonExceptionCode.UNAUTHORIZED);
+        }
     }
 
+    @Transactional(readOnly = true)
+    private WorldCup findVerifiedWorldCup(long worldCupId) {
+        return worldCupRepository.findById(worldCupId)
+                .orElseThrow(() -> new BusinessLogicException(WorldCupExceptionCode.WORLD_CUP_NOT_FOUND));
+    }
 }

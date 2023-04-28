@@ -1,11 +1,16 @@
 package com.mytypeworldcup.mytypeworldcup.domain.worldcup.entity;
 
+import com.mytypeworldcup.mytypeworldcup.domain.candidate.entity.Candidate;
+import com.mytypeworldcup.mytypeworldcup.domain.comment.entity.Comment;
 import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
 import com.mytypeworldcup.mytypeworldcup.global.common.Auditable;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -46,7 +51,11 @@ public class WorldCup extends Auditable {
     @JoinColumn(name = "MEMBER_ID", nullable = false, updatable = false)
     private Member member;
 
-//                candidates 보류
+    @OneToMany(mappedBy = "worldCup", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Candidate> candidates = new ArrayList<>();
+
+    @OneToMany(mappedBy = "worldCup", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Comment> comments = new ArrayList<>();
 
     @Builder
     public WorldCup(String title,
@@ -71,4 +80,13 @@ public class WorldCup extends Auditable {
         }
         return member.getId();
     }
+
+    public void updatePlayCount() {
+        this.playCount++;
+    }
+
+    public int getCandidatesCount() {
+        return this.candidates.size();
+    }
+
 }

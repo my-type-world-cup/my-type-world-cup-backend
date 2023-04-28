@@ -50,30 +50,43 @@ public class WorldCupController {
         return ResponseEntity.status(HttpStatus.CREATED).body(worldCupResponseDto);
     }
 
+    /**
+     * 파라미터 설명<p>
+     * page = 원하는 페이지 !!자체적으로 -1해서 계산함!!<p>
+     * size = 페이지당 볼 게시물 수<p>
+     * sort = playCount(인기순), createdAt(생성일순), commentCount(댓글순)<p>
+     * direction = DESC(내림차순), ASC(오름차순)<p>
+     * keyword = 검색어 (title, description 에서 검색)
+     */
     @GetMapping("/worldcups")
     public ResponseEntity getWorldCups(@Positive @RequestParam(required = false, defaultValue = "1") int page,
                                        @Positive @RequestParam(required = false, defaultValue = "5") int size,
                                        @RequestParam(required = false, defaultValue = "playCount") String sort,
                                        @RequestParam(required = false, defaultValue = "DESC") Sort.Direction direction,
                                        @RequestParam(required = false) String keyword) {
-        /**
-         * 파라미터 설명
-         * page = 원하는 페이지 !!자체적으로 -1해서 계산함!!
-         * size = 페이지당 볼 게시물 수
-         * sort = playCount(인기순), createdAt(생성일순), commentCount(댓글순)
-         * direction = DESC(내림차순), ASC(오름차순)
-         * keyword = 검색어 (title, description 에서 검색)
-         **/
-
         PageRequest pageRequest = PageRequest.of(page - 1, size, direction, sort);
-        Page<WorldCupSimpleResponseDto> responseDtos = worldCupService.searchWorldCups(pageRequest, keyword);
+        Page<WorldCupSimpleResponseDto> responseDtos = worldCupService.searchWorldCups(null, keyword, pageRequest);
 
         return ResponseEntity.ok(new PageResponseDto(responseDtos));
     }
 
-    @GetMapping("/worldcups/{worldcup-id}")
-    public ResponseEntity getWorldCup(@Positive @PathVariable("worldcup-id") long worldCupId) {
+    @GetMapping("/worldcups/{worldCupId}")
+    public ResponseEntity getWorldCup(@Positive @PathVariable long worldCupId) {
         return ResponseEntity.ok(worldCupService.findWorldCup(worldCupId));
     }
 
+    @GetMapping("/my/worldcups")
+    public ResponseEntity getMyWorldCups(Authentication authentication,
+                                         @Positive @RequestParam(required = false, defaultValue = "1") int page,
+                                         @Positive @RequestParam(required = false, defaultValue = "5") int size,
+                                         @RequestParam(required = false, defaultValue = "playCount") String sort,
+                                         @RequestParam(required = false, defaultValue = "DESC") Sort.Direction direction,
+                                         @RequestParam(required = false) String keyword) {
+        Long memberId = memberService.findMemberIdByEmail(authentication.getName());
+
+        PageRequest pageRequest = PageRequest.of(page - 1, size, direction, sort);
+        Page<WorldCupSimpleResponseDto> responseDtos = worldCupService.searchWorldCups(memberId, keyword, pageRequest);
+
+        return ResponseEntity.ok(new PageResponseDto(responseDtos));
+    }
 }

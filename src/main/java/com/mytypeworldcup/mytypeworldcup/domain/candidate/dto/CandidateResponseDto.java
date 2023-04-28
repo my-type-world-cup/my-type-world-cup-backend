@@ -1,5 +1,6 @@
 package com.mytypeworldcup.mytypeworldcup.domain.candidate.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,17 +11,18 @@ public class CandidateResponseDto {
     private String image;
     private Integer finalWinCount;
     private Integer winCount;
-    private Integer matchCount;
+    private Integer matchUpWorldCupCount;
     private Integer matchUpGameCount;
     private Long worldCupId;
 
     @Builder
+    @QueryProjection
     public CandidateResponseDto(Long id,
                                 String name,
                                 String image,
                                 Integer finalWinCount,
                                 Integer winCount,
-                                Integer matchCount,
+                                Integer matchUpWorldCupCount,
                                 Integer matchUpGameCount,
                                 Long worldCupId) {
         this.id = id;
@@ -28,7 +30,7 @@ public class CandidateResponseDto {
         this.image = image;
         this.finalWinCount = finalWinCount;
         this.winCount = winCount;
-        this.matchCount = matchCount;
+        this.matchUpWorldCupCount = matchUpWorldCupCount;
         this.matchUpGameCount = matchUpGameCount;
         this.worldCupId = worldCupId;
     }

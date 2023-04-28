@@ -12,15 +12,18 @@ public class GetWorldCupResponseDto {
     private String title;
     private String description;
     private Boolean visibility;
+    private Integer candidatesCount;
 
     @Builder
     public GetWorldCupResponseDto(Long id,
                                   String title,
                                   String description,
-                                  Boolean visibility) {
+                                  Boolean visibility,
+                                  Integer candidatesCount) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.visibility = visibility;
+        this.candidatesCount = candidatesCount;
     }
 }
