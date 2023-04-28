@@ -5,9 +5,7 @@ import com.mytypeworldcup.mytypeworldcup.domain.comment.dto.CommentPostDto;
 import com.mytypeworldcup.mytypeworldcup.domain.comment.dto.CommentResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.comment.service.CommentService;
 import com.mytypeworldcup.mytypeworldcup.domain.member.service.MemberService;
-import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.GetWorldCupResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +54,7 @@ class CommentControllerTest {
         CommentPostDto requestBody = CommentPostDto
                 .builder()
                 .content("익명의 사용자가 댓글을 작성했습니다.")
+                .candidateName("카리나")
                 .worldCupId(5L)
                 .build();
 
@@ -65,6 +64,7 @@ class CommentControllerTest {
                 .content(requestBody.getContent())
                 .createdAt(LocalDateTime.now())
                 .modifiedAt(LocalDateTime.now())
+                .candidateName(requestBody.getCandidateName())
                 .nickname("익명")
                 .memberId(null)
                 .worldCupId(requestBody.getWorldCupId())
@@ -88,6 +88,7 @@ class CommentControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(response.getId()))
                 .andExpect(jsonPath("$.content").value(response.getContent()))
+                .andExpect(jsonPath("$.candidateName").value(response.getCandidateName()))
                 .andExpect(jsonPath("$.createdAt").exists())
                 .andExpect(jsonPath("$.modifiedAt").exists())
                 .andExpect(jsonPath("$.memberId").isEmpty())
@@ -100,7 +101,8 @@ class CommentControllerTest {
 
     @Test
     @DisplayName("댓글 쓰기 - 로그인 했을 경우")
-    @WithMockUser // 로그인 한 상황 가정
+    @WithMockUser
+        // 로그인 한 상황 가정
     void postComment_Member() throws Exception {
         // given
         Long memberId = 1L;
@@ -108,6 +110,7 @@ class CommentControllerTest {
         CommentPostDto requestBody = CommentPostDto
                 .builder()
                 .content("로그인한 사용자가 작성한 댓글입니다")
+                .candidateName("카리나")
                 .worldCupId(5L)
                 .build();
 
@@ -115,6 +118,7 @@ class CommentControllerTest {
                 .builder()
                 .id(1L)
                 .content(requestBody.getContent())
+                .candidateName(requestBody.getCandidateName())
                 .createdAt(LocalDateTime.now())
                 .modifiedAt(LocalDateTime.now())
                 .memberId(memberId)
@@ -140,6 +144,7 @@ class CommentControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(response.getId()))
                 .andExpect(jsonPath("$.content").value(response.getContent()))
+                .andExpect(jsonPath("$.candidateName").value(response.getCandidateName()))
                 .andExpect(jsonPath("$.createdAt").exists())
                 .andExpect(jsonPath("$.modifiedAt").exists())
                 .andExpect(jsonPath("$.memberId").value(memberId))

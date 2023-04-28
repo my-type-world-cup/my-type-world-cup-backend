@@ -19,6 +19,8 @@ public class Comment extends Auditable {
     @Column(nullable = false)
     private String content;
 
+    private String candidateName;
+
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID", nullable = true, updatable = false)
     private Member member;
@@ -29,9 +31,11 @@ public class Comment extends Auditable {
 
     @Builder
     public Comment(String content,
+                   String candidateName,
                    Member member,
                    WorldCup worldCup) {
         this.content = content;
+        this.candidateName = candidateName;
         this.member = member;
         this.worldCup = worldCup;
     }

@@ -12,6 +12,7 @@ public class CommentResponseDto {
     // 댓글 정보
     private Long id;
     private String content;
+    private String candidateName;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -23,8 +24,10 @@ public class CommentResponseDto {
     private Long worldCupId;
 
     @Builder
+
     public CommentResponseDto(Long id,
                               String content,
+                              String candidateName,
                               LocalDateTime createdAt,
                               LocalDateTime modifiedAt,
                               Long memberId,
@@ -32,6 +35,7 @@ public class CommentResponseDto {
                               Long worldCupId) {
         this.id = id;
         this.content = content;
+        this.candidateName = candidateName;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
         this.memberId = memberId;

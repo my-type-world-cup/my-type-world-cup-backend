@@ -13,16 +13,17 @@ import lombok.Setter;
 public class CommentPostDto {
     @NotBlank
     private String content;
-
+    private String candidateName;
+    private Long worldCupId;
     @Setter
     private Long memberId;
 
-    private Long worldCupId;
-
     @Builder
     public CommentPostDto(String content,
+                          String candidateName,
                           Long worldCupId) {
         this.content = content;
+        this.candidateName = candidateName;
         this.worldCupId = worldCupId;
     }
 
