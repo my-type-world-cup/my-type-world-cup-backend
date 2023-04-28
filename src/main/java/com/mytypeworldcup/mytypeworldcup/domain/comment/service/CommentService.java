@@ -6,11 +6,10 @@ import com.mytypeworldcup.mytypeworldcup.domain.comment.dto.CommentResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.comment.entity.Comment;
 import com.mytypeworldcup.mytypeworldcup.domain.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -26,9 +25,8 @@ public class CommentService {
         return commentResponseDto;
     }
 
-    public List<CommentResponseDto> findCommentsByWorldCupId(Long worldCupId) {
-        List<Comment> all = commentRepository.findAll();
-        return all.stream().map(comment -> commentMapper.commentToCommentResponseDto(comment)).collect(Collectors.toList());
+    public Page<CommentResponseDto> findCommentsByWorldCupId(Long worldCupId, Pageable pageable) {
+        return commentRepository.findAllByWorldCupId(worldCupId, pageable);
     }
 
 }

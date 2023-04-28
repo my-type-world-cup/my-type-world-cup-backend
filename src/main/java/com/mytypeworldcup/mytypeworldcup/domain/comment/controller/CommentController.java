@@ -2,19 +2,20 @@ package com.mytypeworldcup.mytypeworldcup.domain.comment.controller;
 
 import com.mytypeworldcup.mytypeworldcup.domain.comment.dto.CommentPostDto;
 import com.mytypeworldcup.mytypeworldcup.domain.comment.dto.CommentResponseDto;
-import com.mytypeworldcup.mytypeworldcup.domain.comment.exception.CommentExceptionCode;
 import com.mytypeworldcup.mytypeworldcup.domain.comment.service.CommentService;
 import com.mytypeworldcup.mytypeworldcup.domain.member.service.MemberService;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
-import com.mytypeworldcup.mytypeworldcup.global.error.BusinessLogicException;
+import com.mytypeworldcup.mytypeworldcup.global.common.PageResponseDto;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,8 +28,8 @@ public class CommentController {
     public ResponseEntity postComment(Authentication authentication,
                                       @Valid @RequestBody CommentPostDto commentPostDto) {
         if (authentication != null) { // 로그인 했을 경우
-                Long memberId = memberService.findMemberIdByEmail(authentication.getName()); // 현재 로그인한 멤버 확인
-                commentPostDto.setMemberId(memberId);
+            Long memberId = memberService.findMemberIdByEmail(authentication.getName()); // 현재 로그인한 멤버 확인
+            commentPostDto.setMemberId(memberId);
         }
 
         worldCupService.findWorldCup(commentPostDto.getWorldCupId()); // 월드컵 존재여부 확인
@@ -39,10 +40,15 @@ public class CommentController {
     }
 
     @GetMapping("/worldcups/{worldCupId}/comments")
-    public ResponseEntity getCommentsByWorldCupId(@PathVariable Long worldCupId) {
+    public ResponseEntity getCommentsByWorldCupId(@PathVariable Long worldCupId,
+                                                  @Positive @RequestParam(required = false, defaultValue = "1") int page,
+                                                  @Positive @RequestParam(required = false, defaultValue = "5") int size,
+                                                  @RequestParam(required = false, defaultValue = "likesCount") String sort,
+                                                  @RequestParam(required = false, defaultValue = "DESC") Sort.Direction direction) {
+        PageRequest pageRequest = PageRequest.of(page - 1, size, direction, sort);
+        Page<CommentResponseDto> responseDtos = commentService.findCommentsByWorldCupId(worldCupId, pageRequest);
 
-        List<CommentResponseDto> responseDtos = commentService.findCommentsByWorldCupId(worldCupId);
-
-        return ResponseEntity.ok(responseDtos);
+        return ResponseEntity.ok(new PageResponseDto(responseDtos));
     }
+
 }
