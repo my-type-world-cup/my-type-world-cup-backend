@@ -170,6 +170,7 @@ class CommentControllerTest {
         int size = 5;
         String sort = "likesCount";
         Sort.Direction direction = Sort.Direction.DESC;
+        LocalDateTime localDateTime = LocalDateTime.now();
 
         CommentResponseDto comment1 = CommentResponseDto
                 .builder()
@@ -177,8 +178,8 @@ class CommentControllerTest {
                 .content("카리나가 짱이지!")
                 .candidateName("카리나")
                 .likesCount(100)
-                .createdAt(LocalDateTime.now())
-                .modifiedAt(LocalDateTime.now())
+                .createdAt(localDateTime)
+                .modifiedAt(localDateTime)
                 .memberId(5L)
                 .nickname("카리나가좋아요")
                 .worldCupId(1L)
@@ -189,8 +190,8 @@ class CommentControllerTest {
                 .content("윈터가 짱이지!")
                 .candidateName("윈터")
                 .likesCount(78)
-                .createdAt(LocalDateTime.now())
-                .modifiedAt(LocalDateTime.now())
+                .createdAt(localDateTime)
+                .modifiedAt(localDateTime)
                 .memberId(3L)
                 .nickname("윈터짱짱걸")
                 .worldCupId(1L)
