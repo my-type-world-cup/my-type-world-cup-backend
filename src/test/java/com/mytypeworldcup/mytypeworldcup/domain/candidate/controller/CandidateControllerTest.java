@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidatePatchDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateService;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
-import com.mytypeworldcup.mytypeworldcup.global.util.ImageCrawler;
+import com.mytypeworldcup.mytypeworldcup.global.util.NaverSearchAPI;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -34,7 +34,7 @@ class CandidateControllerTest {
     @Autowired
     private Gson gson;
     @MockBean
-    private ImageCrawler imageCrawler;
+    private NaverSearchAPI naverSearchAPI;
     @MockBean
     private WorldCupService worldCupService;
     @MockBean
