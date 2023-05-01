@@ -41,7 +41,7 @@ public class CandidateRepositoryCustomImpl implements CandidateRepositoryCustom 
     }
 
     @Override
-    public Page<CandidateResponseDto> searchAllByWorldCupId(Pageable pageable, String keyword, Long worldCupId) {
+    public Page<CandidateResponseDto> searchAllByWorldCupId(Long worldCupId, String keyword, Pageable pageable) {
 
         // 메인 쿼리
         JPAQuery<CandidateResponseDto> query = queryFactory

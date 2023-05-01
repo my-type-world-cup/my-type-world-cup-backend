@@ -7,7 +7,7 @@ import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateServi
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
 import com.mytypeworldcup.mytypeworldcup.global.auth.oauth2.dto.PasswordDto;
 import com.mytypeworldcup.mytypeworldcup.global.common.PageResponseDto;
-import com.mytypeworldcup.mytypeworldcup.global.util.ImageCrawler;
+import com.mytypeworldcup.mytypeworldcup.global.util.NaverSearchAPI;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,14 +25,19 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Validated
 public class CandidateController {
-    private final ImageCrawler imageCrawler;
+    private final NaverSearchAPI naverSearchAPI;
     private final WorldCupService worldCupService;
     private final CandidateService candidateService;
 
     @GetMapping("/candidates/images/search")
-    public ResponseEntity getImagesByKeyword(@RequestParam String keyword) {
-        List<String> imageUrls = imageCrawler.getImageUrls(keyword);
-        return ResponseEntity.ok(imageUrls);
+    public ResponseEntity getImagesByKeyword(@Positive @RequestParam(required = false, defaultValue = "1") int page,
+                                             @Positive @RequestParam(required = false, defaultValue = "10") int size,
+                                             @RequestParam String keyword) {
+
+        PageRequest pageRequest = PageRequest.of(page - 1, size);
+        Page<String> imageUrls = naverSearchAPI.getImageUrls(keyword, pageRequest);
+
+        return ResponseEntity.ok(new PageResponseDto(imageUrls));
     }
 
     /**
@@ -78,7 +83,7 @@ public class CandidateController {
         worldCupService.verifyPassword(worldCupId, passwordDto.getPassword());
 
         PageRequest pageRequest = PageRequest.of(page - 1, size, direction, sort);
-        Page<CandidateResponseDto> responseDtos = candidateService.findCandidatesByWorldCupId(pageRequest, keyword, worldCupId);
+        Page<CandidateResponseDto> responseDtos = candidateService.findCandidatesByWorldCupId(worldCupId, keyword, pageRequest);
 
         return ResponseEntity.ok(new PageResponseDto(responseDtos));
     }

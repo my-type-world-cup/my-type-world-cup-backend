@@ -70,8 +70,8 @@ public class CandidateService {
     }
 
     @Transactional(readOnly = true)
-    public Page<CandidateResponseDto> findCandidatesByWorldCupId(Pageable pageable, String keyword, Long worldCupId) {
-        return candidateRepository.searchAllByWorldCupId(pageable, keyword, worldCupId);
+    public Page<CandidateResponseDto> findCandidatesByWorldCupId(Long worldCupId, String keyword, Pageable pageable) {
+        return candidateRepository.searchAllByWorldCupId(worldCupId, keyword, pageable);
     }
 
 }

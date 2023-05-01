@@ -54,8 +54,8 @@ public class WorldCupControllerTest {
     private MemberService memberService;
 
     @Test
-    @DisplayName("월드컵 등록-정상통과")
-    void postWorldCupTest() throws Exception {
+    @DisplayName("월드컵 등록")
+    void postWorldCup() throws Exception {
         // given
         Long memberId = 1L;
         Long worldCupId = 1L;
@@ -136,7 +136,7 @@ public class WorldCupControllerTest {
 
     @DisplayName("월드컵 가져오기 - 메인페이지")
     @Test
-    void getWorldCupsTest() throws Exception {
+    void getWorldCups() throws Exception {
         // given
         String page = "1";
         String size = "5";
@@ -208,5 +208,52 @@ public class WorldCupControllerTest {
 
         Assertions.assertEquals(expected, actual);
 
+    }
+
+    @Test
+    @DisplayName("나의 월드컵 보기")
+    void getMyWorldCups() throws Exception {
+        // given
+        String page = "1";
+        String size = "5";
+        String sort = "playCount";
+        String direction = "DESC";
+        String keyword = "월드컵";
+        Long memberId = 10L;
+
+        List<WorldCupSimpleResponseDto> data = new ArrayList<>();
+        for (long i = 1; i <= 3; i++) {
+            WorldCupSimpleResponseDto dummy = new WorldCupSimpleResponseDto(i, "월드컵 " + i, "설명입니다.");
+            dummy.setCandidateSimpleResponseDtos(List.of(
+                    new CandidateSimpleResponseDto(i, "테스트 이미지 " + i, "testURI"),
+                    new CandidateSimpleResponseDto(i + 3, "테스트 이미지 " + i + 3, "testURI")));
+            data.add(dummy);
+        }
+
+        Page<WorldCupSimpleResponseDto> responseDtos = new PageImpl<>(data);
+
+        given(memberService.findMemberIdByEmail(anyString())).willReturn(memberId);
+        given(worldCupService.searchWorldCups(anyLong(), anyString(), any(Pageable.class))).willReturn(responseDtos);
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                get("/my/worldcups")
+                        .param("page", page)
+                        .param("size", size)
+                        .param("sort", sort)
+                        .param("direction", direction)
+                        .param("keyword", keyword)
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        // then
+        actions.andExpect(status().isOk());
+        verify(memberService).findMemberIdByEmail(anyString());
+        verify(worldCupService).searchWorldCups(anyLong(), anyString(), any(Pageable.class));
+
+        String actual = actions.andReturn().getResponse().getContentAsString();
+        String expected = gson.toJson(new PageResponseDto(responseDtos));
+
+        Assertions.assertEquals(expected, actual);
     }
 }

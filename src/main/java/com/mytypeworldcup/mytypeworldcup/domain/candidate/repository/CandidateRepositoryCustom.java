@@ -10,5 +10,5 @@ import java.util.List;
 public interface CandidateRepositoryCustom {
     List<CandidateSimpleResponseDto> findRandomCandidatesByWorldCupIdLimitTeamCount(Long worldCupId, Integer teamCount);
 
-    Page<CandidateResponseDto> searchAllByWorldCupId(Pageable pageable, String keyword, Long worldCupId);
+    Page<CandidateResponseDto> searchAllByWorldCupId(Long worldCupId, String keyword, Pageable pageable);
 }
