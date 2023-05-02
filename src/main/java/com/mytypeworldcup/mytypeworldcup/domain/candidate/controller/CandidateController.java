@@ -1,13 +1,14 @@
 package com.mytypeworldcup.mytypeworldcup.domain.candidate.controller;
 
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidatePatchDto;
+import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateRequestDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateService;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
-import com.mytypeworldcup.mytypeworldcup.global.auth.oauth2.dto.PasswordDto;
 import com.mytypeworldcup.mytypeworldcup.global.common.PageResponseDto;
 import com.mytypeworldcup.mytypeworldcup.global.util.NaverSearchAPI;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -58,12 +59,11 @@ public class CandidateController {
      * 본격적인 월드컵 시작을 위해 월드컵에 사용될 Candidate들을 요청<p>
      * 비밀번호를 입력받아야 하므로 POST 를 사용하였음
      */
-    @PostMapping("/worldcups/{worldCupId}/candidates/random")
-    public ResponseEntity requestRandomCandidatesByWorldCupId(@Positive @PathVariable Long worldCupId,
-                                                              @RequestParam int teamCount,
-                                                              @RequestBody PasswordDto passwordDto) {
-        worldCupService.verifyPassword(worldCupId, passwordDto.getPassword());
-        List<CandidateSimpleResponseDto> responseDtos = candidateService.findRandomCandidates(worldCupId, teamCount);
+    @PostMapping("/candidates/random")
+    public ResponseEntity requestRandomCandidatesByWorldCupId(@RequestParam(required = false, defaultValue = "4") Integer teamCount,
+                                                              @Valid @RequestBody CandidateRequestDto candidateRequestDto) {
+        worldCupService.verifyPassword(candidateRequestDto.getWorldCupId(), candidateRequestDto.getPassword());
+        List<CandidateSimpleResponseDto> responseDtos = candidateService.findRandomCandidates(candidateRequestDto.getWorldCupId(), teamCount);
 
         return ResponseEntity.ok(responseDtos);
     }
@@ -72,18 +72,17 @@ public class CandidateController {
      * 특정 WorldCup 에 속한 모든 Candidate 들을 요청(랭킹,수정페이지에서 사용예정)<P>
      * 비밀번호를 입력받아야 하므로 POST 를 사용하였음
      */
-    @PostMapping("/worldcups/{worldCupId}/candidates")
+    @PostMapping("/candidates/search")
     public ResponseEntity requestCandidatesByWorldCupId(@Positive @RequestParam(required = false, defaultValue = "1") int page,
                                                         @Positive @RequestParam(required = false, defaultValue = "5") int size,
                                                         @RequestParam(required = false, defaultValue = "winCount") String sort,
                                                         @RequestParam(required = false, defaultValue = "DESC") Sort.Direction direction,
                                                         @RequestParam(required = false) String keyword,
-                                                        @Positive @PathVariable Long worldCupId,
-                                                        @RequestBody PasswordDto passwordDto) {
-        worldCupService.verifyPassword(worldCupId, passwordDto.getPassword());
+                                                        @Valid @RequestBody CandidateRequestDto candidateRequestDto) {
+        worldCupService.verifyPassword(candidateRequestDto.getWorldCupId(), candidateRequestDto.getPassword());
 
         PageRequest pageRequest = PageRequest.of(page - 1, size, direction, sort);
-        Page<CandidateResponseDto> responseDtos = candidateService.findCandidatesByWorldCupId(worldCupId, keyword, pageRequest);
+        Page<CandidateResponseDto> responseDtos = candidateService.findCandidatesByWorldCupId(candidateRequestDto.getWorldCupId(), keyword, pageRequest);
 
         return ResponseEntity.ok(new PageResponseDto(responseDtos));
     }

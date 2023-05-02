@@ -47,6 +47,10 @@ public class Comment extends Auditable {
         this.worldCup = worldCup;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Long getMemberId() {
         if (this.member == null) {
             return null;

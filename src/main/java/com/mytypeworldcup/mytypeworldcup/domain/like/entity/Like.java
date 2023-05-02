@@ -4,6 +4,7 @@ import com.mytypeworldcup.mytypeworldcup.domain.comment.entity.Comment;
 import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
 import com.mytypeworldcup.mytypeworldcup.global.common.Auditable;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,4 +24,10 @@ public class Like extends Auditable {
     @JoinColumn(name = "MEMBER_ID", nullable = false, updatable = false)
     private Member member;
 
+    @Builder
+    public Like(Comment comment,
+                Member member) {
+        this.comment = comment;
+        this.member = member;
+    }
 }

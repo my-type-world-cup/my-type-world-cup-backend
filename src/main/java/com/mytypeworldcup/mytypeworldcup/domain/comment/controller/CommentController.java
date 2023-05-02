@@ -39,12 +39,12 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/worldcups/{worldCupId}/comments")
-    public ResponseEntity getCommentsByWorldCupId(@PathVariable Long worldCupId,
-                                                  @Positive @RequestParam(required = false, defaultValue = "1") int page,
+    @GetMapping("/comments")
+    public ResponseEntity getCommentsByWorldCupId(@Positive @RequestParam(required = false, defaultValue = "1") int page,
                                                   @Positive @RequestParam(required = false, defaultValue = "5") int size,
                                                   @RequestParam(required = false, defaultValue = "likesCount") String sort,
-                                                  @RequestParam(required = false, defaultValue = "DESC") Sort.Direction direction) {
+                                                  @RequestParam(required = false, defaultValue = "DESC") Sort.Direction direction,
+                                                  @Positive @RequestParam Long worldCupId) {
         PageRequest pageRequest = PageRequest.of(page - 1, size, direction, sort);
         Page<CommentResponseDto> responseDtos = commentService.findCommentsByWorldCupId(worldCupId, pageRequest);
 

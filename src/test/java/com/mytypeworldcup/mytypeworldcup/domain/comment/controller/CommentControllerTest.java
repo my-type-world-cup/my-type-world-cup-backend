@@ -205,7 +205,8 @@ class CommentControllerTest {
 
         // when
         ResultActions actions = mockMvc.perform(
-                get("/worldcups/{worldCupId}/comments", worldCupId)
+                get("/comments")
+                        .param("worldCupId", String.valueOf(worldCupId))
                         .param("page", String.valueOf(page))
                         .param("size", String.valueOf(size))
                         .param("sort", sort)
