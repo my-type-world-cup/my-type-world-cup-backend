@@ -49,10 +49,6 @@ dependencies {
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
-
-    // Crawler
-    implementation 'org.jsoup:jsoup:1.10.2'
-
 }
 
 tasks.named('test') {
