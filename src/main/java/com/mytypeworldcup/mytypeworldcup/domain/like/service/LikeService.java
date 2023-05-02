@@ -26,12 +26,27 @@ public class LikeService {
         return savedLike.getId();
     }
 
+    public void deleteLike(Long memberId, Long likeId) {
+        Like like = findVerifiedLike(likeId);
+        if (like.getMember().getId() != memberId) {
+            throw new BusinessLogicException(LikeExceptionCode.FORBIDDEN);
+        } else {
+            likeRepository.delete(like);
+        }
+    }
+
     @Transactional(readOnly = true)
     private void verifyExistsLike(Long commentId, Long memberId) {
         Optional<Like> optionalLike = likeRepository.findByComment_IdAndMember_Id(commentId, memberId);
         if (optionalLike.isPresent()) {
             throw new BusinessLogicException(LikeExceptionCode.LIKE_EXISTS);
         }
+    }
+
+    @Transactional(readOnly = true)
+    private Like findVerifiedLike(Long likeId) {
+        return likeRepository.findById(likeId)
+                .orElseThrow(() -> new BusinessLogicException(LikeExceptionCode.LIKE_NOT_FOUND));
     }
 
 }
