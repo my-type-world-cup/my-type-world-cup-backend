@@ -5,7 +5,7 @@ import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateResponseD
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateService;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
-import com.mytypeworldcup.mytypeworldcup.global.auth.oauth2.dto.PasswordDto;
+import com.mytypeworldcup.mytypeworldcup.global.auth.oauth2.dto.RandomWorldCupRequestDto;
 import com.mytypeworldcup.mytypeworldcup.global.common.PageResponseDto;
 import com.mytypeworldcup.mytypeworldcup.global.util.NaverSearchAPI;
 import jakarta.validation.constraints.Positive;
@@ -58,12 +58,10 @@ public class CandidateController {
      * 본격적인 월드컵 시작을 위해 월드컵에 사용될 Candidate들을 요청<p>
      * 비밀번호를 입력받아야 하므로 POST 를 사용하였음
      */
-    @PostMapping("/worldcups/{worldCupId}/candidates/random")
-    public ResponseEntity requestRandomCandidatesByWorldCupId(@Positive @PathVariable Long worldCupId,
-                                                              @RequestParam int teamCount,
-                                                              @RequestBody PasswordDto passwordDto) {
-        worldCupService.verifyPassword(worldCupId, passwordDto.getPassword());
-        List<CandidateSimpleResponseDto> responseDtos = candidateService.findRandomCandidates(worldCupId, teamCount);
+    @PostMapping("/candidates/random")
+    public ResponseEntity requestRandomCandidatesByWorldCupId(@RequestBody RandomWorldCupRequestDto randomWorldCupRequestDto) {
+        worldCupService.verifyPassword(randomWorldCupRequestDto.getWorldCupId(), randomWorldCupRequestDto.getPassword());
+        List<CandidateSimpleResponseDto> responseDtos = candidateService.findRandomCandidates(randomWorldCupRequestDto.getWorldCupId(), randomWorldCupRequestDto.getTeamCount());
 
         return ResponseEntity.ok(responseDtos);
     }
@@ -79,8 +77,8 @@ public class CandidateController {
                                                         @RequestParam(required = false, defaultValue = "DESC") Sort.Direction direction,
                                                         @RequestParam(required = false) String keyword,
                                                         @Positive @PathVariable Long worldCupId,
-                                                        @RequestBody PasswordDto passwordDto) {
-        worldCupService.verifyPassword(worldCupId, passwordDto.getPassword());
+                                                        @RequestBody RandomWorldCupRequestDto randomWorldCupRequestDto) {
+        worldCupService.verifyPassword(worldCupId, randomWorldCupRequestDto.getPassword());
 
         PageRequest pageRequest = PageRequest.of(page - 1, size, direction, sort);
         Page<CandidateResponseDto> responseDtos = candidateService.findCandidatesByWorldCupId(worldCupId, keyword, pageRequest);
