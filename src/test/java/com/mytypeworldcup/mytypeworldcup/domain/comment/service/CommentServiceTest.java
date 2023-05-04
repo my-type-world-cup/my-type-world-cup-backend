@@ -75,6 +75,53 @@ class CommentServiceTest {
     }
 
     @Test
+    @DisplayName("댓글 달기 - 회원 댓글")
+    void createComment_member() {
+        // given
+        LocalDateTime localDateTime = LocalDateTime.now();
+
+        CommentPostDto commentPostDto = CommentPostDto
+                .builder()
+                .content("카리나가 짱이지!")
+                .candidateName("카리나")
+                .worldCupId(1L)
+                .build();
+        commentPostDto.setMemberId(1L);
+
+        CommentResponseDto expected = CommentResponseDto
+                .builder()
+                .id(1L)
+                .content(commentPostDto.getContent())
+                .candidateName(commentPostDto.getCandidateName())
+                .likesCount(0)
+                .createdAt(localDateTime)
+                .modifiedAt(localDateTime)
+                .memberId(commentPostDto.getMemberId())
+                .nickname("시영")
+                .worldCupId(commentPostDto.getWorldCupId())
+                .build();
+
+        given(commentMapper.commentPostDtoToComment(any(CommentPostDto.class))).willReturn(new Comment());
+        given(commentRepository.save(any(Comment.class))).willReturn(new Comment());
+        given(commentMapper.commentToCommentResponseDto(any(Comment.class))).willReturn(expected);
+
+        // when
+        CommentResponseDto actual = commentService.createComment(commentPostDto);
+
+        // then
+        assertSame(expected, actual);
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getContent(), actual.getContent());
+        assertEquals(expected.getCandidateName(), actual.getCandidateName());
+        assertEquals(expected.getLikesCount(), actual.getLikesCount());
+        assertEquals(expected.getCreatedAt(), actual.getCreatedAt());
+        assertEquals(expected.getModifiedAt(), actual.getModifiedAt());
+        assertEquals(expected.getMemberId(), actual.getMemberId());
+        assertEquals(expected.getNickname(), actual.getNickname());
+        assertEquals(expected.getWorldCupId(), actual.getWorldCupId());
+    }
+
+    @Test
     void findCommentsByWorldCupId() {
     }
 }
