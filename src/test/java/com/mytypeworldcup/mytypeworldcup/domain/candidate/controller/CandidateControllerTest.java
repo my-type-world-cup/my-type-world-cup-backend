@@ -2,9 +2,13 @@ package com.mytypeworldcup.mytypeworldcup.domain.candidate.controller;
 
 import com.google.gson.Gson;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidatePatchDto;
+import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateRequestDto;
+import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateService;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
 import com.mytypeworldcup.mytypeworldcup.global.util.NaverSearchAPI;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,11 +21,12 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -78,7 +83,43 @@ class CandidateControllerTest {
     }
 
     @Test
-    void requestRandomCandidatesByWorldCupId() {
+    @DisplayName("랜덤이미지요청")
+    void requestRandomCandidatesByWorldCupId() throws Exception {
+        // given
+        Integer teamCount = 16;
+        Long worldCupId = 1L;
+
+        CandidateRequestDto candidateRequestDto = CandidateRequestDto
+                .builder()
+                .worldCupId(worldCupId)
+                .password(null)
+                .build();
+
+        List<CandidateSimpleResponseDto> candidateSimpleResponseDtos = new ArrayList<>();
+        for (long i = 1; i <= teamCount; i++) {
+            candidateSimpleResponseDtos.add(new CandidateSimpleResponseDto(i, "테스트" + i, "테스트url" + i));
+        }
+
+        doNothing().when(worldCupService).verifyPassword(anyLong(), anyString());
+        given(candidateService.findRandomCandidates(anyLong(), anyInt())).willReturn(candidateSimpleResponseDtos);
+
+        String content = gson.toJson(candidateRequestDto);
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                post("/candidates/random")
+                        .queryParam("teamCount", String.valueOf(teamCount))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .content(content)
+        );
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()", Matchers.is(teamCount)));
     }
 
     @Test
