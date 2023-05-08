@@ -5,16 +5,20 @@ import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidatePostDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.entity.Candidate;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.repository.CandidateRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CandidateServiceTest {
@@ -27,6 +31,7 @@ class CandidateServiceTest {
     private CandidateRepository candidateRepository;
 
     @Test
+    @DisplayName("후보 등록")
     void createCandidate() {
         // given
         CandidatePostDto candidatePostDto = CandidatePostDto
@@ -68,7 +73,26 @@ class CandidateServiceTest {
     }
 
     @Test
+    @DisplayName("후보 단체 등록")
     void createCandidates() {
+        // given
+        List<CandidatePostDto> candidatePostDtos = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            candidatePostDtos.add(CandidatePostDto.builder().build());
+        }
+
+        given(candidateMapper.candidatePostDtoToCandidate(any(CandidatePostDto.class))).willReturn(new Candidate());
+        given(candidateRepository.save(any(Candidate.class))).willReturn(new Candidate());
+        given(candidateMapper.candidateToCandidateResponseDto(any(Candidate.class))).willReturn(CandidateResponseDto.builder().build());
+
+        // when
+        List<CandidateResponseDto> actual = candidateService.createCandidates(candidatePostDtos);
+
+        // then
+        verify(candidateMapper, times(candidatePostDtos.size())).candidatePostDtoToCandidate(any(CandidatePostDto.class));
+        verify(candidateRepository, times(candidatePostDtos.size())).save(any(Candidate.class));
+        verify(candidateMapper, times(candidatePostDtos.size())).candidateToCandidateResponseDto(any(Candidate.class));
+        assertEquals(candidatePostDtos.size(), actual.size());
     }
 
     @Test
