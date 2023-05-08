@@ -49,7 +49,7 @@ public class MemberAuthenticationSuccessHandler implements AuthenticationSuccess
     }
 
     private String makeRedirectUrl(String accessToken, String refreshToken) {
-        return UriComponentsBuilder.fromUriString("/members")
+        return UriComponentsBuilder.fromUriString("http://localhost:3000")
                 .queryParam("access_token", accessToken)
                 .queryParam("refresh_token", refreshToken)
                 .build().toUriString();
