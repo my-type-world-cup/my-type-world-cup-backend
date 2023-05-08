@@ -43,24 +43,24 @@ public class CandidateService {
         return candidateRepository.findRandomCandidatesByWorldCupIdLimitTeamCount(worldCupId, teamCount);
     }
 
-    public void updateMatchResults(List<CandidatePatchDto> candidatePatchDtos) {
-        for (CandidatePatchDto candidatePatchDto : candidatePatchDtos) {
+    public void updateMatchResult(CandidatePatchDto candidatePatchDto) {
+        Candidate candidate = findVerifiedCandidate(candidatePatchDto.getId());
 
-            Candidate candidate = findVerifiedCandidate(candidatePatchDto.getId());
+        int matchUpGameCount = candidatePatchDto.getMatchUpGameCount();
+        int winCount = candidatePatchDto.getWinCount();
 
-            int matchUpGameCount = candidatePatchDto.getMatchUpGameCount();
-            int winCount = candidatePatchDto.getWinCount();
-
-            candidate.updateMatchUpWorldCupCount(); // 월드컵 출전 횟수 업데이트 : 무조건 1증가
-            candidate.updateMatchUpGameCount(matchUpGameCount); // 경기 출전 횟수 업데이트
-            candidate.updateWinCount(winCount); // 경기에서 승리 횟수 업데이트
-            if (matchUpGameCount == winCount) { // 최종 우승 시
-                candidate.updateFinalWinCount(); // finalWinCount += 1
-                candidate.getWorldCup().updatePlayCount(); // worldCup.playCount += 1
-            }
-
+        candidate.updateMatchUpWorldCupCount(); // 월드컵 출전 횟수 업데이트 : 무조건 1증가
+        candidate.updateMatchUpGameCount(matchUpGameCount); // 경기 출전 횟수 업데이트
+        candidate.updateWinCount(winCount); // 경기에서 승리 횟수 업데이트
+        if (matchUpGameCount == winCount) { // 최종 우승 시
+            candidate.updateFinalWinCount(); // finalWinCount += 1
+            candidate.getWorldCup().updatePlayCount(); // worldCup.playCount += 1
         }
-        return;
+    }
+
+    public void updateMatchResults(List<CandidatePatchDto> candidatePatchDtos) {
+        candidatePatchDtos.stream()
+                .forEach(this::updateMatchResult);
     }
 
     @Transactional(readOnly = true)
