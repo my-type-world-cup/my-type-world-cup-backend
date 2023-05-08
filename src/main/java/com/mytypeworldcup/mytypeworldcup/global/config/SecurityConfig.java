@@ -34,7 +34,6 @@ public class SecurityConfig {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
     private final CustomOAuth2UserService oAuth2UserService;
-    private String redirectUrl = "http://localhost:3000";
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -53,21 +52,26 @@ public class SecurityConfig {
                 .and()
                 .apply(new CustomFilterConfigurer())
                 .and()
+//                .headers().cacheControl().disable().and()
+
                 // -> Security Filter(UsernamePasswordAuthenticationFilter, BasicAuthenticationFilter 등) 비활성화됨
 
                 .authorizeHttpRequests(
                         authorize -> authorize
                                 // Member
                                 .requestMatchers(HttpMethod.GET, "/login/**", "/oauth2/**").permitAll() // 네이티브 로그인
-                                .requestMatchers(HttpMethod.GET, "/members").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
+//                                .requestMatchers(HttpMethod.GET, "/members").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/members").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/v11/users").hasRole("ROLE_USER")
                                 .requestMatchers(HttpMethod.GET, "/v11/admin").hasRole("ROLE_ADMIN")
 
 
                                 // WorldCup
-                                .requestMatchers(HttpMethod.POST, "worldcups").authenticated()
+                                .requestMatchers(HttpMethod.POST, "/worldcups").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/my/worldcups").authenticated()
 
+                                // Comment
+                                .requestMatchers(HttpMethod.POST, "/comments").permitAll()
 
                                 .anyRequest().permitAll()
                 )
@@ -86,9 +90,7 @@ public class SecurityConfig {
 //
                 // OAuth2.0 로그인 설정
                 .oauth2Login()
-
-                .defaultSuccessUrl(redirectUrl) // 임시 리다이렉트
-
+//                .defaultSuccessUrl(redirectUrl) // 임시 리다이렉트
                 .userInfoEndpoint()
                 .userService(oAuth2UserService)
                 .and()
@@ -108,9 +110,9 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));   // 모든 출처(Origin)에 대해 스크립트 기반의 HTTP 통신을 허용하도록 설정 -> TODO 운영환경에 맞게 변경할것
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE"));  // setAllowedMethods()를 통해 파라미터로 지정한 HTTP Method에 대한 HTTP 통신을 허용
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();   // orsConfigurationSource 인터페이스의 구현 클래스인 UrlBasedCorsConfigurationSource 클래스의 객체를 생성
+        configuration.setAllowedOrigins(Arrays.asList("*", "http://localhost:3000"));   // 모든 출처(Origin)에 대해 스크립트 기반의 HTTP 통신을 허용하도록 설정 -> TODO 운영환경에 맞게 변경할것
+        configuration.setAllowedMethods(Arrays.asList( "POST", "PATCH", "DELETE"));  // setAllowedMethods()를 통해 파라미터로 지정한 HTTP Method에 대한 HTTP 통신을 허용
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();   // corsConfigurationSource 인터페이스의 구현 클래스인 UrlBasedCorsConfigurationSource 클래스의 객체를 생성
         source.registerCorsConfiguration("/**", configuration);      // 모든 URL에 앞에서 구성한 CORS 정책(CorsConfiguration)을 적용
         return source;
     }
