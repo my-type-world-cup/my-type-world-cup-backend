@@ -200,8 +200,27 @@ class CandidateServiceTest {
     }
 
     @Test
+    @DisplayName("경기결과 리스트 업데이트")
     void updateMatchResults() {
-        // 이건 어떻게 해야하나 ...
+        // given
+        List<CandidatePatchDto> candidatePatchDtos = new ArrayList<>();
+        for (long i = 1; i <= 4; i++) {
+            CandidatePatchDto candidatePatchDto = CandidatePatchDto
+                    .builder()
+                    .id(i)
+                    .winCount(1)
+                    .matchUpGameCount(2)
+                    .build();
+            candidatePatchDtos.add(candidatePatchDto);
+        }
+
+        given(candidateRepository.findById(anyLong())).willReturn(Optional.ofNullable(new Candidate()));
+
+        // when
+        candidateService.updateMatchResults(candidatePatchDtos);
+
+        // then
+        verify(candidateRepository, times(candidatePatchDtos.size())).findById(anyLong());
     }
 
     @Test
