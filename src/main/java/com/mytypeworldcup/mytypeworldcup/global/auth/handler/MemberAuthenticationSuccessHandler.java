@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.io.IOException;
 
 @RequiredArgsConstructor
 public class MemberAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
@@ -18,7 +21,7 @@ public class MemberAuthenticationSuccessHandler implements AuthenticationSuccess
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
-                                        Authentication authentication) {
+                                        Authentication authentication) throws IOException {
         // 인증 성공 후, 토큰 생성
         // Todo 리프레쉬 토큰 관련 고민할 것
 
@@ -37,6 +40,19 @@ public class MemberAuthenticationSuccessHandler implements AuthenticationSuccess
 
         response.setHeader("Authorization", "Bearer " + accessToken);
         response.setHeader("Refresh", refreshToken);
+//        System.out.println("ㅇㅗ어스로그인");
+//        request.setAttribute("Authorization", "Bearer " + accessToken);
+
+//        getRedirectStrategy().sendRedirect(request, response, "http://localhost:8080/members");
+
+            response.sendRedirect(makeRedirectUrl(accessToken, refreshToken));
+    }
+
+    private String makeRedirectUrl(String accessToken, String refreshToken) {
+        return UriComponentsBuilder.fromUriString("/members")
+                .queryParam("access_token", accessToken)
+                .queryParam("refresh_token", refreshToken)
+                .build().toUriString();
     }
 
     Member emailToMember(String email) {
