@@ -1,11 +1,10 @@
 package com.mytypeworldcup.mytypeworldcup.domain.candidate.service;
 
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateMapper;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidatePostDto;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateResponseDto;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleResponseDto;
+import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.*;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.entity.Candidate;
+import com.mytypeworldcup.mytypeworldcup.domain.candidate.exception.CandidateExceptionCode;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.repository.CandidateRepository;
+import com.mytypeworldcup.mytypeworldcup.global.error.BusinessLogicException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,9 +14,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
@@ -119,7 +118,21 @@ class CandidateServiceTest {
     }
 
     @Test
-    void updateMatchResult() {
+    @DisplayName("경기결과 업데이트 - 유효한 후보가 없을 경우")
+    void updateMatchResult_CANDIDATE_NOT_FOUND() {
+        // given
+        CandidatePatchDto candidatePatchDto = CandidatePatchDto
+                .builder()
+                .id(1L)
+                .build();
+
+        given(candidateRepository.findById(anyLong())).willReturn(Optional.ofNullable(null));
+
+        // when
+        BusinessLogicException actual = assertThrows(BusinessLogicException.class, () -> candidateService.updateMatchResult(candidatePatchDto));
+
+        // then
+        assertEquals(CandidateExceptionCode.CANDIDATE_NOT_FOUND, actual.getExceptionCode());
     }
 
     @Test
