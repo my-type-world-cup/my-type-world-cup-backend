@@ -4,6 +4,7 @@ import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.*;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.entity.Candidate;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.exception.CandidateExceptionCode;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.repository.CandidateRepository;
+import com.mytypeworldcup.mytypeworldcup.domain.worldcup.entity.WorldCup;
 import com.mytypeworldcup.mytypeworldcup.global.error.BusinessLogicException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -133,6 +134,69 @@ class CandidateServiceTest {
 
         // then
         assertEquals(CandidateExceptionCode.CANDIDATE_NOT_FOUND, actual.getExceptionCode());
+    }
+
+    @Test
+    @DisplayName("경기결과 업데이트 - 최종우승하지 못한 경우")
+    void updateMatchResult_notFinalWin() {
+        // given
+        CandidatePatchDto candidatePatchDto = CandidatePatchDto
+                .builder()
+                .id(1L)
+                .matchUpGameCount(4)
+                .winCount(3)
+                .build();
+
+        WorldCup worldCup = new WorldCup();
+
+        Candidate candidate = Candidate
+                .builder()
+                .worldCup(worldCup)
+                .build();
+
+        given(candidateRepository.findById(anyLong())).willReturn(Optional.ofNullable(candidate));
+
+        // when
+        candidateService.updateMatchResult(candidatePatchDto);
+
+        // then
+        assertEquals(1, candidate.getMatchUpWorldCupCount()); // 월드컵에 출전한 횟수이므로 무조건 1증가
+        assertEquals(candidatePatchDto.getMatchUpGameCount(), candidate.getMatchUpGameCount());
+        assertEquals(candidatePatchDto.getWinCount(), candidate.getWinCount());
+        // 최종우승하지 못했으므로 if문 동작하지 않으므로 0
+        assertEquals(0, candidate.getFinalWinCount());
+        assertEquals(0, worldCup.getPlayCount());
+    }
+
+    @Test
+    @DisplayName("경기결과 업데이트 - 최종우승한 경우")
+    void updateMatchResult_finalWin() {
+        // given
+        CandidatePatchDto candidatePatchDto = CandidatePatchDto
+                .builder()
+                .id(1L)
+                .matchUpGameCount(4)
+                .winCount(4)
+                .build();
+
+        WorldCup worldCup = new WorldCup();
+
+        Candidate candidate = Candidate
+                .builder()
+                .worldCup(worldCup)
+                .build();
+
+        given(candidateRepository.findById(anyLong())).willReturn(Optional.ofNullable(candidate));
+
+        // when
+        candidateService.updateMatchResult(candidatePatchDto);
+
+        // then
+        assertEquals(1, candidate.getMatchUpWorldCupCount()); // 월드컵에 출전한 횟수이므로 무조건 1증가
+        assertEquals(candidatePatchDto.getMatchUpGameCount(), candidate.getMatchUpGameCount());
+        assertEquals(candidatePatchDto.getWinCount(), candidate.getWinCount());
+        assertEquals(1, candidate.getFinalWinCount()); // 최종우승여부이므로 무조건 1증가
+        assertEquals(1, worldCup.getPlayCount()); // 플레이된 횟수이므로 1증가
     }
 
     @Test
