@@ -3,6 +3,7 @@ package com.mytypeworldcup.mytypeworldcup.domain.candidate.service;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateMapper;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidatePostDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateResponseDto;
+import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.entity.Candidate;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.repository.CandidateRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -96,11 +97,34 @@ class CandidateServiceTest {
     }
 
     @Test
+    @DisplayName("랜덤후보 뽑아오기 - 요청한 갯수만큼 리턴하는지 검증")
     void findRandomCandidates() {
+        // 결과가 teamCount 만큼 왔는지 검증
+        // given
+        Long worldCupId = 1L;
+        Integer teamCount = 16;
+
+        List<CandidateSimpleResponseDto> expected = new ArrayList<>();
+        for (int i = 0; i < teamCount; i++) {
+            expected.add(new CandidateSimpleResponseDto());
+        }
+
+        given(candidateRepository.findRandomCandidatesByWorldCupIdLimitTeamCount(anyLong(), anyInt())).willReturn(expected);
+
+        // when
+        List<CandidateSimpleResponseDto> actual = candidateService.findRandomCandidates(worldCupId, teamCount);
+
+        // then
+        assertEquals(expected.size(), actual.size());
+    }
+
+    @Test
+    void updateMatchResult() {
     }
 
     @Test
     void updateMatchResults() {
+        // 이건 어떻게 해야하나 ...
     }
 
     @Test
