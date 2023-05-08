@@ -56,7 +56,9 @@ public class MemberService {
         }
     }
      */
-
+    public Member findMemberByEmail(String email) {
+        return findVerifiedMemberByEmail(email);
+    }
     @Transactional(readOnly = true)
     public Long findMemberIdByEmail(String email) {
         return findVerifiedMemberByEmail(email).getId();
