@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -225,5 +226,37 @@ class CandidateServiceTest {
 
     @Test
     void findCandidatesByWorldCupId() {
+        // given
+        Long worldCupId = 1L;
+        String keyword = "테스트";
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "winCount");
+
+        List<CandidateResponseDto> candidateResponseDtos = new ArrayList<>();
+        for (long i = 5; i >= 1; i--) {
+            CandidateResponseDto candidateResponseDto = CandidateResponseDto
+                    .builder()
+                    .id(i)
+                    .name("테스트" + i)
+                    .image("이미지url" + i)
+                    .finalWinCount(0)
+                    .winCount((int) i)
+                    .matchUpWorldCupCount(5)
+                    .matchUpGameCount((int) i)
+                    .worldCupId(worldCupId)
+                    .build();
+            candidateResponseDtos.add(candidateResponseDto);
+        }
+
+        Page<CandidateResponseDto> expected = new PageImpl<>(candidateResponseDtos);
+
+        given(candidateRepository.searchAllByWorldCupId(anyLong(), anyString(), any(Pageable.class))).willReturn(expected);
+
+        // when
+        Page<CandidateResponseDto> actual = candidateService.findCandidatesByWorldCupId(worldCupId, keyword, pageable);
+
+        // then
+        assertEquals(expected.getTotalElements(), actual.getTotalElements());
+        assertEquals(expected.getContent(), actual.getContent());
+        assertSame(expected, actual);
     }
 }
