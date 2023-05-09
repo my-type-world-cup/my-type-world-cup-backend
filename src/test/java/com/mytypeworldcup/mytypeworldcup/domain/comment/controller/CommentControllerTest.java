@@ -170,7 +170,7 @@ class CommentControllerTest {
         int size = 5;
         String sort = "likesCount";
         Sort.Direction direction = Sort.Direction.DESC;
-        LocalDateTime localDateTime = LocalDateTime.now();
+        LocalDateTime localDateTime = LocalDateTime.of(2023, 05, 10, 00, 51, 15);
 
         CommentResponseDto comment1 = CommentResponseDto
                 .builder()

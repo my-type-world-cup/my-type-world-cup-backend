@@ -39,7 +39,7 @@ class CommentServiceTest {
     @DisplayName("댓글 달기 - 비회원 댓글")
     void createComment_anonymous() {
         // given
-        LocalDateTime localDateTime = LocalDateTime.now();
+        LocalDateTime localDateTime = LocalDateTime.of(2023, 05, 10, 00, 51, 15);
 
         CommentPostDto commentPostDto = CommentPostDto
                 .builder()
@@ -85,7 +85,7 @@ class CommentServiceTest {
     @DisplayName("댓글 달기 - 회원 댓글")
     void createComment_member() {
         // given
-        LocalDateTime localDateTime = LocalDateTime.now();
+        LocalDateTime localDateTime = LocalDateTime.of(2023, 05, 10, 00, 51, 15);
 
         CommentPostDto commentPostDto = CommentPostDto
                 .builder()
@@ -134,7 +134,7 @@ class CommentServiceTest {
         // given
         Pageable pageable = PageRequest.of(0, 5, DESC, "likesCount");
         Long worldCupId = 1L;
-        LocalDateTime localDateTime = LocalDateTime.now();
+        LocalDateTime localDateTime = LocalDateTime.of(2023, 05, 10, 00, 51, 15);
 
         List<CommentResponseDto> commentResponseDtos = new ArrayList<>();
         for (long i = 1; i <= 5; i++) {
