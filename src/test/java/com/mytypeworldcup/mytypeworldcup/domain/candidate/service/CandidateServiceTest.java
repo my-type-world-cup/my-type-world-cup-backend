@@ -225,6 +225,7 @@ class CandidateServiceTest {
     }
 
     @Test
+    @DisplayName("월드컵아이디로 후보찾기")
     void findCandidatesByWorldCupId() {
         // given
         Long worldCupId = 1L;
