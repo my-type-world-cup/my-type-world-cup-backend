@@ -6,13 +6,13 @@ import com.mytypeworldcup.mytypeworldcup.domain.member.service.MemberService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URI;
+
+import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,10 +28,9 @@ public class LikeController {
         likePostDto.setMemberId(memberId);
 
         Long likeId = likeService.createLike(likePostDto);
-        Map<String, Long> response = new HashMap<>();
-        response.put("likeId", likeId);
+        URI location = fromCurrentRequest().path("/{id}").buildAndExpand(likeId).toUri();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.created(location).build();
     }
 
     @DeleteMapping("/likes/{likeId}")
