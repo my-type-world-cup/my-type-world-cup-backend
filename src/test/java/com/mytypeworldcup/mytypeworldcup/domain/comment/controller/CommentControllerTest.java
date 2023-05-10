@@ -178,6 +178,7 @@ class CommentControllerTest {
                 .content("카리나가 짱이지!")
                 .candidateName("카리나")
                 .likesCount(100)
+                .isLiked(true)
                 .createdAt(localDateTime)
                 .modifiedAt(localDateTime)
                 .memberId(5L)
@@ -189,6 +190,7 @@ class CommentControllerTest {
                 .id(2L)
                 .content("윈터가 짱이지!")
                 .candidateName("윈터")
+                .isLiked(false)
                 .likesCount(78)
                 .createdAt(localDateTime)
                 .modifiedAt(localDateTime)
@@ -201,7 +203,8 @@ class CommentControllerTest {
 
         Page<CommentResponseDto> responseDtos = new PageImpl<>(comments);
 
-        given(commentService.findCommentsByWorldCupId(anyLong(), any(Pageable.class))).willReturn(responseDtos);
+        given(memberService.findMemberIdByEmail(anyString())).willReturn(1L);
+        given(commentService.findCommentsByWorldCupId(anyLong(), anyLong(), any(Pageable.class))).willReturn(responseDtos);
 
         // when
         ResultActions actions = mockMvc.perform(
@@ -222,6 +225,7 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$.data[0].content").value(comment1.getContent()))
                 .andExpect(jsonPath("$.data[0].candidateName").value(comment1.getCandidateName()))
                 .andExpect(jsonPath("$.data[0].likesCount").value(comment1.getLikesCount()))
+                .andExpect(jsonPath("$.data[0].isLiked").isBoolean())
                 .andExpect(jsonPath("$.data[0].createdAt").value(comment1.getCreatedAt().toString()))
                 .andExpect(jsonPath("$.data[0].modifiedAt").value(comment1.getModifiedAt().toString()))
                 .andExpect(jsonPath("$.data[0].memberId").value(comment1.getMemberId()))
@@ -231,6 +235,7 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$.data[1].content").value(comment2.getContent()))
                 .andExpect(jsonPath("$.data[1].candidateName").value(comment2.getCandidateName()))
                 .andExpect(jsonPath("$.data[1].likesCount").value(comment2.getLikesCount()))
+                .andExpect(jsonPath("$.data[1].isLiked").isBoolean())
                 .andExpect(jsonPath("$.data[1].createdAt").value(comment2.getCreatedAt().toString()))
                 .andExpect(jsonPath("$.data[1].modifiedAt").value(comment2.getModifiedAt().toString()))
                 .andExpect(jsonPath("$.data[1].memberId").value(comment2.getMemberId()))
@@ -243,6 +248,6 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$.pageInfo.totalPages").value(responseDtos.getTotalPages()))
                 .andExpect(jsonPath("$.pageInfo.last").value(responseDtos.isLast()));
 
-        verify(commentService).findCommentsByWorldCupId(anyLong(), any(Pageable.class));
+        verify(commentService).findCommentsByWorldCupId(anyLong(), anyLong(), any(Pageable.class));
     }
 }
