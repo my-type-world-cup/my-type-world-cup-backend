@@ -15,6 +15,7 @@ public class CommentResponseDto {
     private String content;
     private String candidateName;
     private Integer likesCount;
+    private Boolean isLiked;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -31,6 +32,7 @@ public class CommentResponseDto {
                               String content,
                               String candidateName,
                               Integer likesCount,
+                              Boolean isLiked,
                               LocalDateTime createdAt,
                               LocalDateTime modifiedAt,
                               Long memberId,
@@ -40,6 +42,7 @@ public class CommentResponseDto {
         this.content = content;
         this.candidateName = candidateName;
         this.likesCount = likesCount;
+        this.isLiked = isLiked;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
         this.memberId = memberId;
