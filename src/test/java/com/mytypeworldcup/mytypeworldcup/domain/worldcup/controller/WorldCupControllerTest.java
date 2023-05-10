@@ -6,7 +6,7 @@ import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateResponseD
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateService;
 import com.mytypeworldcup.mytypeworldcup.domain.member.service.MemberService;
-import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.GetWorldCupResponseDto;
+import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupInfoResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupPostDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupSimpleResponseDto;
@@ -183,7 +183,7 @@ public class WorldCupControllerTest {
     void getWorldCup() throws Exception {
         // given
         long worldCupId = 1L;
-        GetWorldCupResponseDto response = GetWorldCupResponseDto
+        WorldCupInfoResponseDto response = WorldCupInfoResponseDto
                 .builder()
                 .id(worldCupId)
                 .title("테스트 타이틀")

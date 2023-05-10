@@ -119,7 +119,7 @@ class WorldCupServiceTest {
 
         WorldCup worldCup = new WorldCup();
         worldCup.setId(1L);
-        GetWorldCupResponseDto expected = GetWorldCupResponseDto
+        WorldCupInfoResponseDto expected = WorldCupInfoResponseDto
                 .builder()
                 .id(worldCupId)
                 .title("테스트 월드컵")
@@ -129,14 +129,14 @@ class WorldCupServiceTest {
                 .build();
 
         given(worldCupRepository.findById(anyLong())).willReturn(Optional.ofNullable(worldCup));
-        given(worldCupMapper.worldCupToGetWorldCupResponseDto(any(WorldCup.class))).willReturn(expected);
+        given(worldCupMapper.worldCupToWorldCupInfoResponseDto(any(WorldCup.class))).willReturn(expected);
 
         // when
-        GetWorldCupResponseDto actual = worldCupService.findWorldCup(worldCupId);
+        WorldCupInfoResponseDto actual = worldCupService.findWorldCup(worldCupId);
 
         // then
         verify(worldCupRepository).findById(anyLong());
-        verify(worldCupMapper).worldCupToGetWorldCupResponseDto(any(WorldCup.class));
+        verify(worldCupMapper).worldCupToWorldCupInfoResponseDto(any(WorldCup.class));
 
         assertSame(expected, actual);
         assertEquals(expected.getId(), actual.getId());
