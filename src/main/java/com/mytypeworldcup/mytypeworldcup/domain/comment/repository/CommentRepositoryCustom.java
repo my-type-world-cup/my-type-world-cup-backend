@@ -5,5 +5,5 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface CommentRepositoryCustom {
-    Page<CommentResponseDto> findAllByWorldCupId(Long worldCupId, Pageable pageable);
+    Page<CommentResponseDto> findAllByWorldCupId(Long worldCupId, Long memberId, Pageable pageable);
 }
