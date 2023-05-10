@@ -112,6 +112,7 @@ class CommentMapperTest {
         assertEquals(comment.getContent(), commentResponseDto.getContent());
         assertEquals(comment.getCandidateName(), commentResponseDto.getCandidateName());
         assertEquals(comment.getLikesCount(), commentResponseDto.getLikesCount());
+        assertEquals(false, commentResponseDto.getIsLiked());
         assertEquals(comment.getCreatedAt(), commentResponseDto.getCreatedAt());
         assertEquals(comment.getModifiedAt(), commentResponseDto.getModifiedAt());
         assertEquals(comment.getMemberId(), commentResponseDto.getMemberId());
