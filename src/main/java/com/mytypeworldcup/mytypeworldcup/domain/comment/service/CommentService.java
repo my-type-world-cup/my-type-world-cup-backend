@@ -25,8 +25,8 @@ public class CommentService {
         return commentResponseDto;
     }
 
-    public Page<CommentResponseDto> findCommentsByWorldCupId(Long worldCupId, Pageable pageable) {
-        return commentRepository.findAllByWorldCupId(worldCupId, pageable);
+    public Page<CommentResponseDto> findCommentsByWorldCupId(Long worldCupId, Long memberId, Pageable pageable) {
+        return commentRepository.findAllByWorldCupId(worldCupId, memberId, pageable);
     }
 
 }
