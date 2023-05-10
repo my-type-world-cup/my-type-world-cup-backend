@@ -144,6 +144,7 @@ class CommentServiceTest {
                     .content("윈터가 짱이지! - " + i)
                     .candidateName("윈터")
                     .likesCount((int) (100 - i))
+                    .isLiked(false)
                     .createdAt(localDateTime)
                     .modifiedAt(localDateTime)
                     .memberId(null)
@@ -155,10 +156,10 @@ class CommentServiceTest {
 
         Page<CommentResponseDto> expected = new PageImpl<>(commentResponseDtos, pageable, 30);
 
-        given(commentRepository.findAllByWorldCupId(anyLong(), any(Pageable.class))).willReturn(expected);
+        given(commentRepository.findAllByWorldCupId(anyLong(), any(), any(Pageable.class))).willReturn(expected);
 
         // when
-        Page<CommentResponseDto> actual = commentService.findCommentsByWorldCupId(worldCupId, pageable);
+        Page<CommentResponseDto> actual = commentService.findCommentsByWorldCupId(worldCupId, null, pageable);
 
         // then
         assertSame(expected, actual);
