@@ -7,5 +7,8 @@ import org.mapstruct.Mapper;
 public interface CommentMapper {
     Comment commentPostDtoToComment(CommentPostDto commentPostDto);
 
+    /**
+     * 댓글 생성시에만 사용할 것. 이외에 사용하려면 getIsLiked 해결할 것
+     */
     CommentResponseDto commentToCommentResponseDto(Comment comment);
 }
