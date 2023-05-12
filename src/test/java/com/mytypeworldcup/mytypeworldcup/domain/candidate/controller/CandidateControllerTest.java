@@ -8,7 +8,6 @@ import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleRes
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateService;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
 import com.mytypeworldcup.mytypeworldcup.global.common.PageResponseDto;
-import com.mytypeworldcup.mytypeworldcup.global.util.NaverSearchAPI;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -46,15 +45,9 @@ class CandidateControllerTest {
     @Autowired
     private Gson gson;
     @MockBean
-    private NaverSearchAPI naverSearchAPI;
-    @MockBean
     private WorldCupService worldCupService;
     @MockBean
     private CandidateService candidateService;
-
-    @Test
-    void getImagesByKeyword() {
-    }
 
     @Test
     void patchMatchResults() throws Exception {

@@ -7,7 +7,6 @@ import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleRes
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateService;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
 import com.mytypeworldcup.mytypeworldcup.global.common.PageResponseDto;
-import com.mytypeworldcup.mytypeworldcup.global.util.NaverSearchAPI;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -26,20 +25,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Validated
 public class CandidateController {
-    private final NaverSearchAPI naverSearchAPI;
     private final WorldCupService worldCupService;
     private final CandidateService candidateService;
-
-    @GetMapping("/candidates/images/search")
-    public ResponseEntity getImagesByKeyword(@Positive @RequestParam(required = false, defaultValue = "1") int page,
-                                             @Positive @RequestParam(required = false, defaultValue = "10") int size,
-                                             @RequestParam String keyword) {
-
-        PageRequest pageRequest = PageRequest.of(page - 1, size);
-        Page<String> imageUrls = naverSearchAPI.getImageUrls(keyword, pageRequest);
-
-        return ResponseEntity.ok(new PageResponseDto(imageUrls));
-    }
 
     /**
      * 경기 결과를 반영하는 메서드<p>
