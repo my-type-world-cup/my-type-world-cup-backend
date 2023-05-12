@@ -3,8 +3,8 @@ package com.mytypeworldcup.mytypeworldcup.domain.image.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mytypeworldcup.mytypeworldcup.global.common.NaverItemResponseDto;
-import com.mytypeworldcup.mytypeworldcup.global.common.NaverResponseDto;
+import com.mytypeworldcup.mytypeworldcup.domain.image.dto.NaverItemResponseDto;
+import com.mytypeworldcup.mytypeworldcup.domain.image.dto.NaverResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -30,7 +30,7 @@ public class NaverSearchAPI {
 
     private final ObjectMapper objectMapper;
 
-    public Page<String> getImageUrls(String keyword, Pageable pageable) {
+    public Page<String> searchImages(String keyword, Pageable pageable) {
         int display = pageable.getPageSize();
         int start = pageable.getPageNumber() * display + 1; // 네이버 api 형식에 맞게 변환
 
