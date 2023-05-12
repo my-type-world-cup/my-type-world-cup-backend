@@ -1,6 +1,5 @@
-package com.mytypeworldcup.mytypeworldcup.global.common;
+package com.mytypeworldcup.mytypeworldcup.domain.image.dto;
 
-import com.mytypeworldcup.mytypeworldcup.global.common.NaverItemResponseDto;
 import lombok.Getter;
 
 import java.util.List;
