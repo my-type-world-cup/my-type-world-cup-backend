@@ -1,4 +1,4 @@
-package com.mytypeworldcup.mytypeworldcup.global.util;
+package com.mytypeworldcup.mytypeworldcup.domain.image.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
