@@ -4,6 +4,7 @@ import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidatePostDto;
 import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,7 @@ public class WorldCupPostDto {
     @NotNull
     private Boolean visibility;
 
+    @Pattern(regexp = "\\d{4}", message = "Password must be a 4-digit number")
     private String password;
 
     @NotNull
