@@ -26,7 +26,7 @@ public class WorldCupPostDto {
     @NotNull
     private Boolean visibility;
 
-    @Pattern(regexp = "\\d{4}", message = "Password must be a 4-digit number")
+    @Pattern(regexp = "\\d{4}", message = "비밀번호는 4자리의 숫자로 이루어져야 합니다.")
     private String password;
 
     @NotNull
