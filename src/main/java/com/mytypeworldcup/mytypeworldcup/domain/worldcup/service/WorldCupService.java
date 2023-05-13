@@ -45,8 +45,8 @@ public class WorldCupService {
     @Transactional(readOnly = true)
     public void verifyPassword(Long worldCupId, String password) {
         WorldCup worldCup = findVerifiedWorldCup(worldCupId);
-        if (!worldCup.getPassword().equals(password)) {
-            throw new BusinessLogicException(CommonExceptionCode.UNAUTHORIZED);
+        if (worldCup.getPassword() != null && !worldCup.getPassword().equals(password)) {
+            throw new BusinessLogicException(CommonExceptionCode.INVALID_PASSWORD);
         }
     }
 

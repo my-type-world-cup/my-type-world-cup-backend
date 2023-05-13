@@ -161,8 +161,27 @@ class WorldCupServiceTest {
     }
 
     @Test
+    @DisplayName("비밀번호 검증 - 비밀번호가 없을 경우")
+    void verifyPassword_noPassword() {
+        // given
+        Long worldCupId = 1L;
+        String password = null;
+
+        WorldCup expected = WorldCup
+                .builder()
+                .password(null)
+                .build();
+
+        given(worldCupRepository.findById(anyLong())).willReturn(Optional.ofNullable(expected));
+
+        // when
+        // then
+        assertDoesNotThrow(() -> worldCupService.verifyPassword(worldCupId, password));
+    }
+
+    @Test
     @DisplayName("비밀번호 검증 - 성공")
-    void verifyPassword_happy() {
+    void verifyPassword_success() {
         // given
         Long worldCupId = 1L;
         String password = String.valueOf(1234);
@@ -180,8 +199,8 @@ class WorldCupServiceTest {
     }
 
     @Test
-    @DisplayName("비밀번호 검증 - 실패")
-    void verifyPassword_bad() {
+    @DisplayName("비밀번호 검증 - 유효하지않는 비밀번호")
+    void verifyPassword_invalidPassword() {
         // given
         Long worldCupId = 1L;
         String password = "1234";
@@ -197,6 +216,6 @@ class WorldCupServiceTest {
         BusinessLogicException thrown = assertThrows(BusinessLogicException.class, () -> worldCupService.verifyPassword(worldCupId, password));
 
         // then
-        assertEquals(CommonExceptionCode.UNAUTHORIZED, thrown.getExceptionCode());
+        assertEquals(CommonExceptionCode.INVALID_PASSWORD, thrown.getExceptionCode());
     }
 }
