@@ -59,12 +59,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorize -> authorize
                                 // Member
-                                .requestMatchers(HttpMethod.GET, "/login/**", "/oauth2/**").permitAll() // 네이티브 로그인
-//                                .requestMatchers(HttpMethod.GET, "/members").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/members").authenticated()
-                                .requestMatchers(HttpMethod.GET, "/v11/users").hasRole("ROLE_USER")
-                                .requestMatchers(HttpMethod.GET, "/v11/admin").hasRole("ROLE_ADMIN")
-
+                                .requestMatchers(HttpMethod.PATCH, "/members").authenticated()
 
                                 // WorldCup
                                 .requestMatchers(HttpMethod.POST, "/worldcups").authenticated()

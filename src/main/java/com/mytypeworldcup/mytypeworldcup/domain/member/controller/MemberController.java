@@ -1,18 +1,17 @@
 package com.mytypeworldcup.mytypeworldcup.domain.member.controller;
 
+import com.mytypeworldcup.mytypeworldcup.domain.member.dto.MemberPatchDto;
 import com.mytypeworldcup.mytypeworldcup.domain.member.dto.MemberPostDto;
 import com.mytypeworldcup.mytypeworldcup.domain.member.dto.MemberResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
 import com.mytypeworldcup.mytypeworldcup.domain.member.service.MemberService;
 import com.mytypeworldcup.mytypeworldcup.global.auth.oauth2.dto.ProviderType;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,7 +19,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/members")
-    public ResponseEntity postMember(@RequestBody MemberPostDto memberPostDto) {
+    public ResponseEntity postMember(@RequestBody @Valid MemberPostDto memberPostDto) {
 
         Member member = Member
                 .builder()
@@ -41,4 +40,11 @@ public class MemberController {
         return ResponseEntity.ok(memberResponseDto);
     }
 
+    @PatchMapping("/members")
+    public ResponseEntity patchMember(Authentication authentication,
+                                      @RequestBody @Valid MemberPatchDto memberPatchDto) {
+
+        //Todo 이거하면됭
+        return ResponseEntity.ok().build();
+    }
 }
