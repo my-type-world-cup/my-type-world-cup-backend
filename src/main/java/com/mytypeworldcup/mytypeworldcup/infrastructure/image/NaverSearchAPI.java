@@ -1,19 +1,16 @@
-package com.mytypeworldcup.mytypeworldcup.domain.image.api;
+package com.mytypeworldcup.mytypeworldcup.infrastructure.image;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mytypeworldcup.mytypeworldcup.domain.image.dto.NaverItemResponseDto;
-import com.mytypeworldcup.mytypeworldcup.domain.image.dto.NaverResponseDto;
+import com.mytypeworldcup.mytypeworldcup.infrastructure.image.dto.NaverItemResponseDto;
+import com.mytypeworldcup.mytypeworldcup.infrastructure.image.dto.NaverResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -27,8 +24,7 @@ public class NaverSearchAPI {
     private String clientId;
     @Value("${naver.search.api.secret}")
     private String clientSecret;
-
-    private final ObjectMapper objectMapper;
+    private final WebClient webClient;
 
     public Page<String> searchImages(String keyword, Pageable pageable) {
         int display = pageable.getPageSize();
@@ -36,8 +32,7 @@ public class NaverSearchAPI {
 
         // 네이버 검색 API 요청
         URI uri = UriComponentsBuilder
-                .fromUriString("https://openapi.naver.com")
-                .path("/v1/search/image")
+                .fromUriString("https://openapi.naver.com/v1/search/image")
                 .queryParam("query", keyword)
                 .queryParam("display", display)
                 .queryParam("start", start)
@@ -47,26 +42,20 @@ public class NaverSearchAPI {
                 .build()
                 .toUri();
 
-        // Spring 요청 제공 클래스 및 헤더 시크릿 키 설정
-        RequestEntity<Void> request = RequestEntity
-                .get(uri)
-                .header("X-Naver-Client-Id", this.clientId)
-                .header("X-Naver-Client-Secret", this.clientSecret)
-                .build();
+        // 요청 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Naver-Client-Id", this.clientId);
+        headers.set("X-Naver-Client-Secret", this.clientSecret);
 
-        // Spring 제공 restTemplate
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
-
-        // JSON 파싱 (Json 문자열 -> NaverResponseDto 변환)
-        NaverResponseDto naverResponseDto;
-        try {
-            naverResponseDto = objectMapper.readValue(response.getBody(), NaverResponseDto.class);
-        } catch (JsonMappingException e) {
-            throw new RuntimeException(e); // TODO 에러 관련 처리
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e); // TODO 에러 관련 처리
-        }
+        // WebClient를 사용하여 API 호출
+        NaverResponseDto naverResponseDto = webClient
+                .get()
+                .uri(uri)
+                .headers(h -> h.addAll(headers))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(NaverResponseDto.class)
+                .block();
 
         // 객체에서 이미지링크만 파싱
         List<String> images = new ArrayList<>();
@@ -76,5 +65,4 @@ public class NaverSearchAPI {
 
         return new PageImpl<>(images, pageable, naverResponseDto.getTotal());
     }
-
 }
