@@ -165,11 +165,11 @@ class WorldCupServiceTest {
     void verifyPassword_happy() {
         // given
         Long worldCupId = 1L;
-        String password = "1234";
+        String password = String.valueOf(1234);
 
         WorldCup expected = WorldCup
                 .builder()
-                .password(password)
+                .password(String.valueOf(1234))
                 .build();
 
         given(worldCupRepository.findById(anyLong())).willReturn(Optional.ofNullable(expected));
