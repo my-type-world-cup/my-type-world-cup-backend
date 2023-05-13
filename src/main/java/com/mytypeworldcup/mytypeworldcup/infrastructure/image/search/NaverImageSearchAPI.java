@@ -19,7 +19,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class NaverSearchAPI implements SearchAPIAdapter {
+public class NaverImageSearchAPI implements ImageSearchAPIAdapter {
     @Value("${naver.search.api.id}")
     private String clientId;
     @Value("${naver.search.api.secret}")
