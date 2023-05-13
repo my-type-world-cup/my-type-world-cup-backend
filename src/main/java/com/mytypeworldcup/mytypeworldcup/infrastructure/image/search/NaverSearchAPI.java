@@ -1,7 +1,7 @@
-package com.mytypeworldcup.mytypeworldcup.infrastructure.image;
+package com.mytypeworldcup.mytypeworldcup.infrastructure.image.search;
 
-import com.mytypeworldcup.mytypeworldcup.infrastructure.image.dto.NaverItemResponseDto;
-import com.mytypeworldcup.mytypeworldcup.infrastructure.image.dto.NaverResponseDto;
+import com.mytypeworldcup.mytypeworldcup.infrastructure.image.search.dto.NaverItemResponseDto;
+import com.mytypeworldcup.mytypeworldcup.infrastructure.image.search.dto.NaverResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -19,13 +19,14 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class NaverSearchAPI {
+public class NaverSearchAPI implements SearchAPIAdapter {
     @Value("${naver.search.api.id}")
     private String clientId;
     @Value("${naver.search.api.secret}")
     private String clientSecret;
     private final WebClient webClient;
 
+    @Override
     public Page<String> searchImages(String keyword, Pageable pageable) {
         int display = pageable.getPageSize();
         int start = pageable.getPageNumber() * display + 1; // 네이버 api 형식에 맞게 변환
