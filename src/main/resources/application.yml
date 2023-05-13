@@ -2,19 +2,19 @@ spring:
   profiles:
     active: dev
     include: secret
+  servlet:
+    multipart:
+      max-file-size: 10MB # 개별 파일 최대 크기
+      max-request-size: 10MB # 요청당 최대 크기
 
 logging:
   level:
     org:
       springframework:
         orm:
-          jpa: DEBUG
+          jpa: DEBUG # JPA 관련 로그메시지 DEBUG 레벨로 출력 -> 분리할 것
+
 server:
   servlet:
     encoding:
-      force-response: true
-    multipart:
-      enabled: true
-#      file-size-threshold: 2MB
-#      max-file-size: 10MB
-#      max-request-size: 10MB
+      force-response: true # 모든 응답의 문자 인코딩을 강제
