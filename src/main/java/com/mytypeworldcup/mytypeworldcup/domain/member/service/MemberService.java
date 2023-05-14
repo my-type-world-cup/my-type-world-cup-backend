@@ -1,6 +1,7 @@
 package com.mytypeworldcup.mytypeworldcup.domain.member.service;
 
 import com.mytypeworldcup.mytypeworldcup.domain.member.dto.MemberMapper;
+import com.mytypeworldcup.mytypeworldcup.domain.member.dto.MemberPatchDto;
 import com.mytypeworldcup.mytypeworldcup.domain.member.dto.MemberResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
 import com.mytypeworldcup.mytypeworldcup.domain.member.exception.MemberExceptionCode;
@@ -59,6 +60,14 @@ public class MemberService {
     }
      */
 
+    public MemberResponseDto updateMember(String email, MemberPatchDto memberPatchDto) {
+        Member member = findVerifiedMemberByEmail(email);
+
+        Optional.ofNullable(memberPatchDto.getNickname()).ifPresent(data -> member.setNickname(data));
+
+        return memberMapper.memberToMemberResponseDto(member);
+    }
+
     @Transactional
     public MemberResponseDto findMemberByEmail(String email) {
         Member member = findVerifiedMemberByEmail(email);
@@ -71,7 +80,7 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    private Member findVerifiedMemberByEmail(String email) {
+    public Member findVerifiedMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessLogicException(MemberExceptionCode.MEMBER_NOT_FOUND));
     }
@@ -83,5 +92,4 @@ public class MemberService {
             throw new BusinessLogicException(MemberExceptionCode.MEMBER_EXISTS);
         }
     }
-
 }
