@@ -43,8 +43,7 @@ public class MemberController {
     @PatchMapping("/members")
     public ResponseEntity patchMember(Authentication authentication,
                                       @RequestBody @Valid MemberPatchDto memberPatchDto) {
-
-        //Todo 이거하면됭
-        return ResponseEntity.ok().build();
+        MemberResponseDto memberResponseDto = memberService.updateMember(authentication.getName(), memberPatchDto);
+        return ResponseEntity.ok(memberResponseDto);
     }
 }
