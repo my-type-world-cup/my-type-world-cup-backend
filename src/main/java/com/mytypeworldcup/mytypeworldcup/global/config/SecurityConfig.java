@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -29,6 +30,7 @@ import java.util.Arrays;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtTokenizer jwtTokenizer;
@@ -38,8 +40,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .headers().frameOptions().sameOrigin() //동일 출처로부터 들어오는 request만 페이지 렌더링 허용 h2
-                .and()
+                .headers(headers -> headers
+                        .frameOptions().sameOrigin() //동일 출처로부터 들어오는 request만 페이지 렌더링 허용 h2
+                        .cacheControl().disable()
+                )
                 .csrf().disable() // csrf 공격에 대한 설정 비활성화
                 .cors(withDefaults()) // cors설정 -> withDefaults() 일경우 corsConfigurationSource 라는 이름으로 등록된 Bean을 이용함
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 스테이트리스
@@ -52,7 +56,6 @@ public class SecurityConfig {
                 .and()
                 .apply(new CustomFilterConfigurer())
                 .and()
-//                .headers().cacheControl().disable().and()
 
                 // -> Security Filter(UsernamePasswordAuthenticationFilter, BasicAuthenticationFilter 등) 비활성화됨
 
@@ -70,8 +73,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/comments").permitAll()
 
                                 // Like
-                                .requestMatchers(HttpMethod.POST,"/comments/*/likes").authenticated()
-                                .requestMatchers(HttpMethod.DELETE,"/comments/*/likes").authenticated()
+                                .requestMatchers(HttpMethod.POST, "/comments/*/likes").authenticated()
+                                .requestMatchers(HttpMethod.DELETE, "/comments/*/likes").authenticated()
 
                                 .anyRequest().permitAll()
                 )
