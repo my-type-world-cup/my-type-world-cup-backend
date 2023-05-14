@@ -69,6 +69,10 @@ public class SecurityConfig {
                                 // Comment
                                 .requestMatchers(HttpMethod.POST, "/comments").permitAll()
 
+                                // Like
+                                .requestMatchers(HttpMethod.POST,"/comments/*/likes").authenticated()
+                                .requestMatchers(HttpMethod.DELETE,"/comments/*/likes").authenticated()
+
                                 .anyRequest().permitAll()
                 )
 
