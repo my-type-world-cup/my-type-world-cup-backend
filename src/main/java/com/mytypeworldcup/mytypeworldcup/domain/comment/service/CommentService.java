@@ -4,7 +4,9 @@ import com.mytypeworldcup.mytypeworldcup.domain.comment.dto.CommentMapper;
 import com.mytypeworldcup.mytypeworldcup.domain.comment.dto.CommentPostDto;
 import com.mytypeworldcup.mytypeworldcup.domain.comment.dto.CommentResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.comment.entity.Comment;
+import com.mytypeworldcup.mytypeworldcup.domain.comment.exception.CommentExceptionCode;
 import com.mytypeworldcup.mytypeworldcup.domain.comment.repository.CommentRepository;
+import com.mytypeworldcup.mytypeworldcup.global.error.BusinessLogicException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,4 +31,8 @@ public class CommentService {
         return commentRepository.findAllByWorldCupId(worldCupId, memberId, pageable);
     }
 
+    public Comment findVerifiedCommentById(Long id) {
+        return commentRepository.findById(id)
+                .orElseThrow(() -> new BusinessLogicException(CommentExceptionCode.COMMENT_NOT_FOUND));
+    }
 }
