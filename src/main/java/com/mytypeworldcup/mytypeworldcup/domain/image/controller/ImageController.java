@@ -3,6 +3,7 @@ package com.mytypeworldcup.mytypeworldcup.domain.image.controller;
 import com.mytypeworldcup.mytypeworldcup.global.common.PageResponseDto;
 import com.mytypeworldcup.mytypeworldcup.infrastructure.image.search.ImageSearchAPIAdapter;
 import com.mytypeworldcup.mytypeworldcup.infrastructure.image.upload.ImageUploadAPIAdapter;
+import com.mytypeworldcup.mytypeworldcup.infrastructure.image.upload.dto.ImageResponseDto;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,7 +35,7 @@ public class ImageController {
 
     @PostMapping("/images")
     public ResponseEntity postImage(@RequestParam MultipartFile file) {
-        imageUploadAPI.uploadImage(file);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        ImageResponseDto imageResponseDto = imageUploadAPI.uploadImage(file);
+        return ResponseEntity.status(HttpStatus.CREATED).body(imageResponseDto);
     }
 }
