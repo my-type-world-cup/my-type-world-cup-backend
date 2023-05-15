@@ -80,11 +80,4 @@ public class Candidate extends Auditable {
     public void updateMatchUpGameCount(int matchUpGameCount) {
         this.matchUpGameCount += matchUpGameCount;
     }
-
-    public String getThumb() {
-        if (this.thumb.isEmpty()) {
-            return this.image;
-        }
-        return this.thumb;
-    }
 }
