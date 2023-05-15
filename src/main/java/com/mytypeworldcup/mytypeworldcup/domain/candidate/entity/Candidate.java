@@ -27,6 +27,7 @@ public class Candidate extends Auditable {
     // 이미지 링크
     @Column(nullable = false)
     private String image;
+    private String thumb;
 
     // 최종 우승 횟수 - 1등을 한 횟수를 의미함
     @Column(nullable = false)
@@ -74,5 +75,12 @@ public class Candidate extends Auditable {
 
     public void updateMatchUpGameCount(int matchUpGameCount) {
         this.matchUpGameCount += matchUpGameCount;
+    }
+
+    public String getThumb() {
+        if (this.thumb.isEmpty()) {
+            return this.image;
+        }
+        return this.thumb;
     }
 }
