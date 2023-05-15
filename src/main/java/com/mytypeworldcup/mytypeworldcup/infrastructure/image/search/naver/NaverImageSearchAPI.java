@@ -48,21 +48,21 @@ public class NaverImageSearchAPI implements ImageSearchAPIAdapter {
         headers.set("X-Naver-Client-Secret", this.clientSecret);
 
         // WebClient를 사용하여 API 호출
-        NaverResponseDto naverResponseDto = webClient
+        NaverInfo naverInfo = webClient
                 .get()
                 .uri(uri)
                 .headers(h -> h.addAll(headers))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .bodyToMono(NaverResponseDto.class)
+                .bodyToMono(NaverInfo.class)
                 .block();
 
         // 객체에서 이미지링크만 파싱
         List<String> images = new ArrayList<>();
-        for (NaverItemResponseDto item : naverResponseDto.getItems()) {
+        for (NaverItem item : naverInfo.getItems()) {
             images.add(item.getLink());
         }
 
-        return new PageImpl<>(images, pageable, naverResponseDto.getTotal());
+        return new PageImpl<>(images, pageable, naverInfo.getTotal());
     }
 }
