@@ -9,15 +9,18 @@ import lombok.Setter;
 public class CandidatePostDto {
 
     private String name;
-
     private String image;
+    private String thumb;
     @Setter
     private Long worldCupId;
 
     @Builder
-    public CandidatePostDto(String name, String image) {
+    public CandidatePostDto(String name,
+                            String image,
+                            String thumb) {
         this.name = name;
         this.image = image;
+        this.thumb = thumb;
     }
 
     public WorldCup getWorldCup() {
