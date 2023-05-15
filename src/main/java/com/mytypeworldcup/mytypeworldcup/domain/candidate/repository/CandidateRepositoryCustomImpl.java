@@ -32,7 +32,8 @@ public class CandidateRepositoryCustomImpl implements CandidateRepositoryCustom 
                 .select(new QCandidateSimpleResponseDto(
                         candidate.id,
                         candidate.name,
-                        candidate.image))
+                        candidate.image,
+                        candidate.thumb))
                 .from(candidate)
                 .where(candidate.worldCup.id.eq(worldCupId))
                 .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
