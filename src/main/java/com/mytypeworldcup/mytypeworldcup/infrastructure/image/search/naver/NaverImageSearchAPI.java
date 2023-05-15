@@ -1,7 +1,6 @@
-package com.mytypeworldcup.mytypeworldcup.infrastructure.image.search;
+package com.mytypeworldcup.mytypeworldcup.infrastructure.image.search.naver;
 
-import com.mytypeworldcup.mytypeworldcup.infrastructure.image.search.dto.NaverItemResponseDto;
-import com.mytypeworldcup.mytypeworldcup.infrastructure.image.search.dto.NaverResponseDto;
+import com.mytypeworldcup.mytypeworldcup.infrastructure.image.search.ImageSearchAPIAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;

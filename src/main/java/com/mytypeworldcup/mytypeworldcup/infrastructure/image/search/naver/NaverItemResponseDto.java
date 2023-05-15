@@ -1,4 +1,4 @@
-package com.mytypeworldcup.mytypeworldcup.infrastructure.image.search.dto;
+package com.mytypeworldcup.mytypeworldcup.infrastructure.image.search.naver;
 
 import lombok.Getter;
 
