@@ -51,9 +51,13 @@ public class Candidate extends Auditable {
     private WorldCup worldCup;
 
     @Builder
-    public Candidate(String name, String image, WorldCup worldCup) {
+    public Candidate(String name,
+                     String image,
+                     String thumb,
+                     WorldCup worldCup) {
         this.name = name;
         this.image = image;
+        this.thumb = thumb;
         this.worldCup = worldCup;
     }
 

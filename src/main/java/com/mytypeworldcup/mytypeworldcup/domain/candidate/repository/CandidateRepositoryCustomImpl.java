@@ -49,6 +49,7 @@ public class CandidateRepositoryCustomImpl implements CandidateRepositoryCustom 
                         candidate.id,
                         candidate.name,
                         candidate.image,
+                        candidate.thumb,
                         candidate.finalWinCount,
                         candidate.winCount,
                         candidate.matchUpWorldCupCount,
