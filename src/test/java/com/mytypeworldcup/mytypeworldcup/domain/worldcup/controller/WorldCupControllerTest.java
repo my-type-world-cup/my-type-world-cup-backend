@@ -68,6 +68,7 @@ public class WorldCupControllerTest {
                     .builder()
                     .name("test name " + i)
                     .image("test image uri " + i)
+                    .image("test thumb uri " + i)
                     .build();
 
             CandidateResponseDto candidateResponseDto = CandidateResponseDto
@@ -75,6 +76,7 @@ public class WorldCupControllerTest {
                     .id(i)
                     .name(candidatePostDto.getName())
                     .image(candidatePostDto.getImage())
+                    .thumb(candidatePostDto.getThumb())
                     .finalWinCount(0)
                     .winCount(0)
                     .matchUpWorldCupCount(0)
@@ -148,8 +150,8 @@ public class WorldCupControllerTest {
         for (long i = 1; i <= 3; i++) {
             WorldCupSimpleResponseDto dummy = new WorldCupSimpleResponseDto(i, "월드컵 " + i, "설명입니다.");
             dummy.setCandidateSimpleResponseDtos(List.of(
-                    new CandidateSimpleResponseDto(i, "테스트 이미지 " + i, "testURI"),
-                    new CandidateSimpleResponseDto(i + 3, "테스트 이미지 " + i + 3, "testURI")));
+                    new CandidateSimpleResponseDto(i, "테스트 이미지 " + i, "테스트 이미지 url", "테스트 썸네일 url"),
+                    new CandidateSimpleResponseDto(i + 3, "테스트 이미지 " + i + 3, "테스트 이미지 url", "테스트 썸네일 url")));
             data.add(dummy);
         }
 
@@ -225,8 +227,8 @@ public class WorldCupControllerTest {
         for (long i = 1; i <= 3; i++) {
             WorldCupSimpleResponseDto dummy = new WorldCupSimpleResponseDto(i, "월드컵 " + i, "설명입니다.");
             dummy.setCandidateSimpleResponseDtos(List.of(
-                    new CandidateSimpleResponseDto(i, "테스트 이미지 " + i, "testURI"),
-                    new CandidateSimpleResponseDto(i + 3, "테스트 이미지 " + i + 3, "testURI")));
+                    new CandidateSimpleResponseDto(i, "테스트 이미지 " + i, "테스트 이미지 url", "테스트 썸네일 url"),
+                    new CandidateSimpleResponseDto(i + 3, "테스트 이미지 " + i + 3, "테스트 이미지 url", "테스트 썸네일 url")));
             data.add(dummy);
         }
 

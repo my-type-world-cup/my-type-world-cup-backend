@@ -97,7 +97,7 @@ class CandidateControllerTest {
 
         List<CandidateSimpleResponseDto> candidateSimpleResponseDtos = new ArrayList<>();
         for (long i = 1; i <= teamCount; i++) {
-            candidateSimpleResponseDtos.add(new CandidateSimpleResponseDto(i, "테스트" + i, "테스트url" + i));
+            candidateSimpleResponseDtos.add(new CandidateSimpleResponseDto(i, "테스트" + i, "테스트 이미지 url" + i, "테스트 썸네일 url" + i));
         }
 
         doNothing().when(worldCupService).verifyPassword(anyLong(), anyString());
@@ -145,6 +145,7 @@ class CandidateControllerTest {
                     .id(i)
                     .name("테스트후보명" + i)
                     .image("테스트이미지url" + i)
+                    .thumb("테스트썸네일url" + i)
                     .finalWinCount((int) (10L - i))
                     .winCount((int) (10L - i))
                     .matchUpWorldCupCount(100)

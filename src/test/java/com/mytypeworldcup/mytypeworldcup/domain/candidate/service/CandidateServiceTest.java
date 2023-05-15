@@ -40,6 +40,7 @@ class CandidateServiceTest {
                 .builder()
                 .name("카리나")
                 .image("카리나이미지링크")
+                .thumb("카리나썸네일링크")
                 .build();
         candidatePostDto.setWorldCupId(1L);
 
@@ -67,6 +68,7 @@ class CandidateServiceTest {
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getImage(), actual.getImage());
+        assertEquals(expected.getThumb(), actual.getThumb());
         assertEquals(0, actual.getFinalWinCount());
         assertEquals(0, actual.getWinCount());
         assertEquals(0, actual.getMatchUpWorldCupCount());
@@ -239,6 +241,7 @@ class CandidateServiceTest {
                     .id(i)
                     .name("테스트" + i)
                     .image("이미지url" + i)
+                    .thumb("썸네일url" + i)
                     .finalWinCount(0)
                     .winCount((int) i)
                     .matchUpWorldCupCount(5)

@@ -26,6 +26,7 @@ class CandidateMapperTest {
                 .builder()
                 .name("테스트")
                 .image("이미지url")
+                .thumb("썸네일url")
                 .build();
         candidatePostDto.setWorldCupId(1L);
 
@@ -35,6 +36,7 @@ class CandidateMapperTest {
         // then
         assertEquals(candidatePostDto.getName(), candidate.getName());
         assertEquals(candidatePostDto.getImage(), candidate.getImage());
+        assertEquals(candidatePostDto.getThumb(), candidate.getThumb());
         assertEquals(candidatePostDto.getWorldCupId(), candidate.getWorldCupId());
     }
 
@@ -49,6 +51,7 @@ class CandidateMapperTest {
                 .builder()
                 .name("테스트")
                 .image("이미지url")
+                .thumb("썸네일url")
                 .worldCup(worldCup)
                 .build();
         // candidate id 설정
@@ -70,6 +73,7 @@ class CandidateMapperTest {
         assertEquals(candidate.getId(), candidateResponseDto.getId());
         assertEquals(candidate.getName(), candidateResponseDto.getName());
         assertEquals(candidate.getImage(), candidateResponseDto.getImage());
+        assertEquals(candidate.getThumb(), candidateResponseDto.getThumb());
         assertEquals(candidate.getFinalWinCount(), candidateResponseDto.getFinalWinCount());
         assertEquals(candidate.getWinCount(), candidateResponseDto.getWinCount());
         assertEquals(candidate.getMatchUpWorldCupCount(), candidateResponseDto.getMatchUpWorldCupCount());
