@@ -2,6 +2,7 @@ package com.mytypeworldcup.mytypeworldcup.global.auth.handler;
 
 import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
 import com.mytypeworldcup.mytypeworldcup.global.auth.jwt.JwtTokenizer;
+import com.mytypeworldcup.mytypeworldcup.global.auth.service.RefreshService;
 import com.mytypeworldcup.mytypeworldcup.global.util.CustomAuthorityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,6 +20,7 @@ import static com.mytypeworldcup.mytypeworldcup.global.auth.utils.CookieUtil.add
 public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
+    private final RefreshService refreshService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -37,8 +39,11 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String accessToken = jwtTokenizer.delegateAccessToken(member);
         String refreshToken = jwtTokenizer.delegateRefreshToken(member);
 
+        // RefreshToken 저장
+        refreshService.saveRefreshToken(member.getEmail(), refreshToken, jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes()));
+
         // 쿠키 설정
-        addHttpOnlyCookie(response, "JwtRefreshToken", refreshToken, jwtTokenizer.getRefreshTokenExpirationMinutes());
+        addHttpOnlyCookie(response, "RefreshToken", refreshToken, jwtTokenizer.getRefreshTokenExpirationMinutes());
 
         // 리다이렉트 URI 설정
         String referer = request.getHeader("Referer");
