@@ -8,6 +8,7 @@ import com.mytypeworldcup.mytypeworldcup.global.auth.jwt.JwtTokenizer;
 import com.mytypeworldcup.mytypeworldcup.global.auth.jwt.JwtVerificationFilter;
 import com.mytypeworldcup.mytypeworldcup.global.auth.jwt.MemberAuthenticationEntryPoint;
 import com.mytypeworldcup.mytypeworldcup.global.auth.oauth2.service.CustomOAuth2UserService;
+import com.mytypeworldcup.mytypeworldcup.global.auth.service.RefreshService;
 import com.mytypeworldcup.mytypeworldcup.global.util.CustomAuthorityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +37,7 @@ public class SecurityConfig {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
     private final CustomOAuth2UserService oAuth2UserService;
+    private final RefreshService refreshService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -97,7 +99,7 @@ public class SecurityConfig {
                 .userInfoEndpoint()
                 .userService(oAuth2UserService)
                 .and()
-                .successHandler(new MemberAuthenticationSuccessHandler(jwtTokenizer, authorityUtils))
+                .successHandler(new MemberAuthenticationSuccessHandler(jwtTokenizer, authorityUtils, refreshService))
         ;
         return http.build();
     }
@@ -133,7 +135,7 @@ public class SecurityConfig {
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer);
             jwtAuthenticationFilter.setFilterProcessesUrl("/login/native");
 
-            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler(jwtTokenizer, authorityUtils));
+            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler(jwtTokenizer, authorityUtils, refreshService));
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
 
             JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils);
