@@ -8,13 +8,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 
+import static com.mytypeworldcup.mytypeworldcup.global.auth.utils.CookieUtil.addHttpOnlyCookie;
+
 @RequiredArgsConstructor
-public class MemberAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
 
@@ -23,10 +25,7 @@ public class MemberAuthenticationSuccessHandler implements AuthenticationSuccess
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException {
         // 인증 성공 후, 토큰 생성
-        // Todo 리프레쉬 토큰 관련 고민할 것
-
         Member member;
-
         try {
             member = (Member) authentication.getPrincipal();
         } catch (ClassCastException e) {
@@ -38,22 +37,28 @@ public class MemberAuthenticationSuccessHandler implements AuthenticationSuccess
         String accessToken = jwtTokenizer.delegateAccessToken(member);
         String refreshToken = jwtTokenizer.delegateRefreshToken(member);
 
-        response.setHeader("Authorization", "Bearer " + accessToken);
-        response.setHeader("Refresh", refreshToken);
-//        System.out.println("ㅇㅗ어스로그인");
-//        request.setAttribute("Authorization", "Bearer " + accessToken);
+        // 쿠키 설정
+        addHttpOnlyCookie(response, "JwtRefreshToken", refreshToken, jwtTokenizer.getRefreshTokenExpirationMinutes());
 
-//        getRedirectStrategy().sendRedirect(request, response, "http://localhost:8080/members");
+        // 리다이렉트 URI 설정
+        String referer = request.getHeader("Referer");
+        String uri = createURI(accessToken, referer);
 
-            response.sendRedirect(makeRedirectUrl(accessToken, refreshToken));
+        getRedirectStrategy().sendRedirect(request, response, uri);
     }
 
-    private String makeRedirectUrl(String accessToken, String refreshToken) {
-        return UriComponentsBuilder.fromUriString("http://localhost:3000")
+    private String createURI(String accessToken, String referer) {
+        if (referer == null) {
+            referer = "http://localhost:3000";
+        }
+        //Todo: 본 주소와 비교하는 로직 추가해야함
+        return UriComponentsBuilder
+                .fromUriString(referer)
                 .queryParam("access_token", accessToken)
-                .queryParam("refresh_token", refreshToken)
-                .build().toUriString();
+                .build()
+                .toUriString();
     }
+
 
     Member emailToMember(String email) {
         // 이메일과 역할 세팅
