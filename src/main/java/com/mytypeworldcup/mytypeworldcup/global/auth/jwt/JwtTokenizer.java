@@ -13,10 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class JwtTokenizer {
@@ -123,5 +120,26 @@ public class JwtTokenizer {
         String refreshToken = this.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
 
         return refreshToken;
+    }
+
+    // 만료된 액세트 토큰에서 Claims 추출하는 메서드
+    public Claims extractClaimsFromAccessToken(String accessToken) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getKeyFromBase64EncodedKey(encodeBase64SecretKey(secretKey)))
+                .setAllowedClockSkewSeconds((refreshTokenExpirationMinutes - accessTokenExpirationMinutes) * 60)
+                .build()
+                .parseClaimsJws(accessToken)
+                .getBody();
+    }
+
+    // 만료된 액세스토큰의 유효기간을 연장하여 재발행 하는 메서드
+    public String refreshAccessToken(String accessToken) {
+        Claims claims = extractClaimsFromAccessToken(accessToken);
+        Member member = Member
+                .builder()
+                .email(claims.getSubject())
+                .roles((List<String>) claims.get("roles"))
+                .build();
+        return delegateAccessToken(member);
     }
 }
