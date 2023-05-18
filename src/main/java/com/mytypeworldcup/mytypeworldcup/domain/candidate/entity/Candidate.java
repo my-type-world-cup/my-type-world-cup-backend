@@ -27,6 +27,7 @@ public class Candidate extends Auditable {
     // 이미지 링크
     @Column(nullable = false)
     private String image;
+    private String thumb;
 
     // 최종 우승 횟수 - 1등을 한 횟수를 의미함
     @Column(nullable = false)
@@ -50,9 +51,13 @@ public class Candidate extends Auditable {
     private WorldCup worldCup;
 
     @Builder
-    public Candidate(String name, String image, WorldCup worldCup) {
+    public Candidate(String name,
+                     String image,
+                     String thumb,
+                     WorldCup worldCup) {
         this.name = name;
         this.image = image;
+        this.thumb = thumb;
         this.worldCup = worldCup;
     }
 

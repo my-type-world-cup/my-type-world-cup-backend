@@ -40,13 +40,19 @@ public class CommentController {
     }
 
     @GetMapping("/comments")
-    public ResponseEntity getCommentsByWorldCupId(@Positive @RequestParam(required = false, defaultValue = "1") int page,
+    public ResponseEntity getCommentsByWorldCupId(Authentication authentication,
+                                                  @Positive @RequestParam(required = false, defaultValue = "1") int page,
                                                   @Positive @RequestParam(required = false, defaultValue = "5") int size,
                                                   @RequestParam(required = false, defaultValue = "likesCount") String sort,
                                                   @RequestParam(required = false, defaultValue = "DESC") Sort.Direction direction,
                                                   @Positive @RequestParam Long worldCupId) {
+        Long memberId = null;
+        if (authentication != null) {
+            memberId = memberService.findMemberIdByEmail(authentication.getName()); // 현재 로그인한 멤버 확인
+        }
+
         PageRequest pageRequest = PageRequest.of(page - 1, size, direction, sort);
-        Page<CommentResponseDto> responseDtos = commentService.findCommentsByWorldCupId(worldCupId, pageRequest);
+        Page<CommentResponseDto> responseDtos = commentService.findCommentsByWorldCupId(worldCupId, memberId, pageRequest);
 
         return ResponseEntity.ok(new PageResponseDto(responseDtos));
     }

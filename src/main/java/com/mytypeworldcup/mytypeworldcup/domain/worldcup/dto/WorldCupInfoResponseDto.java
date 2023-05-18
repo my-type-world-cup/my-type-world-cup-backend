@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class GetWorldCupResponseDto {
+public class WorldCupInfoResponseDto {
     /**
      * getWorldCup() 메서드의 리스폰스 디티오 입니다
      */
@@ -15,11 +15,11 @@ public class GetWorldCupResponseDto {
     private Integer candidatesCount;
 
     @Builder
-    public GetWorldCupResponseDto(Long id,
-                                  String title,
-                                  String description,
-                                  Boolean visibility,
-                                  Integer candidatesCount) {
+    public WorldCupInfoResponseDto(Long id,
+                                   String title,
+                                   String description,
+                                   Boolean visibility,
+                                   Integer candidatesCount) {
         this.id = id;
         this.title = title;
         this.description = description;

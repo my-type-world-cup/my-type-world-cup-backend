@@ -72,4 +72,9 @@ public class Comment extends Auditable {
     public Integer getLikesCount() {
         return this.likes.size();
     }
+
+    // 매퍼 매핑용 메서드
+    public boolean getIsLiked() {
+        return false;
+    }
 }

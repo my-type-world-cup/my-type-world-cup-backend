@@ -13,10 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class JwtTokenizer {
@@ -83,7 +80,7 @@ public class JwtTokenizer {
                 .parseClaimsJws(jws);
     }
 
-    private Date getTokenExpiration(int expirationMinutes) {
+    public Date getTokenExpiration(int expirationMinutes) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, expirationMinutes);
         Date expiration = calendar.getTime();
@@ -124,4 +121,15 @@ public class JwtTokenizer {
 
         return refreshToken;
     }
+
+    // 만료된 액세트 토큰에서 Claims 추출하는 메서드
+    public Claims extractClaimsFromAccessToken(String accessToken) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getKeyFromBase64EncodedKey(encodeBase64SecretKey(secretKey)))
+                .setAllowedClockSkewSeconds((refreshTokenExpirationMinutes - accessTokenExpirationMinutes) * 60)
+                .build()
+                .parseClaimsJws(accessToken)
+                .getBody();
+    }
+
 }

@@ -10,13 +10,16 @@ public class CandidateSimpleResponseDto {
     private Long id;
     private String name;
     private String image;
+    private String thumb;
 
     @QueryProjection
     public CandidateSimpleResponseDto(Long id,
                                       String name,
-                                      String image) {
+                                      String image,
+                                      String thumb) {
         this.id = id;
         this.name = name;
         this.image = image;
+        this.thumb = thumb;
     }
 }

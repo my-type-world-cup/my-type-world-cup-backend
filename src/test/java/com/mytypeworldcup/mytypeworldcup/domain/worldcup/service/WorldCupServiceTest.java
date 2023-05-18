@@ -94,8 +94,8 @@ class WorldCupServiceTest {
         for (long i = 1; i <= 3; i++) {
             WorldCupSimpleResponseDto dummy = new WorldCupSimpleResponseDto(i, "월드컵 " + i, "설명입니다.");
             dummy.setCandidateSimpleResponseDtos(List.of(
-                    new CandidateSimpleResponseDto(i, "테스트 이미지 " + i, "testURI"),
-                    new CandidateSimpleResponseDto(i + 3, "테스트 이미지 " + i + 3, "testURI")));
+                    new CandidateSimpleResponseDto(i, "테스트 이미지 " + i, "테스트 이미지 url", "테스트 썸네일 url"),
+                    new CandidateSimpleResponseDto(i + 3, "테스트 이미지 " + i + 3, "테스트 이미지 url", "테스트 썸네일 url")));
             data.add(dummy);
         }
 
@@ -119,7 +119,7 @@ class WorldCupServiceTest {
 
         WorldCup worldCup = new WorldCup();
         worldCup.setId(1L);
-        GetWorldCupResponseDto expected = GetWorldCupResponseDto
+        WorldCupInfoResponseDto expected = WorldCupInfoResponseDto
                 .builder()
                 .id(worldCupId)
                 .title("테스트 월드컵")
@@ -129,14 +129,14 @@ class WorldCupServiceTest {
                 .build();
 
         given(worldCupRepository.findById(anyLong())).willReturn(Optional.ofNullable(worldCup));
-        given(worldCupMapper.worldCupToGetWorldCupResponseDto(any(WorldCup.class))).willReturn(expected);
+        given(worldCupMapper.worldCupToWorldCupInfoResponseDto(any(WorldCup.class))).willReturn(expected);
 
         // when
-        GetWorldCupResponseDto actual = worldCupService.findWorldCup(worldCupId);
+        WorldCupInfoResponseDto actual = worldCupService.findWorldCup(worldCupId);
 
         // then
         verify(worldCupRepository).findById(anyLong());
-        verify(worldCupMapper).worldCupToGetWorldCupResponseDto(any(WorldCup.class));
+        verify(worldCupMapper).worldCupToWorldCupInfoResponseDto(any(WorldCup.class));
 
         assertSame(expected, actual);
         assertEquals(expected.getId(), actual.getId());
@@ -161,15 +161,15 @@ class WorldCupServiceTest {
     }
 
     @Test
-    @DisplayName("비밀번호 검증 - 성공")
-    void verifyPassword_happy() {
+    @DisplayName("비밀번호 검증 - 비밀번호가 없을 경우")
+    void verifyPassword_noPassword() {
         // given
         Long worldCupId = 1L;
-        String password = "1234";
+        String password = null;
 
         WorldCup expected = WorldCup
                 .builder()
-                .password(password)
+                .password(null)
                 .build();
 
         given(worldCupRepository.findById(anyLong())).willReturn(Optional.ofNullable(expected));
@@ -180,8 +180,27 @@ class WorldCupServiceTest {
     }
 
     @Test
-    @DisplayName("비밀번호 검증 - 실패")
-    void verifyPassword_bad() {
+    @DisplayName("비밀번호 검증 - 성공")
+    void verifyPassword_success() {
+        // given
+        Long worldCupId = 1L;
+        String password = String.valueOf(1234);
+
+        WorldCup expected = WorldCup
+                .builder()
+                .password(String.valueOf(1234))
+                .build();
+
+        given(worldCupRepository.findById(anyLong())).willReturn(Optional.ofNullable(expected));
+
+        // when
+        // then
+        assertDoesNotThrow(() -> worldCupService.verifyPassword(worldCupId, password));
+    }
+
+    @Test
+    @DisplayName("비밀번호 검증 - 유효하지않는 비밀번호")
+    void verifyPassword_invalidPassword() {
         // given
         Long worldCupId = 1L;
         String password = "1234";
@@ -197,6 +216,6 @@ class WorldCupServiceTest {
         BusinessLogicException thrown = assertThrows(BusinessLogicException.class, () -> worldCupService.verifyPassword(worldCupId, password));
 
         // then
-        assertEquals(CommonExceptionCode.UNAUTHORIZED, thrown.getExceptionCode());
+        assertEquals(CommonExceptionCode.INVALID_PASSWORD, thrown.getExceptionCode());
     }
 }

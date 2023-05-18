@@ -1,9 +1,9 @@
-package com.mytypeworldcup.mytypeworldcup.global.common;
+package com.mytypeworldcup.mytypeworldcup.infrastructure.image.search.naver;
 
 import lombok.Getter;
 
 @Getter
-public class NaverItemResponseDto {
+public class NaverItem {
     private String title;
     private String link;
     private String thumbnail;

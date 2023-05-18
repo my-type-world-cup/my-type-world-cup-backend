@@ -37,16 +37,16 @@ public class WorldCupService {
     }
 
     @Transactional(readOnly = true)
-    public GetWorldCupResponseDto findWorldCup(long worldCupId) {
+    public WorldCupInfoResponseDto findWorldCup(long worldCupId) {
         WorldCup worldCup = findVerifiedWorldCup(worldCupId);
-        return worldCupMapper.worldCupToGetWorldCupResponseDto(worldCup);
+        return worldCupMapper.worldCupToWorldCupInfoResponseDto(worldCup);
     }
 
     @Transactional(readOnly = true)
     public void verifyPassword(Long worldCupId, String password) {
-        WorldCup worldCup = findVerifiedWorldCup(worldCupId);
-        if (worldCup.getPassword() != password) {
-            throw new BusinessLogicException(CommonExceptionCode.UNAUTHORIZED);
+        String worldCupPassword = findVerifiedWorldCup(worldCupId).getPassword();
+        if (worldCupPassword != null && !worldCupPassword.equals(password)) {
+            throw new BusinessLogicException(CommonExceptionCode.INVALID_PASSWORD);
         }
     }
 

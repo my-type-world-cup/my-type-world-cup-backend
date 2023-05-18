@@ -55,7 +55,8 @@ public class WorldCupRepositoryCustomImpl implements WorldCupRepositoryCustom {
                             .select(new QCandidateSimpleResponseDto(
                                     candidate.id,
                                     candidate.name,
-                                    candidate.image))
+                                    candidate.image,
+                                    candidate.thumb))
                             .from(candidate)
                             .where(candidate.worldCup.id.eq(worldCupSimpleResponseDto.getId()))
                             .orderBy(candidate.finalWinCount.desc())

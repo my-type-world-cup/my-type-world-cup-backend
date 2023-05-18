@@ -2,28 +2,32 @@ package com.mytypeworldcup.mytypeworldcup.global.auth.handler;
 
 import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
 import com.mytypeworldcup.mytypeworldcup.global.auth.jwt.JwtTokenizer;
+import com.mytypeworldcup.mytypeworldcup.global.auth.service.RefreshService;
 import com.mytypeworldcup.mytypeworldcup.global.util.CustomAuthorityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.io.IOException;
+
+import static com.mytypeworldcup.mytypeworldcup.global.auth.utils.CookieUtil.addHttpOnlyCookie;
 
 @RequiredArgsConstructor
-public class MemberAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
+    private final RefreshService refreshService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
-                                        Authentication authentication) {
+                                        Authentication authentication) throws IOException {
         // 인증 성공 후, 토큰 생성
-        // Todo 리프레쉬 토큰 관련 고민할 것
-
         Member member;
-
         try {
             member = (Member) authentication.getPrincipal();
         } catch (ClassCastException e) {
@@ -35,9 +39,31 @@ public class MemberAuthenticationSuccessHandler implements AuthenticationSuccess
         String accessToken = jwtTokenizer.delegateAccessToken(member);
         String refreshToken = jwtTokenizer.delegateRefreshToken(member);
 
-        response.setHeader("Authorization", "Bearer " + accessToken);
-        response.setHeader("Refresh", refreshToken);
+        // RefreshToken 저장
+        refreshService.saveRefreshToken(member.getEmail(), refreshToken, jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes()));
+
+        // 쿠키 설정
+        addHttpOnlyCookie(response, "RefreshToken", refreshToken, jwtTokenizer.getRefreshTokenExpirationMinutes());
+
+        // 리다이렉트 URI 설정
+        String referer = request.getHeader("Referer");
+        String uri = createURI(accessToken, referer);
+
+        getRedirectStrategy().sendRedirect(request, response, uri);
     }
+
+    private String createURI(String accessToken, String referer) {
+        if (referer == null) {
+            referer = "http://localhost:3000";
+        }
+        //Todo: 본 주소와 비교하는 로직 추가해야함
+        return UriComponentsBuilder
+                .fromUriString(referer)
+                .queryParam("access_token", accessToken)
+                .build()
+                .toUriString();
+    }
+
 
     Member emailToMember(String email) {
         // 이메일과 역할 세팅

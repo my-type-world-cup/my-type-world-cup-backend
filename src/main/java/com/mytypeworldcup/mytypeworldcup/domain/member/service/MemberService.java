@@ -1,5 +1,8 @@
 package com.mytypeworldcup.mytypeworldcup.domain.member.service;
 
+import com.mytypeworldcup.mytypeworldcup.domain.member.dto.MemberMapper;
+import com.mytypeworldcup.mytypeworldcup.domain.member.dto.MemberPatchDto;
+import com.mytypeworldcup.mytypeworldcup.domain.member.dto.MemberResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
 import com.mytypeworldcup.mytypeworldcup.domain.member.exception.MemberExceptionCode;
 import com.mytypeworldcup.mytypeworldcup.domain.member.repository.MemberRepository;
@@ -20,6 +23,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils authorityUtils;
+    private final MemberMapper memberMapper;
 
     public Member createMember(Member member) {
         verifyExistsEmail(member.getEmail());
@@ -34,7 +38,6 @@ public class MemberService {
 
         return memberRepository.save(member);
     }
-
 
     /*
     public Member findMember(String email, ProviderType providerType) {
@@ -57,13 +60,27 @@ public class MemberService {
     }
      */
 
+    public MemberResponseDto updateMember(String email, MemberPatchDto memberPatchDto) {
+        Member member = findVerifiedMemberByEmail(email);
+
+        Optional.ofNullable(memberPatchDto.getNickname()).ifPresent(data -> member.setNickname(data));
+
+        return memberMapper.memberToMemberResponseDto(member);
+    }
+
+    @Transactional
+    public MemberResponseDto findMemberByEmail(String email) {
+        Member member = findVerifiedMemberByEmail(email);
+        return memberMapper.memberToMemberResponseDto(member);
+    }
+
     @Transactional(readOnly = true)
     public Long findMemberIdByEmail(String email) {
         return findVerifiedMemberByEmail(email).getId();
     }
 
     @Transactional(readOnly = true)
-    private Member findVerifiedMemberByEmail(String email) {
+    public Member findVerifiedMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessLogicException(MemberExceptionCode.MEMBER_NOT_FOUND));
     }
@@ -75,5 +92,4 @@ public class MemberService {
             throw new BusinessLogicException(MemberExceptionCode.MEMBER_EXISTS);
         }
     }
-
 }

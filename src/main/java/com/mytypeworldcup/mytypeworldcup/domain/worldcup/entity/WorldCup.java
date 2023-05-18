@@ -5,6 +5,7 @@ import com.mytypeworldcup.mytypeworldcup.domain.comment.entity.Comment;
 import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
 import com.mytypeworldcup.mytypeworldcup.global.common.Auditable;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,6 +41,7 @@ public class WorldCup extends Auditable {
     private Boolean visibility;
 
     // 비밀번호 -> 공개일경우 해당 필드 null, 비공개일경우 Null이 아님
+    @Column(length = 4)
     private String password;
 
     // 해당 월드컵이 실행된 횟수
