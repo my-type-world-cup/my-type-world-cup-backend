@@ -132,14 +132,4 @@ public class JwtTokenizer {
                 .getBody();
     }
 
-    // 만료된 액세스토큰의 유효기간을 연장하여 재발행 하는 메서드
-    public String refreshAccessToken(String accessToken) {
-        Claims claims = extractClaimsFromAccessToken(accessToken);
-        Member member = Member
-                .builder()
-                .email(claims.getSubject())
-                .roles((List<String>) claims.get("roles"))
-                .build();
-        return delegateAccessToken(member);
-    }
 }
