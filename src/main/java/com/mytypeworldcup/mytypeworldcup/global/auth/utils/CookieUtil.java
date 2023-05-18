@@ -1,5 +1,7 @@
 package com.mytypeworldcup.mytypeworldcup.global.auth.utils;
 
+import com.mytypeworldcup.mytypeworldcup.global.error.BusinessLogicException;
+import com.mytypeworldcup.mytypeworldcup.global.error.CommonExceptionCode;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -8,30 +10,24 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.util.SerializationUtils;
 
 import java.util.Base64;
-import java.util.Optional;
 
 @Slf4j
 public class CookieUtil {
-    public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {
+    public static Cookie getCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
 
-        if (cookies != null && cookies.length > 0) {
+        if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (name.equals(cookie.getName())) {
-                    return Optional.of(cookie);
+                    return cookie;
                 }
             }
         }
-        return Optional.empty();
+
+        throw new BusinessLogicException(CommonExceptionCode.BAD_REQUEST);
     }
 
     public static void addHttpOnlyCookie(HttpServletResponse response, String name, String value, int maxAge) {
-       /* Cookie cookie = new Cookie(name, value);
-        cookie.setPath("/");
-        cookie.setSecure(true);
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(10000000);
-        response.addCookie(cookie);*/
         ResponseCookie cookie = ResponseCookie.from(name, value)
                 .sameSite("None")
                 .secure(true) // 동일 사이트, 크로스 사이트에 모두 쿠키 전송 가능
