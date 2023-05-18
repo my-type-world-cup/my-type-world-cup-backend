@@ -67,6 +67,9 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/members").authenticated()
                                 .requestMatchers(HttpMethod.PATCH, "/members").authenticated()
 
+                                // Auth
+                                .requestMatchers(HttpMethod.DELETE,"/auth/logout").authenticated()
+
                                 // WorldCup
                                 .requestMatchers(HttpMethod.POST, "/worldcups").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/my/worldcups").authenticated()
