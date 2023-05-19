@@ -1,9 +1,9 @@
 package com.mytypeworldcup.mytypeworldcup.domain.candidate.controller;
 
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidatePatchDto;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateRequestDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleResponseDto;
+import com.mytypeworldcup.mytypeworldcup.global.common.PasswordDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateService;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
 import com.mytypeworldcup.mytypeworldcup.global.common.PageResponseDto;
@@ -46,11 +46,12 @@ public class CandidateController {
      * 본격적인 월드컵 시작을 위해 월드컵에 사용될 Candidate들을 요청<p>
      * 비밀번호를 입력받아야 하므로 POST 를 사용하였음
      */
-    @PostMapping("/candidates/random")
-    public ResponseEntity requestRandomCandidatesByWorldCupId(@RequestParam(required = false, defaultValue = "4") Integer teamCount,
-                                                              @Valid @RequestBody CandidateRequestDto candidateRequestDto) {
-        worldCupService.verifyPassword(candidateRequestDto.getWorldCupId(), candidateRequestDto.getPassword());
-        List<CandidateSimpleResponseDto> responseDtos = candidateService.findRandomCandidates(candidateRequestDto.getWorldCupId(), teamCount);
+    @PostMapping("/worldcups/{worldCupId}/candidates/random")
+    public ResponseEntity requestRandomCandidatesByWorldCupId(@Positive @PathVariable long worldCupId,
+                                                              @RequestParam(required = false, defaultValue = "4") Integer teamCount,
+                                                              @Valid @RequestBody PasswordDto passwordDto) {
+        worldCupService.verifyPassword(worldCupId, passwordDto.getPassword());
+        List<CandidateSimpleResponseDto> responseDtos = candidateService.findRandomCandidates(worldCupId, teamCount);
 
         return ResponseEntity.ok(responseDtos);
     }
@@ -66,17 +67,18 @@ public class CandidateController {
      * direction = DESC(내림차순, default), ASC(오름차순)<p>
      * keyword = 검색어 (name 에서 검색)
      */
-    @PostMapping("/candidates/search")
-    public ResponseEntity requestCandidatesByWorldCupId(@Positive @RequestParam(required = false, defaultValue = "1") int page,
+    @PostMapping("/worldcups/{worldCupId}/candidates")
+    public ResponseEntity requestCandidatesByWorldCupId(@Positive @PathVariable long worldCupId,
+                                                        @Positive @RequestParam(required = false, defaultValue = "1") int page,
                                                         @Positive @RequestParam(required = false, defaultValue = "5") int size,
                                                         @RequestParam(required = false, defaultValue = "winCount") String sort,
                                                         @RequestParam(required = false, defaultValue = "DESC") Sort.Direction direction,
                                                         @RequestParam(required = false) String keyword,
-                                                        @Valid @RequestBody CandidateRequestDto candidateRequestDto) {
-        worldCupService.verifyPassword(candidateRequestDto.getWorldCupId(), candidateRequestDto.getPassword());
+                                                        @Valid @RequestBody PasswordDto passwordDto) {
+        worldCupService.verifyPassword(worldCupId, passwordDto.getPassword());
 
         PageRequest pageRequest = PageRequest.of(page - 1, size, direction, sort);
-        Page<CandidateResponseDto> responseDtos = candidateService.findCandidatesByWorldCupId(candidateRequestDto.getWorldCupId(), keyword, pageRequest);
+        Page<CandidateResponseDto> responseDtos = candidateService.findCandidatesByWorldCupId(worldCupId, keyword, pageRequest);
 
         return ResponseEntity.ok(new PageResponseDto(responseDtos));
     }
