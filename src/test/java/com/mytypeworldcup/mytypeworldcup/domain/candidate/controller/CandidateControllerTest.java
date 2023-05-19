@@ -2,12 +2,12 @@ package com.mytypeworldcup.mytypeworldcup.domain.candidate.controller;
 
 import com.google.gson.Gson;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidatePatchDto;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateRequestDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateService;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
 import com.mytypeworldcup.mytypeworldcup.global.common.PageResponseDto;
+import com.mytypeworldcup.mytypeworldcup.global.common.PasswordDto;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -89,11 +89,7 @@ class CandidateControllerTest {
         Integer teamCount = 16;
         Long worldCupId = 1L;
 
-        CandidateRequestDto candidateRequestDto = CandidateRequestDto
-                .builder()
-                .worldCupId(worldCupId)
-                .password(null)
-                .build();
+        PasswordDto passwordDto = new PasswordDto(null);
 
         List<CandidateSimpleResponseDto> candidateSimpleResponseDtos = new ArrayList<>();
         for (long i = 1; i <= teamCount; i++) {
@@ -103,11 +99,11 @@ class CandidateControllerTest {
         doNothing().when(worldCupService).verifyPassword(anyLong(), anyString());
         given(candidateService.findRandomCandidates(anyLong(), anyInt())).willReturn(candidateSimpleResponseDtos);
 
-        String content = gson.toJson(candidateRequestDto);
+        String content = gson.toJson(passwordDto);
 
         // when
         ResultActions actions = mockMvc.perform(
-                post("/candidates/random")
+                post("/worldcups/{worldCupId}/candidates/random", worldCupId)
                         .queryParam("teamCount", String.valueOf(teamCount))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -131,12 +127,9 @@ class CandidateControllerTest {
         String sort = "winCount";
         String direction = "DESC";
         String keyword = null;
+        long worldCupId = 1L;
 
-        CandidateRequestDto request = CandidateRequestDto
-                .builder()
-                .worldCupId(1L)
-                .password(null)
-                .build();
+        PasswordDto request = new PasswordDto(null);
 
         List<CandidateResponseDto> data = new ArrayList<>();
         for (long i = 1; i <= 10; i++) {
@@ -150,7 +143,7 @@ class CandidateControllerTest {
                     .winCount((int) (10L - i))
                     .matchUpWorldCupCount(100)
                     .matchUpGameCount(100)
-                    .worldCupId(request.getWorldCupId())
+                    .worldCupId(worldCupId)
                     .build();
             data.add(candidateResponseDto);
         }
@@ -164,7 +157,7 @@ class CandidateControllerTest {
 
         // when
         ResultActions actions = mockMvc.perform(
-                post("/candidates/search")
+                post("/worldcups/{worldCupId}/candidates", worldCupId)
                         .param("page", String.valueOf(page))
                         .param("size", String.valueOf(size))
                         .param("sort", sort)
