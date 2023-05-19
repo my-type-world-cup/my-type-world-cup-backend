@@ -13,6 +13,7 @@ import com.mytypeworldcup.mytypeworldcup.global.util.CustomAuthorityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -44,7 +45,6 @@ public class SecurityConfig {
         http
                 .headers(headers -> headers
                         .frameOptions().sameOrigin() //동일 출처로부터 들어오는 request만 페이지 렌더링 허용 h2
-                        .cacheControl().disable()
                 )
                 .csrf().disable() // csrf 공격에 대한 설정 비활성화
                 .cors(withDefaults()) // cors설정 -> withDefaults() 일경우 corsConfigurationSource 라는 이름으로 등록된 Bean을 이용함
