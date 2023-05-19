@@ -27,7 +27,6 @@ class WorldCupMapperTest {
                 .builder()
                 .title("춘식이 월드컵")
                 .description("춘식이 월드컵이에요!")
-                .visibility(false)
                 .password("4885")
                 .build();
         worldCupPostDto.setMemberId(1L);
@@ -38,7 +37,6 @@ class WorldCupMapperTest {
         // then
         assertEquals(worldCupPostDto.getTitle(), worldCup.getTitle());
         assertEquals(worldCupPostDto.getDescription(), worldCup.getDescription());
-        assertEquals(worldCupPostDto.getVisibility(), worldCup.getVisibility());
         assertEquals(worldCupPostDto.getPassword(), worldCup.getPassword());
         assertEquals(worldCupPostDto.getMemberId(), worldCup.getMemberId());
     }
@@ -54,7 +52,6 @@ class WorldCupMapperTest {
                 .builder()
                 .title("춘식이 월드컵")
                 .description("춘식이 월드컵이에요!")
-                .visibility(false)
                 .password("4885")
                 .member(member)
                 .build();
@@ -67,7 +64,6 @@ class WorldCupMapperTest {
         assertEquals(worldCup.getId(), worldCupResponseDto.getId());
         assertEquals(worldCup.getTitle(), worldCupResponseDto.getTitle());
         assertEquals(worldCup.getDescription(), worldCupResponseDto.getDescription());
-        assertEquals(worldCup.getVisibility(), worldCupResponseDto.getVisibility());
         assertEquals(worldCup.getPassword(), worldCupResponseDto.getPassword());
         assertEquals(worldCup.getMemberId(), worldCupResponseDto.getMemberId());
     }
@@ -80,7 +76,7 @@ class WorldCupMapperTest {
                 .builder()
                 .title("춘식이 월드컵")
                 .description("춘식이 월드컵이에요!")
-                .visibility(false)
+                .password(null)
                 .build();
         worldCup.setId(2L);
         List<Candidate> candidates = worldCup.getCandidates();

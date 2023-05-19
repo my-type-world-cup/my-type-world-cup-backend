@@ -79,7 +79,7 @@ public class WorldCupRepositoryCustomImpl implements WorldCupRepositoryCustom {
 
     private BooleanExpression getExpressionByMemberId(Long memberId) {
         return memberId == null
-                ? worldCup.visibility.eq(true) // memberId가 없으면 일반적인 검색이므로 공개된 월드컵 조건 리턴
+                ? worldCup.password.isNotNull() // memberId가 없으면 일반적인 검색이므로 공개된 월드컵 조건 리턴
                 : worldCup.member.id.eq(memberId); // memberId가 있으면 내가만든월드컵 검색이므로 eq.memberId 조건 리턴
     }
 

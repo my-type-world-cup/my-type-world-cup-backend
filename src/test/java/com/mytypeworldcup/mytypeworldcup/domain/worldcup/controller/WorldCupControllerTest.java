@@ -68,7 +68,7 @@ public class WorldCupControllerTest {
                     .builder()
                     .name("test name " + i)
                     .image("test image uri " + i)
-                    .image("test thumb uri " + i)
+                    .thumb("test thumb uri " + i)
                     .build();
 
             CandidateResponseDto candidateResponseDto = CandidateResponseDto
@@ -92,7 +92,6 @@ public class WorldCupControllerTest {
                 .builder()
                 .title("테스트 월드컵의 제목입니다.")
                 .description("테스트 월드컵의 설명입니다.")
-                .visibility(true) // 공개 = true
                 .password(null) // 공개 = null
                 .candidatePostDtos(candidatePostDtos)
                 .build();
@@ -102,7 +101,6 @@ public class WorldCupControllerTest {
                 .id(worldCupId)
                 .title(request.getTitle())
                 .description(request.getDescription())
-                .visibility(request.getVisibility())
                 .password(request.getPassword())
                 .memberId(memberId)
                 .build();
@@ -128,7 +126,6 @@ public class WorldCupControllerTest {
                 .andExpect(jsonPath("$.id").value(worldCupId))
                 .andExpect(jsonPath("$.title").value(request.getTitle()))
                 .andExpect(jsonPath("$.description").value(request.getDescription()))
-                .andExpect(jsonPath("$.visibility").value(request.getPassword() == null))
                 .andExpect(jsonPath("$.password").isEmpty())
                 .andExpect(jsonPath("$.memberId").value(memberId))
                 .andExpect(jsonPath("$.candidateResponseDtos").isArray());

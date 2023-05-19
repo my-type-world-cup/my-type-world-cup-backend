@@ -24,9 +24,6 @@ public class WorldCupPostDto {
     @NotNull
     private String description; // 생략가능
 
-    @NotNull
-    private Boolean visibility;
-
     @Pattern(regexp = "\\d{4}", message = "비밀번호는 4자리의 숫자로 이루어져야 합니다.")
     private String password;
 
@@ -37,12 +34,10 @@ public class WorldCupPostDto {
     @Builder
     public WorldCupPostDto(String title,
                            String description,
-                           Boolean visibility,
                            String password,
                            List<CandidatePostDto> candidatePostDtos) {
         this.title = title;
         this.description = description;
-        this.visibility = visibility;
         this.password = password;
         this.candidatePostDtos = candidatePostDtos;
     }

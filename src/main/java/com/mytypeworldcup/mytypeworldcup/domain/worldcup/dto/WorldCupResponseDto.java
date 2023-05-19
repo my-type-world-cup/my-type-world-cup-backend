@@ -11,7 +11,6 @@ public class WorldCupResponseDto {
     private Long id;
     private String title;
     private String description;
-    private Boolean visibility;
     private String password;
     private Long memberId;
     private List<CandidateResponseDto> candidateResponseDtos;
@@ -20,13 +19,11 @@ public class WorldCupResponseDto {
     public WorldCupResponseDto(Long id,
                                String title,
                                String description,
-                               Boolean visibility,
                                String password,
                                Long memberId) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.visibility = visibility;
         this.password = password;
         this.memberId = memberId;
     }

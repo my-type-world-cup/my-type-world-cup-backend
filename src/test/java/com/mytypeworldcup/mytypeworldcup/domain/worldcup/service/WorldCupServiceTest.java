@@ -45,7 +45,6 @@ class WorldCupServiceTest {
                 .builder()
                 .title("테스트 월드컵")
                 .description("테스트 설명")
-                .visibility(true)
                 .password(null) // 공개이므로 비밀번호 없음
                 .build();
         worldCupPostDto.setMemberId(1L);
@@ -55,7 +54,6 @@ class WorldCupServiceTest {
                 .id(2L)
                 .title(worldCupPostDto.getTitle())
                 .description(worldCupPostDto.getDescription())
-                .visibility(worldCupPostDto.getVisibility())
                 .password(worldCupPostDto.getPassword())
                 .memberId(worldCupPostDto.getMemberId())
                 .build();
@@ -79,7 +77,6 @@ class WorldCupServiceTest {
         assertEquals(expected.getMemberId(), actual.getMemberId());
         assertEquals(expected.getDescription(), actual.getDescription());
         assertEquals(expected.getPassword(), actual.getPassword());
-        assertEquals(expected.getVisibility(), actual.getVisibility());
     }
 
     @Test
