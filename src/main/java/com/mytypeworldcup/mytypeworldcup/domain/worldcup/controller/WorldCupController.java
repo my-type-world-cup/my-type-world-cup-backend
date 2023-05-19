@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -21,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Validated
 @RestController
@@ -67,7 +69,9 @@ public class WorldCupController {
         PageRequest pageRequest = PageRequest.of(page - 1, size, direction, sort);
         Page<WorldCupSimpleResponseDto> responseDtos = worldCupService.searchWorldCups(null, keyword, pageRequest);
 
-        return ResponseEntity.ok(new PageResponseDto(responseDtos));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(20, TimeUnit.SECONDS))
+                .body(new PageResponseDto(responseDtos));
     }
 
     @GetMapping("/worldcups/{worldCupId}")
