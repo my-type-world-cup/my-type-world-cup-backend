@@ -5,7 +5,6 @@ import com.mytypeworldcup.mytypeworldcup.domain.comment.entity.Comment;
 import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
 import com.mytypeworldcup.mytypeworldcup.global.common.Auditable;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,13 +32,6 @@ public class WorldCup extends Auditable {
     // 월드컵의 설명
     private String description;
 
-    /**
-     * visibility 와 password 둘다필요한가 ??
-     */
-    // 공개 or 비공개 여부 true=공개
-    @Column(nullable = false)
-    private Boolean visibility;
-
     // 비밀번호 -> 공개일경우 해당 필드 null, 비공개일경우 Null이 아님
     @Column(length = 4)
     private String password;
@@ -62,12 +54,10 @@ public class WorldCup extends Auditable {
     @Builder
     public WorldCup(String title,
                     String description,
-                    Boolean visibility,
                     String password,
                     Member member) {
         this.title = title;
         this.description = description;
-        this.visibility = visibility;
         this.password = password;
         this.member = member;
     }
@@ -91,4 +81,10 @@ public class WorldCup extends Auditable {
         return this.candidates.size();
     }
 
+    public boolean getVisibility() {
+        if (this.password == null) {
+            return true;
+        }
+        return false;
+    }
 }
