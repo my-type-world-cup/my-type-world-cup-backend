@@ -236,7 +236,7 @@ public class WorldCupControllerTest {
 
         // when
         ResultActions actions = mockMvc.perform(
-                get("/my/worldcups")
+                get("/members/worldcups")
                         .param("page", page)
                         .param("size", size)
                         .param("sort", sort)
