@@ -79,7 +79,7 @@ public class WorldCupController {
         return ResponseEntity.ok(worldCupService.findWorldCup(worldCupId));
     }
 
-    @GetMapping("/my/worldcups")
+    @GetMapping("/members/worldcups")
     public ResponseEntity getMyWorldCups(Authentication authentication,
                                          @Positive @RequestParam(required = false, defaultValue = "1") int page,
                                          @Positive @RequestParam(required = false, defaultValue = "5") int size,
