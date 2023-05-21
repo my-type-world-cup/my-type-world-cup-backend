@@ -13,7 +13,6 @@ import com.mytypeworldcup.mytypeworldcup.global.util.CustomAuthorityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.CacheControl;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -68,11 +67,16 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.PATCH, "/members").authenticated()
 
                                 // Auth
-                                .requestMatchers(HttpMethod.DELETE,"/auth/logout").authenticated()
+                                .requestMatchers(HttpMethod.DELETE, "/auth/logout").authenticated()
 
                                 // WorldCup
                                 .requestMatchers(HttpMethod.POST, "/worldcups").authenticated()
-                                .requestMatchers(HttpMethod.GET, "/my/worldcups").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/members/worldcups").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/worldcups/*/details").authenticated()
+                                .requestMatchers(HttpMethod.PATCH, "/worldcups/*").authenticated()
+
+                                // Candidate
+                                .requestMatchers(HttpMethod.POST, "/candidates").authenticated()
 
                                 // Comment
                                 .requestMatchers(HttpMethod.POST, "/comments").permitAll()
