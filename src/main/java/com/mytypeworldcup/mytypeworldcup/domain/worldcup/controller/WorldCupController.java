@@ -1,6 +1,7 @@
 package com.mytypeworldcup.mytypeworldcup.domain.worldcup.controller;
 
 import com.mytypeworldcup.mytypeworldcup.domain.member.service.MemberService;
+import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupPatchDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupPostDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupSimpleResponseDto;
@@ -41,6 +42,17 @@ public class WorldCupController {
         return ResponseEntity.status(HttpStatus.CREATED).body(worldCupResponseDto);
     }
 
+    @PatchMapping("/worldcups/{worldCupId}")
+    public ResponseEntity patchWorldCup(Authentication authentication,
+                                        @Positive @PathVariable long worldCupId,
+                                        @RequestBody @Valid WorldCupPatchDto worldCupPatchDto) {
+
+        worldCupService.verifyWorldCupAccess(authentication.getName(), worldCupId);
+        WorldCupResponseDto worldCupResponseDto = worldCupService.updateWorldCup(worldCupId, worldCupPatchDto);
+
+        return ResponseEntity.ok(worldCupResponseDto);
+    }
+
     /**
      * 파라미터 설명<p>
      * page = 원하는 페이지 !!자체적으로 -1해서 계산함!!<p>
@@ -77,7 +89,8 @@ public class WorldCupController {
     @GetMapping("/worldcups/{worldCupId}/details")
     public ResponseEntity getWorldCupDetails(Authentication authentication,
                                              @Positive @PathVariable long worldCupId) {
-        WorldCupResponseDto worldCupResponseDto = worldCupService.findWorldCupDetails(authentication.getName(), worldCupId);
+        worldCupService.verifyWorldCupAccess(authentication.getName(), worldCupId);
+        WorldCupResponseDto worldCupResponseDto = worldCupService.findWorldCupDetails(worldCupId);
         return ResponseEntity.ok(worldCupResponseDto);
     }
 
