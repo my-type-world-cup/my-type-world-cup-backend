@@ -1,7 +1,5 @@
 package com.mytypeworldcup.mytypeworldcup.domain.worldcup.controller;
 
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateResponseDto;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateService;
 import com.mytypeworldcup.mytypeworldcup.domain.member.service.MemberService;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupPostDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupResponseDto;
@@ -21,7 +19,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Validated
@@ -29,7 +26,6 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class WorldCupController {
     private final WorldCupService worldCupService;
-    private final CandidateService candidateService;
     private final MemberService memberService;
 
     @PostMapping("/worldcups")
@@ -41,13 +37,6 @@ public class WorldCupController {
 
         // WorldCup 생성
         WorldCupResponseDto worldCupResponseDto = worldCupService.createWorldCup(worldCupPostDto);
-
-        // 생성된 WorldCup의 Id값을 세팅 후 Candidate 생성
-        worldCupPostDto.setWorldCupIdForCandidatePostDtos(worldCupResponseDto.getId());
-        List<CandidateResponseDto> candidateResponseDtos = candidateService.createCandidates(worldCupPostDto.getCandidatePostDtos());
-
-        // 생성된 값들을 세팅 후 리턴
-        worldCupResponseDto.setCandidateResponseDtos(candidateResponseDtos);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(worldCupResponseDto);
     }
@@ -74,9 +63,24 @@ public class WorldCupController {
                 .body(new PageResponseDto(responseDtos));
     }
 
+    /**
+     * 월드컵 미리보기
+     */
     @GetMapping("/worldcups/{worldCupId}")
     public ResponseEntity getWorldCup(@Positive @PathVariable long worldCupId) {
         return ResponseEntity.ok(worldCupService.findWorldCup(worldCupId));
+    }
+
+    /**
+     * 월드컵 상세보기(월드컵 생성자만 가능)
+     */
+    @GetMapping("/worldcups/{worldCupId}/details")
+    public ResponseEntity getWorldCupDetails(Authentication authentication,
+                                             @Positive @PathVariable long worldCupId) {
+        Long memberId = memberService.findMemberIdByEmail(authentication.getName());
+        WorldCupResponseDto worldCupResponseDto = worldCupService.findWorldCupDetails(memberId, worldCupId);
+
+        return ResponseEntity.ok(worldCupResponseDto);
     }
 
     @GetMapping("/members/worldcups")
@@ -90,7 +94,6 @@ public class WorldCupController {
 
         PageRequest pageRequest = PageRequest.of(page - 1, size, direction, sort);
         Page<WorldCupSimpleResponseDto> responseDtos = worldCupService.searchWorldCups(memberId, keyword, pageRequest);
-
         return ResponseEntity.ok(new PageResponseDto(responseDtos));
     }
 }
