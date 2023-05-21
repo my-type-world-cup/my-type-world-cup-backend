@@ -126,7 +126,7 @@ class CandidateServiceTest {
     @DisplayName("경기결과 업데이트 - 유효한 후보가 없을 경우")
     void updateMatchResult_CANDIDATE_NOT_FOUND() {
         // given
-        CandidatePatchDto candidatePatchDto = CandidatePatchDto
+        MatchDto matchDto = MatchDto
                 .builder()
                 .id(1L)
                 .build();
@@ -134,7 +134,7 @@ class CandidateServiceTest {
         given(candidateRepository.findById(anyLong())).willReturn(Optional.ofNullable(null));
 
         // when
-        BusinessLogicException actual = assertThrows(BusinessLogicException.class, () -> candidateService.updateMatchResult(candidatePatchDto));
+        BusinessLogicException actual = assertThrows(BusinessLogicException.class, () -> candidateService.updateMatchResult(matchDto));
 
         // then
         assertEquals(CandidateExceptionCode.CANDIDATE_NOT_FOUND, actual.getExceptionCode());
@@ -144,7 +144,7 @@ class CandidateServiceTest {
     @DisplayName("경기결과 업데이트 - 최종우승하지 못한 경우")
     void updateMatchResult_notFinalWin() {
         // given
-        CandidatePatchDto candidatePatchDto = CandidatePatchDto
+        MatchDto matchDto = MatchDto
                 .builder()
                 .id(1L)
                 .matchUpGameCount(4)
@@ -161,12 +161,12 @@ class CandidateServiceTest {
         given(candidateRepository.findById(anyLong())).willReturn(Optional.ofNullable(candidate));
 
         // when
-        candidateService.updateMatchResult(candidatePatchDto);
+        candidateService.updateMatchResult(matchDto);
 
         // then
         assertEquals(1, candidate.getMatchUpWorldCupCount()); // 월드컵에 출전한 횟수이므로 무조건 1증가
-        assertEquals(candidatePatchDto.getMatchUpGameCount(), candidate.getMatchUpGameCount());
-        assertEquals(candidatePatchDto.getWinCount(), candidate.getWinCount());
+        assertEquals(matchDto.getMatchUpGameCount(), candidate.getMatchUpGameCount());
+        assertEquals(matchDto.getWinCount(), candidate.getWinCount());
         // 최종우승하지 못했으므로 if문 동작하지 않으므로 0
         assertEquals(0, candidate.getFinalWinCount());
         assertEquals(0, worldCup.getPlayCount());
@@ -176,7 +176,7 @@ class CandidateServiceTest {
     @DisplayName("경기결과 업데이트 - 최종우승한 경우")
     void updateMatchResult_finalWin() {
         // given
-        CandidatePatchDto candidatePatchDto = CandidatePatchDto
+        MatchDto matchDto = MatchDto
                 .builder()
                 .id(1L)
                 .matchUpGameCount(4)
@@ -193,12 +193,12 @@ class CandidateServiceTest {
         given(candidateRepository.findById(anyLong())).willReturn(Optional.ofNullable(candidate));
 
         // when
-        candidateService.updateMatchResult(candidatePatchDto);
+        candidateService.updateMatchResult(matchDto);
 
         // then
         assertEquals(1, candidate.getMatchUpWorldCupCount()); // 월드컵에 출전한 횟수이므로 무조건 1증가
-        assertEquals(candidatePatchDto.getMatchUpGameCount(), candidate.getMatchUpGameCount());
-        assertEquals(candidatePatchDto.getWinCount(), candidate.getWinCount());
+        assertEquals(matchDto.getMatchUpGameCount(), candidate.getMatchUpGameCount());
+        assertEquals(matchDto.getWinCount(), candidate.getWinCount());
         assertEquals(1, candidate.getFinalWinCount()); // 최종우승여부이므로 무조건 1증가
         assertEquals(1, worldCup.getPlayCount()); // 플레이된 횟수이므로 1증가
     }
@@ -207,24 +207,24 @@ class CandidateServiceTest {
     @DisplayName("경기결과 리스트 업데이트")
     void updateMatchResults() {
         // given
-        List<CandidatePatchDto> candidatePatchDtos = new ArrayList<>();
+        List<MatchDto> matchDtos = new ArrayList<>();
         for (long i = 1; i <= 4; i++) {
-            CandidatePatchDto candidatePatchDto = CandidatePatchDto
+            MatchDto matchDto = MatchDto
                     .builder()
                     .id(i)
                     .winCount(1)
                     .matchUpGameCount(2)
                     .build();
-            candidatePatchDtos.add(candidatePatchDto);
+            matchDtos.add(matchDto);
         }
 
         given(candidateRepository.findById(anyLong())).willReturn(Optional.ofNullable(new Candidate()));
 
         // when
-        candidateService.updateMatchResults(candidatePatchDtos);
+        candidateService.updateMatchResults(matchDtos);
 
         // then
-        verify(candidateRepository, times(candidatePatchDtos.size())).findById(anyLong());
+        verify(candidateRepository, times(matchDtos.size())).findById(anyLong());
     }
 
     @Test

@@ -1,6 +1,6 @@
 package com.mytypeworldcup.mytypeworldcup.domain.candidate.controller;
 
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidatePatchDto;
+import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.MatchDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidatePostDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleResponseDto;
@@ -44,11 +44,11 @@ public class CandidateController {
      * 결과를 리스트로 받는다
      */
     @PatchMapping("/candidates")
-    public ResponseEntity patchMatchResults(@RequestBody List<CandidatePatchDto> candidatePatchDtos) {
-        candidateService.updateMatchResults(candidatePatchDtos);
+    public ResponseEntity patchMatchResults(@RequestBody List<MatchDto> matchDtos) {
+        candidateService.updateMatchResults(matchDtos);
 
         Map<String, Integer> result = new HashMap<>();
-        result.put("updatedCandidates", candidatePatchDtos.size());
+        result.put("updatedCandidates", matchDtos.size());
 
         return ResponseEntity.ok(result);
     }

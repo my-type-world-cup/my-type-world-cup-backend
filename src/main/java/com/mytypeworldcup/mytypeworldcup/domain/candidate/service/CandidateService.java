@@ -43,11 +43,11 @@ public class CandidateService {
         return candidateRepository.findRandomCandidatesByWorldCupIdLimitTeamCount(worldCupId, teamCount);
     }
 
-    public void updateMatchResult(CandidatePatchDto candidatePatchDto) {
-        Candidate candidate = findVerifiedCandidate(candidatePatchDto.getId());
+    public void updateMatchResult(MatchDto matchDto) {
+        Candidate candidate = findVerifiedCandidate(matchDto.getId());
 
-        int matchUpGameCount = candidatePatchDto.getMatchUpGameCount();
-        int winCount = candidatePatchDto.getWinCount();
+        int matchUpGameCount = matchDto.getMatchUpGameCount();
+        int winCount = matchDto.getWinCount();
 
         candidate.updateMatchUpWorldCupCount(); // 월드컵 출전 횟수 업데이트 : 무조건 1증가
         candidate.updateMatchUpGameCount(matchUpGameCount); // 경기 출전 횟수 업데이트
@@ -58,8 +58,8 @@ public class CandidateService {
         }
     }
 
-    public void updateMatchResults(List<CandidatePatchDto> candidatePatchDtos) {
-        candidatePatchDtos.stream()
+    public void updateMatchResults(List<MatchDto> matchDtos) {
+        matchDtos.stream()
                 .forEach(this::updateMatchResult);
     }
 

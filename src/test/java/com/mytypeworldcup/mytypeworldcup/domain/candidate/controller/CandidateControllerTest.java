@@ -1,7 +1,7 @@
 package com.mytypeworldcup.mytypeworldcup.domain.candidate.controller;
 
 import com.google.gson.Gson;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidatePatchDto;
+import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.MatchDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateService;
@@ -52,15 +52,15 @@ class CandidateControllerTest {
     @Test
     void patchMatchResults() throws Exception {
         // given
-        List<CandidatePatchDto> patchDtos = new ArrayList<>();
+        List<MatchDto> patchDtos = new ArrayList<>();
         for (long i = 1; i <= 4; i++) {
-            CandidatePatchDto candidatePatchDto = CandidatePatchDto
+            MatchDto matchDto = MatchDto
                     .builder()
                     .id(1L)
                     .matchUpGameCount(4)
                     .winCount(1)
                     .build();
-            patchDtos.add(candidatePatchDto);
+            patchDtos.add(matchDto);
         }
 
         String content = gson.toJson(patchDtos);

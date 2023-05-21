@@ -4,13 +4,13 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class CandidatePatchDto {
+public class MatchDto {
     private Long id;
     private Integer matchUpGameCount;
     private Integer winCount;
 
     @Builder
-    public CandidatePatchDto(Long id, Integer matchUpGameCount, Integer winCount) {
+    public MatchDto(Long id, Integer matchUpGameCount, Integer winCount) {
         this.id = id;
         this.matchUpGameCount = matchUpGameCount;
         this.winCount = winCount;
