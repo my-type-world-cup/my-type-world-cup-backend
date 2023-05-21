@@ -34,7 +34,7 @@ public class CandidateController {
     @PostMapping("/candidates")
     public ResponseEntity postCandidate(Authentication authentication,
                                         @RequestBody CandidatePostDto candidatePostDto) {
-        worldCupService.findWorldCupDetails(authentication.getName(), candidatePostDto.getWorldCupId());
+        worldCupService.verifyWorldCupAccess(authentication.getName(), candidatePostDto.getWorldCupId());
         CandidateResponseDto candidateResponseDto = candidateService.createCandidate(candidatePostDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(candidateResponseDto);
     }
