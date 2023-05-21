@@ -77,9 +77,7 @@ public class WorldCupController {
     @GetMapping("/worldcups/{worldCupId}/details")
     public ResponseEntity getWorldCupDetails(Authentication authentication,
                                              @Positive @PathVariable long worldCupId) {
-        Long memberId = memberService.findMemberIdByEmail(authentication.getName());
-        WorldCupResponseDto worldCupResponseDto = worldCupService.findWorldCupDetails(memberId, worldCupId);
-
+        WorldCupResponseDto worldCupResponseDto = worldCupService.findWorldCupDetails(authentication.getName(), worldCupId);
         return ResponseEntity.ok(worldCupResponseDto);
     }
 
