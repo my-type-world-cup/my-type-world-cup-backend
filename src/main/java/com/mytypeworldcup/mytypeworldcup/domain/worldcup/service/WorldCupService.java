@@ -43,6 +43,15 @@ public class WorldCupService {
     }
 
     @Transactional(readOnly = true)
+    public WorldCupResponseDto findWorldCupDetails(String email, long worldCupId) {
+        WorldCup worldCup = findVerifiedWorldCup(worldCupId);
+        if (!worldCup.getMember().getEmail().equals(email)) {
+            throw new BusinessLogicException(CommonExceptionCode.FORBIDDEN);
+        }
+        return worldCupMapper.worldCupToWorldCupResponseDto(worldCup);
+    }
+
+    @Transactional(readOnly = true)
     public void verifyPassword(Long worldCupId, String password) {
         String worldCupPassword = findVerifiedWorldCup(worldCupId).getPassword();
         if (worldCupPassword != null && !worldCupPassword.equals(password)) {
