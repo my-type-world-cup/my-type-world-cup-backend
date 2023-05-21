@@ -77,6 +77,7 @@ public class SecurityConfig {
 
                                 // Candidate
                                 .requestMatchers(HttpMethod.POST, "/candidates").authenticated()
+                                .requestMatchers(HttpMethod.PATCH, "/candidates/*").authenticated()
 
                                 // Comment
                                 .requestMatchers(HttpMethod.POST, "/comments").permitAll()

@@ -1,9 +1,6 @@
 package com.mytypeworldcup.mytypeworldcup.domain.candidate.controller;
 
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.MatchDto;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidatePostDto;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateResponseDto;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleResponseDto;
+import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.*;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateService;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
 import com.mytypeworldcup.mytypeworldcup.global.common.PageResponseDto;
@@ -37,6 +34,15 @@ public class CandidateController {
         worldCupService.verifyWorldCupAccess(authentication.getName(), candidatePostDto.getWorldCupId());
         CandidateResponseDto candidateResponseDto = candidateService.createCandidate(candidatePostDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(candidateResponseDto);
+    }
+
+    @PatchMapping("/candidates/{candidateId}")
+    public ResponseEntity patchCandidate(Authentication authentication,
+                                         @Positive @PathVariable long candidateId,
+                                         @RequestBody CandidatePatchDto candidatePatchDto) {
+        candidateService.verifyAccess(authentication.getName(), candidateId);
+        CandidateResponseDto candidateResponseDto = candidateService.updateCandidate(candidateId, candidatePatchDto);
+        return ResponseEntity.ok(candidateResponseDto);
     }
 
     /**
