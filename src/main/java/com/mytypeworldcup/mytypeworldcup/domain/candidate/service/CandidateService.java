@@ -32,11 +32,11 @@ public class CandidateService {
         return candidateMapper.candidateToCandidateResponseDto(savedCandidate);
     }
 
-    public List<CandidateResponseDto> createCandidates(List<CandidatePostDto> candidatePostDtos) {
-        return candidatePostDtos.stream()
-                .map(this::createCandidate)
-                .toList();
-    }
+//    public List<CandidateResponseDto> createCandidates(List<CandidatePostDto> candidatePostDtos) {
+//        return candidatePostDtos.stream()
+//                .map(this::createCandidate)
+//                .toList();
+//    }
 
     @Transactional(readOnly = true)
     public List<CandidateSimpleResponseDto> findRandomCandidates(Long worldCupId, Integer teamCount) {

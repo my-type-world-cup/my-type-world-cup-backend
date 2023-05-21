@@ -41,8 +41,8 @@ class CandidateServiceTest {
                 .name("카리나")
                 .image("카리나이미지링크")
                 .thumb("카리나썸네일링크")
+                .worldCupId(1L)
                 .build();
-        candidatePostDto.setWorldCupId(1L);
 
         CandidateResponseDto expected = CandidateResponseDto
                 .builder()
@@ -76,29 +76,30 @@ class CandidateServiceTest {
         assertEquals(expected.getWorldCupId(), actual.getWorldCupId());
     }
 
-    @Test
-    @DisplayName("후보 단체 등록")
-    void createCandidates() {
-        // given
-        List<CandidatePostDto> candidatePostDtos = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            candidatePostDtos.add(CandidatePostDto.builder().build());
+    /*
+        @Test
+        @DisplayName("후보 단체 등록")
+        void createCandidates() {
+            // given
+            List<CandidatePostDto> candidatePostDtos = new ArrayList<>();
+            for (int i = 0; i < 10; i++) {
+                candidatePostDtos.add(CandidatePostDto.builder().build());
+            }
+
+            given(candidateMapper.candidatePostDtoToCandidate(any(CandidatePostDto.class))).willReturn(new Candidate());
+            given(candidateRepository.save(any(Candidate.class))).willReturn(new Candidate());
+            given(candidateMapper.candidateToCandidateResponseDto(any(Candidate.class))).willReturn(CandidateResponseDto.builder().build());
+
+            // when
+            List<CandidateResponseDto> actual = candidateService.createCandidates(candidatePostDtos);
+
+            // then
+            verify(candidateMapper, times(candidatePostDtos.size())).candidatePostDtoToCandidate(any(CandidatePostDto.class));
+            verify(candidateRepository, times(candidatePostDtos.size())).save(any(Candidate.class));
+            verify(candidateMapper, times(candidatePostDtos.size())).candidateToCandidateResponseDto(any(Candidate.class));
+            assertEquals(candidatePostDtos.size(), actual.size());
         }
-
-        given(candidateMapper.candidatePostDtoToCandidate(any(CandidatePostDto.class))).willReturn(new Candidate());
-        given(candidateRepository.save(any(Candidate.class))).willReturn(new Candidate());
-        given(candidateMapper.candidateToCandidateResponseDto(any(Candidate.class))).willReturn(CandidateResponseDto.builder().build());
-
-        // when
-        List<CandidateResponseDto> actual = candidateService.createCandidates(candidatePostDtos);
-
-        // then
-        verify(candidateMapper, times(candidatePostDtos.size())).candidatePostDtoToCandidate(any(CandidatePostDto.class));
-        verify(candidateRepository, times(candidatePostDtos.size())).save(any(Candidate.class));
-        verify(candidateMapper, times(candidatePostDtos.size())).candidateToCandidateResponseDto(any(Candidate.class));
-        assertEquals(candidatePostDtos.size(), actual.size());
-    }
-
+    */
     @Test
     @DisplayName("랜덤후보 뽑아오기 - 요청한 갯수만큼 리턴하는지 검증")
     void findRandomCandidates() {

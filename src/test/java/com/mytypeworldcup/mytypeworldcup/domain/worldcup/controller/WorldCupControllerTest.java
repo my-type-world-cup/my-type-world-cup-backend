@@ -1,10 +1,7 @@
 package com.mytypeworldcup.mytypeworldcup.domain.worldcup.controller;
 
 import com.google.gson.Gson;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidatePostDto;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleResponseDto;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateService;
 import com.mytypeworldcup.mytypeworldcup.domain.member.service.MemberService;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupInfoResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupPostDto;
@@ -49,8 +46,6 @@ public class WorldCupControllerTest {
     @MockBean
     private WorldCupService worldCupService;
     @MockBean
-    private CandidateService candidateService;
-    @MockBean
     private MemberService memberService;
 
     @Test
@@ -60,40 +55,11 @@ public class WorldCupControllerTest {
         Long memberId = 1L;
         Long worldCupId = 1L;
 
-        List<CandidatePostDto> candidatePostDtos = new ArrayList<>();
-        List<CandidateResponseDto> candidateResponseDtos = new ArrayList<>();
-        for (long i = 1; i <= 10; i++) {
-
-            CandidatePostDto candidatePostDto = CandidatePostDto
-                    .builder()
-                    .name("test name " + i)
-                    .image("test image uri " + i)
-                    .thumb("test thumb uri " + i)
-                    .build();
-
-            CandidateResponseDto candidateResponseDto = CandidateResponseDto
-                    .builder()
-                    .id(i)
-                    .name(candidatePostDto.getName())
-                    .image(candidatePostDto.getImage())
-                    .thumb(candidatePostDto.getThumb())
-                    .finalWinCount(0)
-                    .winCount(0)
-                    .matchUpWorldCupCount(0)
-                    .matchUpGameCount(0)
-                    .worldCupId(worldCupId)
-                    .build();
-
-            candidatePostDtos.add(candidatePostDto);
-            candidateResponseDtos.add(candidateResponseDto);
-        }
-
         WorldCupPostDto request = WorldCupPostDto
                 .builder()
                 .title("테스트 월드컵의 제목입니다.")
                 .description("테스트 월드컵의 설명입니다.")
                 .password(null) // 공개 = null
-                .candidatePostDtos(candidatePostDtos)
                 .build();
 
         WorldCupResponseDto response = WorldCupResponseDto
@@ -107,7 +73,6 @@ public class WorldCupControllerTest {
 
         given(memberService.findMemberIdByEmail(anyString())).willReturn(memberId);
         given(worldCupService.createWorldCup(any(WorldCupPostDto.class))).willReturn(response);
-        given(candidateService.createCandidates(anyList())).willReturn(candidateResponseDtos);
 
         String content = gson.toJson(request);
 
@@ -127,10 +92,7 @@ public class WorldCupControllerTest {
                 .andExpect(jsonPath("$.title").value(request.getTitle()))
                 .andExpect(jsonPath("$.description").value(request.getDescription()))
                 .andExpect(jsonPath("$.password").isEmpty())
-                .andExpect(jsonPath("$.memberId").value(memberId))
-                .andExpect(jsonPath("$.candidateResponseDtos").isArray());
-//                .andExpect(jsonPath("$.candidateResponseDtos[*].worldCupId").isNumber())
-
+                .andExpect(jsonPath("$.memberId").value(memberId));
     }
 
     @DisplayName("월드컵 가져오기 - 메인페이지")

@@ -72,7 +72,6 @@ class WorldCupServiceTest {
 
         assertSame(expected, actual);
         assertEquals(expected.getId(), actual.getId());
-        assertEquals(expected.getCandidateResponseDtos(), actual.getCandidateResponseDtos());
         assertEquals(expected.getTitle(), actual.getTitle());
         assertEquals(expected.getMemberId(), actual.getMemberId());
         assertEquals(expected.getDescription(), actual.getDescription());
