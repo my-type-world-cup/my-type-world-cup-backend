@@ -5,6 +5,7 @@ import com.mytypeworldcup.mytypeworldcup.domain.candidate.entity.Candidate;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.exception.CandidateExceptionCode;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.repository.CandidateRepository;
 import com.mytypeworldcup.mytypeworldcup.global.error.BusinessLogicException;
+import com.mytypeworldcup.mytypeworldcup.global.error.CommonExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -74,4 +76,21 @@ public class CandidateService {
         return candidateRepository.searchAllByWorldCupId(worldCupId, keyword, pageable);
     }
 
+    public CandidateResponseDto updateCandidate(long candidateId, CandidatePatchDto candidatePatchDto) {
+        Candidate candidate = findVerifiedCandidate(candidateId);
+
+        Optional.ofNullable(candidatePatchDto.getName()).ifPresent(data -> candidate.updateName(data));
+        Optional.ofNullable(candidatePatchDto.getImage()).ifPresent(data -> candidate.updateImage(data));
+        Optional.ofNullable(candidatePatchDto.getThumb()).ifPresent(data -> candidate.updateThumb(data));
+
+        return candidateMapper.candidateToCandidateResponseDto(candidate);
+    }
+
+    @Transactional(readOnly = true)
+    public void verifyAccess(String email, long candidateId) {
+        Candidate candidate = findVerifiedCandidate(candidateId);
+        if (!candidate.getWorldCup().getMember().getEmail().equals(email)) {
+            throw new BusinessLogicException(CommonExceptionCode.FORBIDDEN);
+        }
+    }
 }
