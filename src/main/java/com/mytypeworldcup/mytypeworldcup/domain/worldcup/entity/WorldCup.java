@@ -87,4 +87,16 @@ public class WorldCup extends Auditable {
         }
         return false;
     }
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    public void updateDescription(String description) {
+        this.description = description;
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
 }
