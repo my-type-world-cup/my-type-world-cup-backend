@@ -69,7 +69,7 @@ class WorldCupMapperTest {
     }
 
     @Test
-    @DisplayName("WorldCup -> WorldCupInfoResponseDto")
+    @DisplayName("WorldCup -> WorldCupPreview")
     void worldCupToWorldCupInfoResponseDto() {
         // given
         WorldCup worldCup = WorldCup
@@ -85,13 +85,13 @@ class WorldCupMapperTest {
         }
 
         // when
-        WorldCupInfoResponseDto worldCupInfoResponseDto = worldCupMapper.worldCupToWorldCupInfoResponseDto(worldCup);
+        WorldCupPreview worldCupPreview = worldCupMapper.worldCupToWorldCupPreview(worldCup);
 
         // then
-        assertEquals(worldCup.getId(), worldCupInfoResponseDto.getId());
-        assertEquals(worldCup.getTitle(), worldCupInfoResponseDto.getTitle());
-        assertEquals(worldCup.getDescription(), worldCupInfoResponseDto.getDescription());
-        assertEquals(worldCup.getVisibility(), worldCupInfoResponseDto.getVisibility());
-        assertEquals(worldCup.getCandidatesCount(), worldCupInfoResponseDto.getCandidatesCount());
+        assertEquals(worldCup.getId(), worldCupPreview.getId());
+        assertEquals(worldCup.getTitle(), worldCupPreview.getTitle());
+        assertEquals(worldCup.getDescription(), worldCupPreview.getDescription());
+        assertEquals(worldCup.getVisibility(), worldCupPreview.getVisibility());
+        assertEquals(worldCup.getCandidatesCount(), worldCupPreview.getCandidatesCount());
     }
 }

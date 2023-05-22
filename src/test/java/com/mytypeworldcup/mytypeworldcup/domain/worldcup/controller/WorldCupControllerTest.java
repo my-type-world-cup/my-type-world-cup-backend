@@ -3,7 +3,7 @@ package com.mytypeworldcup.mytypeworldcup.domain.worldcup.controller;
 import com.google.gson.Gson;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.member.service.MemberService;
-import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupInfoResponseDto;
+import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupPreview;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupPostDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupSimpleResponseDto;
@@ -141,10 +141,10 @@ public class WorldCupControllerTest {
 
     @DisplayName("특정 월드컵 요청")
     @Test
-    void getWorldCup() throws Exception {
+    void getWorldCupPreview() throws Exception {
         // given
         long worldCupId = 1L;
-        WorldCupInfoResponseDto response = WorldCupInfoResponseDto
+        WorldCupPreview response = WorldCupPreview
                 .builder()
                 .id(worldCupId)
                 .title("테스트 타이틀")
@@ -153,7 +153,7 @@ public class WorldCupControllerTest {
                 .candidatesCount(10)
                 .build();
 
-        given(worldCupService.findWorldCup(anyLong())).willReturn(response);
+        given(worldCupService.findWorldCupPreview(anyLong())).willReturn(response);
 
         // when
         ResultActions actions = mockMvc.perform(

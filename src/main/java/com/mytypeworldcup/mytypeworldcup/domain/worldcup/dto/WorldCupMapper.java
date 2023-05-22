@@ -10,5 +10,5 @@ public interface WorldCupMapper {
 
     WorldCupResponseDto worldCupToWorldCupResponseDto(WorldCup worldCup);
 
-    WorldCupInfoResponseDto worldCupToWorldCupInfoResponseDto(WorldCup worldCup);
+    WorldCupPreview worldCupToWorldCupPreview(WorldCup worldCup);
 }

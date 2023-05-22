@@ -115,7 +115,7 @@ class WorldCupServiceTest {
 
         WorldCup worldCup = new WorldCup();
         worldCup.setId(1L);
-        WorldCupInfoResponseDto expected = WorldCupInfoResponseDto
+        WorldCupPreview expected = WorldCupPreview
                 .builder()
                 .id(worldCupId)
                 .title("테스트 월드컵")
@@ -125,14 +125,14 @@ class WorldCupServiceTest {
                 .build();
 
         given(worldCupRepository.findById(anyLong())).willReturn(Optional.ofNullable(worldCup));
-        given(worldCupMapper.worldCupToWorldCupInfoResponseDto(any(WorldCup.class))).willReturn(expected);
+        given(worldCupMapper.worldCupToWorldCupPreview(any(WorldCup.class))).willReturn(expected);
 
         // when
-        WorldCupInfoResponseDto actual = worldCupService.findWorldCup(worldCupId);
+        WorldCupPreview actual = worldCupService.findWorldCupPreview(worldCupId);
 
         // then
         verify(worldCupRepository).findById(anyLong());
-        verify(worldCupMapper).worldCupToWorldCupInfoResponseDto(any(WorldCup.class));
+        verify(worldCupMapper).worldCupToWorldCupPreview(any(WorldCup.class));
 
         assertSame(expected, actual);
         assertEquals(expected.getId(), actual.getId());
@@ -152,7 +152,7 @@ class WorldCupServiceTest {
 
         // when
         // then
-        BusinessLogicException thrown = assertThrows(BusinessLogicException.class, () -> worldCupService.findWorldCup(worldCupId));
+        BusinessLogicException thrown = assertThrows(BusinessLogicException.class, () -> worldCupService.findWorldCupPreview(worldCupId));
         assertEquals(WorldCupExceptionCode.WORLD_CUP_NOT_FOUND, thrown.getExceptionCode());
     }
 

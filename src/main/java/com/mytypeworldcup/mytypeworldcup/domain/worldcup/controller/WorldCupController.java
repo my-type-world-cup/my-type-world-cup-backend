@@ -79,8 +79,8 @@ public class WorldCupController {
      * 월드컵 미리보기
      */
     @GetMapping("/worldcups/{worldCupId}")
-    public ResponseEntity getWorldCup(@Positive @PathVariable long worldCupId) {
-        return ResponseEntity.ok(worldCupService.findWorldCup(worldCupId));
+    public ResponseEntity getWorldCupPreview(@Positive @PathVariable long worldCupId) {
+        return ResponseEntity.ok(worldCupService.findWorldCupPreview(worldCupId));
     }
 
     /**

@@ -55,9 +55,9 @@ public class WorldCupService {
     }
 
     @Transactional(readOnly = true)
-    public WorldCupInfoResponseDto findWorldCup(long worldCupId) {
+    public WorldCupPreview findWorldCupPreview(long worldCupId) {
         WorldCup worldCup = findVerifiedWorldCup(worldCupId);
-        return worldCupMapper.worldCupToWorldCupInfoResponseDto(worldCup);
+        return worldCupMapper.worldCupToWorldCupPreview(worldCup);
     }
 
     @Transactional(readOnly = true)
