@@ -1,9 +1,7 @@
 package com.mytypeworldcup.mytypeworldcup.domain.candidate.controller;
 
 import com.google.gson.Gson;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.MatchDto;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateResponseDto;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleResponseDto;
+import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.*;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateService;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
 import com.mytypeworldcup.mytypeworldcup.global.common.PageResponseDto;
@@ -50,6 +48,107 @@ class CandidateControllerTest {
     private CandidateService candidateService;
 
     @Test
+    @DisplayName("후보 등록")
+    void postCandidate() throws Exception {
+        // given
+        CandidatePostDto request = CandidatePostDto.builder()
+                .name("테스트")
+                .image("image Url")
+                .thumb("thumb Url")
+                .worldCupId(1L)
+                .build();
+
+        CandidateResponseDto response = CandidateResponseDto.builder()
+                .id(3L)
+                .name(request.getName())
+                .image(request.getImage())
+                .thumb(request.getThumb())
+                .finalWinCount(0)
+                .winCount(0)
+                .matchUpWorldCupCount(0)
+                .matchUpGameCount(0)
+                .worldCupId(request.getWorldCupId())
+                .build();
+
+        doNothing().when(worldCupService).verifyWorldCupAccess(anyString(), anyLong());
+        given(candidateService.createCandidate(any(CandidatePostDto.class))).willReturn(response);
+
+        String content = gson.toJson(request);
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                post("/candidates")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .content(content)
+        );
+
+        // then
+        actions
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(response.getId()))
+                .andExpect(jsonPath("$.name").value(response.getName()))
+                .andExpect(jsonPath("$.image").value(response.getImage()))
+                .andExpect(jsonPath("$.finalWinCount").value(0))
+                .andExpect(jsonPath("$.winCount").value(0))
+                .andExpect(jsonPath("$.matchUpWorldCupCount").value(0))
+                .andExpect(jsonPath("$.matchUpGameCount").value(0))
+                .andExpect(jsonPath("$.worldCupId").value(response.getWorldCupId()));
+    }
+
+    @Test
+    @DisplayName("후보 정보 수정")
+    void patchCandidate() throws Exception {
+        // given
+        long candidateId = 1L;
+        CandidatePatchDto request = CandidatePatchDto.builder()
+                .name("테스트")
+                .image("image Url")
+                .thumb("thumb Url")
+                .build();
+
+        CandidateResponseDto response = CandidateResponseDto.builder()
+                .id(candidateId)
+                .name(request.getName())
+                .image(request.getImage())
+                .thumb(request.getThumb())
+                .finalWinCount(0)
+                .winCount(0)
+                .matchUpWorldCupCount(0)
+                .matchUpGameCount(0)
+                .worldCupId(1L)
+                .build();
+
+        doNothing().when(candidateService).verifyAccess(anyString(), anyLong());
+        given(candidateService.updateCandidate(anyLong(), any(CandidatePatchDto.class))).willReturn(response);
+
+        String content = gson.toJson(request);
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                patch("/candidates/{candidateId}", candidateId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .content(content)
+        );
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(response.getId()))
+                .andExpect(jsonPath("$.name").value(response.getName()))
+                .andExpect(jsonPath("$.image").value(response.getImage()))
+                .andExpect(jsonPath("$.finalWinCount").value(0))
+                .andExpect(jsonPath("$.winCount").value(0))
+                .andExpect(jsonPath("$.matchUpWorldCupCount").value(0))
+                .andExpect(jsonPath("$.matchUpGameCount").value(0))
+                .andExpect(jsonPath("$.worldCupId").value(response.getWorldCupId()));
+    }
+
+    @Test
+    @DisplayName("월드컵 결과 반영")
     void patchMatchResults() throws Exception {
         // given
         List<MatchDto> patchDtos = new ArrayList<>();
