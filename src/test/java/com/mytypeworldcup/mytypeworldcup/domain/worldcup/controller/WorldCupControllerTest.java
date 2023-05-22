@@ -3,10 +3,7 @@ package com.mytypeworldcup.mytypeworldcup.domain.worldcup.controller;
 import com.google.gson.Gson;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.member.service.MemberService;
-import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupPreview;
-import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupPostDto;
-import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupResponseDto;
-import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupSimpleResponseDto;
+import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.*;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
 import com.mytypeworldcup.mytypeworldcup.global.common.PageResponseDto;
 import org.junit.jupiter.api.Assertions;
@@ -30,8 +27,7 @@ import java.util.List;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -92,6 +88,50 @@ public class WorldCupControllerTest {
                 .andExpect(jsonPath("$.title").value(request.getTitle()))
                 .andExpect(jsonPath("$.description").value(request.getDescription()))
                 .andExpect(jsonPath("$.password").isEmpty())
+                .andExpect(jsonPath("$.memberId").value(memberId));
+    }
+
+    @Test
+    @DisplayName("월드컵 정보 수정")
+    void patchWorldCup() throws Exception {
+        // given
+        long worldCupId = 1L;
+        long memberId = 2L;
+        WorldCupPatchDto request = WorldCupPatchDto.builder()
+                .title("제목 수정하기")
+                .description("설명 수정하기")
+                .password("1423")
+                .build();
+
+        WorldCupResponseDto response = WorldCupResponseDto.builder()
+                .id(worldCupId)
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .password(request.getPassword())
+                .memberId(memberId)
+                .build();
+
+        doNothing().when(worldCupService).verifyWorldCupAccess(anyString(), anyLong());
+        given(worldCupService.updateWorldCup(anyLong(), any(WorldCupPatchDto.class))).willReturn(response);
+
+        String content = gson.toJson(request);
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                patch("/worldcups/{worldCupId}", worldCupId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(content)
+                        .with(csrf())
+        );
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(worldCupId))
+                .andExpect(jsonPath("$.title").value(request.getTitle()))
+                .andExpect(jsonPath("$.description").value(request.getDescription()))
+                .andExpect(jsonPath("$.password").value(request.getPassword()))
                 .andExpect(jsonPath("$.memberId").value(memberId));
     }
 
@@ -169,6 +209,39 @@ public class WorldCupControllerTest {
 
         Assertions.assertEquals(expected, actual);
 
+    }
+
+    @Test
+    @DisplayName("월드컵 상세정보 보기")
+    void getWorldCupDetails() throws Exception {
+        // given
+        long worldCupId = 1L;
+        long memberId = 2L;
+        WorldCupResponseDto response = WorldCupResponseDto.builder()
+                .id(worldCupId)
+                .title("테스트 월드컵 제목")
+                .description("테스트 월드컵 설명")
+                .password("1423")
+                .memberId(memberId)
+                .build();
+
+        doNothing().when(worldCupService).verifyWorldCupAccess(anyString(), anyLong());
+        given(worldCupService.findWorldCupDetails(anyLong())).willReturn(response);
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                get("/worldcups/{worldCupId}/details", worldCupId)
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(worldCupId))
+                .andExpect(jsonPath("$.title").value(response.getTitle()))
+                .andExpect(jsonPath("$.description").value(response.getDescription()))
+                .andExpect(jsonPath("$.password").value(response.getPassword()))
+                .andExpect(jsonPath("$.memberId").value(response.getMemberId()));
     }
 
     @Test
