@@ -79,6 +79,86 @@ class WorldCupServiceTest {
     }
 
     @Test
+    @DisplayName("월드컵 업데이트")
+    void updateWorldCup() {
+        // given
+        long worldCupId = 1L;
+        WorldCup worldCup = WorldCup.builder()
+                .title("테스트 타이틀")
+                .description("테스트 설명")
+                .password(null)
+                .build();
+        worldCup.setId(worldCupId);
+
+        WorldCupPatchDto worldCupPatchDto = WorldCupPatchDto.builder()
+                .title("업데이트 테스트")
+                .description("업데이트 테스트 입니다")
+                .password("1435")
+                .build();
+
+        WorldCupResponseDto worldCupResponseDto = WorldCupResponseDto.builder()
+                .id(worldCupId)
+                .title(worldCupPatchDto.getTitle())
+                .description(worldCupPatchDto.getDescription())
+                .password(worldCupPatchDto.getPassword())
+                .build();
+
+        given(worldCupRepository.findById(worldCupId)).willReturn(Optional.of(worldCup));
+        given(worldCupMapper.worldCupToWorldCupResponseDto(any(WorldCup.class))).willReturn(worldCupResponseDto);
+
+        // when
+        WorldCupResponseDto result = worldCupService.updateWorldCup(worldCupId, worldCupPatchDto);
+
+        // then
+        verify(worldCupRepository, times(1)).findById(worldCupId);
+        verify(worldCupMapper, times(1)).worldCupToWorldCupResponseDto(any(WorldCup.class));
+        assertEquals(worldCupPatchDto.getTitle(), worldCup.getTitle());
+        assertEquals(worldCupPatchDto.getDescription(), worldCup.getDescription());
+        assertEquals(worldCupPatchDto.getPassword(), worldCup.getPassword());
+        assertSame(worldCupResponseDto, result);
+    }
+
+    @Test
+    @DisplayName("월드컵 업데이트 - 비밀번호 \"null\"인 경우")
+    void updateWorldCup_passwordNull() {
+        // given
+        long worldCupId = 1L;
+        WorldCup worldCup = WorldCup.builder()
+                .title("테스트 타이틀")
+                .description("테스트 설명")
+                .password("1434")
+                .build();
+        worldCup.setId(worldCupId);
+
+        WorldCupPatchDto worldCupPatchDto = WorldCupPatchDto.builder()
+                .title("업데이트 테스트")
+                .description("업데이트 테스트 입니다")
+                .password("null")
+                .build();
+
+        WorldCupResponseDto worldCupResponseDto = WorldCupResponseDto.builder()
+                .id(worldCupId)
+                .title(worldCupPatchDto.getTitle())
+                .description(worldCupPatchDto.getDescription())
+                .password(worldCupPatchDto.getPassword())
+                .build();
+
+        given(worldCupRepository.findById(worldCupId)).willReturn(Optional.of(worldCup));
+        given(worldCupMapper.worldCupToWorldCupResponseDto(any(WorldCup.class))).willReturn(worldCupResponseDto);
+
+        // when
+        WorldCupResponseDto actual = worldCupService.updateWorldCup(worldCupId, worldCupPatchDto);
+
+        // then
+        verify(worldCupRepository, times(1)).findById(worldCupId);
+        verify(worldCupMapper, times(1)).worldCupToWorldCupResponseDto(any(WorldCup.class));
+        assertEquals(worldCupPatchDto.getTitle(), worldCup.getTitle());
+        assertEquals(worldCupPatchDto.getDescription(), worldCup.getDescription());
+        assertNull(worldCup.getPassword());
+        assertSame(worldCupResponseDto, actual);
+    }
+
+    @Test
     @DisplayName("월드컵 검색")
     void searchWorldCups() {
         // given
@@ -109,7 +189,7 @@ class WorldCupServiceTest {
 
     @Test
     @DisplayName("월드컵 아이디로 찾기 - 성공")
-    void findWorldCup_happy() {
+    void findWorldCupPreview() {
         // given
         Long worldCupId = 1L;
 
@@ -144,7 +224,7 @@ class WorldCupServiceTest {
 
     @Test
     @DisplayName("월드컵 아이디로 찾기 - 실패")
-    void findWorldCup_bad() {
+    void findWorldCupPreview_bad() {
         // given
         Long worldCupId = 1L;
 
@@ -177,7 +257,7 @@ class WorldCupServiceTest {
 
     @Test
     @DisplayName("비밀번호 검증 - 성공")
-    void verifyPassword_success() {
+    void verifyPassword() {
         // given
         Long worldCupId = 1L;
         String password = String.valueOf(1234);
@@ -214,4 +294,32 @@ class WorldCupServiceTest {
         // then
         assertEquals(CommonExceptionCode.INVALID_PASSWORD, thrown.getExceptionCode());
     }
+
+    @Test
+    @DisplayName("월드컵 상세보기")
+    void findWorldCupDetails() {
+        // given
+        long worldCupId = 1L;
+        WorldCupResponseDto worldCupResponseDto = WorldCupResponseDto.builder()
+                .id(worldCupId)
+                .title("test")
+                .description("test")
+                .password(null)
+                .memberId(2L)
+                .build();
+
+        given(worldCupRepository.findById(anyLong())).willReturn(Optional.ofNullable(new WorldCup()));
+        given(worldCupMapper.worldCupToWorldCupResponseDto(any(WorldCup.class))).willReturn(worldCupResponseDto);
+
+        // when
+        WorldCupResponseDto actual = worldCupService.findWorldCupDetails(worldCupId);
+
+        // then
+        assertEquals(worldCupResponseDto.getId(), actual.getId());
+        assertEquals(worldCupResponseDto.getTitle(), actual.getTitle());
+        assertEquals(worldCupResponseDto.getDescription(), actual.getDescription());
+        assertEquals(worldCupResponseDto.getMemberId(), actual.getMemberId());
+        assertNull(actual.getPassword());
+    }
+
 }
