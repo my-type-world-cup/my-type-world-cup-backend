@@ -104,7 +104,7 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$.worldCupId").value(response.getWorldCupId()));
 
         verifyNoInteractions(memberService);
-        verify(worldCupService).findWorldCup(anyLong());
+        verify(worldCupService).findVerifiedWorldCup(anyLong());
     }
 
     @Test
@@ -158,7 +158,7 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$.worldCupId").value(response.getWorldCupId()));
 
         verify(memberService).findMemberIdByEmail(anyString());
-        verify(worldCupService).findWorldCup(anyLong());
+        verify(worldCupService).findVerifiedWorldCup(anyLong());
     }
 
     @Test

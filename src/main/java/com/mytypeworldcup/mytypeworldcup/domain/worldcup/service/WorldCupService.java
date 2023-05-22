@@ -83,7 +83,7 @@ public class WorldCupService {
     }
 
     @Transactional(readOnly = true)
-    private WorldCup findVerifiedWorldCup(long worldCupId) {
+    public WorldCup findVerifiedWorldCup(long worldCupId) {
         return worldCupRepository.findById(worldCupId)
                 .orElseThrow(() -> new BusinessLogicException(WorldCupExceptionCode.WORLD_CUP_NOT_FOUND));
     }

@@ -32,7 +32,7 @@ public class CommentController {
             commentPostDto.setMemberId(memberId);
         }
 
-        worldCupService.findWorldCup(commentPostDto.getWorldCupId()); // 월드컵 존재여부 확인
+        worldCupService.findVerifiedWorldCup(commentPostDto.getWorldCupId()); // 월드컵 존재여부 확인
 
         CommentResponseDto response = commentService.createComment(commentPostDto);
 
