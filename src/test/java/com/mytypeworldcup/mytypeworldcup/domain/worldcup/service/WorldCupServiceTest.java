@@ -1,6 +1,7 @@
 package com.mytypeworldcup.mytypeworldcup.domain.worldcup.service;
 
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleResponseDto;
+import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.*;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.entity.WorldCup;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.exception.WorldCupExceptionCode;
@@ -322,4 +323,77 @@ class WorldCupServiceTest {
         assertNull(actual.getPassword());
     }
 
+    @Test
+    @DisplayName("월드컵 접근 권한 확인")
+    void verifyWorldCupAccess() {
+        // given
+        String email = "test@test.com";
+
+        Member member = Member.builder()
+                .email("test@test.com")
+                .build();
+
+        WorldCup worldCup = WorldCup.builder()
+                .member(member)
+                .build();
+
+        given(worldCupRepository.findById(anyLong())).willReturn(Optional.ofNullable(worldCup));
+
+        // when
+        // then
+        assertDoesNotThrow(() -> worldCupService.verifyWorldCupAccess(email, 1L));
+    }
+
+    @Test
+    @DisplayName("월드컵 접근 권한 확인 - 실패")
+    void verifyWorldCupAccess_bad() {
+        // given
+        String email = "test@test.com";
+
+        Member member = Member.builder()
+                .email("forbidden@test.com")
+                .build();
+
+        WorldCup worldCup = WorldCup.builder()
+                .member(member)
+                .build();
+
+        given(worldCupRepository.findById(anyLong())).willReturn(Optional.ofNullable(worldCup));
+
+        // when
+        BusinessLogicException thrown = assertThrows(BusinessLogicException.class, () -> worldCupService.verifyWorldCupAccess(email, 1L));
+
+        // then
+        assertEquals(CommonExceptionCode.FORBIDDEN, thrown.getExceptionCode());
+    }
+
+    @Test
+    @DisplayName("유효한 월드컵 찾기")
+    void findVerifiedWorldCup() {
+        // given
+        long id = 1L;
+        WorldCup worldCup = new WorldCup();
+        worldCup.setId(id);
+
+        given(worldCupRepository.findById(anyLong())).willReturn(Optional.ofNullable(worldCup));
+
+        // when
+        WorldCup verifiedWorldCup = worldCupService.findVerifiedWorldCup(id);
+
+        // then
+        assertEquals(id, verifiedWorldCup.getId());
+    }
+
+    @Test
+    @DisplayName("유효한 월드컵 찾기 - 실패")
+    void findVerifiedWorldCup_bad() {
+        // given
+        long id = 1L;
+
+        // when
+        BusinessLogicException thrown = assertThrows(BusinessLogicException.class, () -> worldCupService.findVerifiedWorldCup(id));
+
+        // then
+        assertEquals(WorldCupExceptionCode.WORLD_CUP_NOT_FOUND, thrown.getExceptionCode());
+    }
 }
