@@ -7,12 +7,12 @@ import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupResponseDto
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupSimpleResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
 import com.mytypeworldcup.mytypeworldcup.global.common.PageResponseDto;
+import com.mytypeworldcup.mytypeworldcup.global.common.SearchRequestParamDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,13 +62,10 @@ public class WorldCupController {
      * keyword = 검색어 (title, description 에서 검색)
      */
     @GetMapping("/worldcups")
-    public ResponseEntity getWorldCups(@Positive @RequestParam(required = false, defaultValue = "1") int page,
-                                       @Positive @RequestParam(required = false, defaultValue = "5") int size,
-                                       @RequestParam(required = false, defaultValue = "playCount") String sort,
-                                       @RequestParam(required = false, defaultValue = "DESC") Sort.Direction direction,
-                                       @RequestParam(required = false) String keyword) {
-        PageRequest pageRequest = PageRequest.of(page - 1, size, direction, sort);
-        Page<WorldCupSimpleResponseDto> responseDtos = worldCupService.searchWorldCups(null, keyword, pageRequest);
+    public ResponseEntity getWorldCups(@ModelAttribute @Valid SearchRequestParamDto params) {
+
+        PageRequest pageRequest = PageRequest.of(params.getPage(), params.getSize(), params.getDirection(), params.getSort());
+        Page<WorldCupSimpleResponseDto> responseDtos = worldCupService.searchWorldCups(null, params.getKeyword(), pageRequest);
 
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.maxAge(20, TimeUnit.SECONDS))
@@ -96,15 +93,12 @@ public class WorldCupController {
 
     @GetMapping("/members/worldcups")
     public ResponseEntity getMyWorldCups(Authentication authentication,
-                                         @Positive @RequestParam(required = false, defaultValue = "1") int page,
-                                         @Positive @RequestParam(required = false, defaultValue = "5") int size,
-                                         @RequestParam(required = false, defaultValue = "playCount") String sort,
-                                         @RequestParam(required = false, defaultValue = "DESC") Sort.Direction direction,
-                                         @RequestParam(required = false) String keyword) {
+                                         @ModelAttribute @Valid SearchRequestParamDto params) {
         Long memberId = memberService.findMemberIdByEmail(authentication.getName());
 
-        PageRequest pageRequest = PageRequest.of(page - 1, size, direction, sort);
-        Page<WorldCupSimpleResponseDto> responseDtos = worldCupService.searchWorldCups(memberId, keyword, pageRequest);
+        PageRequest pageRequest = PageRequest.of(params.getPage(), params.getSize(), params.getDirection(), params.getSort());
+        Page<WorldCupSimpleResponseDto> responseDtos = worldCupService.searchWorldCups(memberId, params.getKeyword(), pageRequest);
+
         return ResponseEntity.ok(new PageResponseDto(responseDtos));
     }
 }

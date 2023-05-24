@@ -2,6 +2,7 @@ package com.mytypeworldcup.mytypeworldcup.domain.candidate.controller;
 
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.*;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateService;
+import com.mytypeworldcup.mytypeworldcup.global.common.SearchRequestParamDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
 import com.mytypeworldcup.mytypeworldcup.global.common.PageResponseDto;
 import com.mytypeworldcup.mytypeworldcup.global.common.PasswordDto;
@@ -10,7 +11,6 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -79,23 +79,20 @@ public class CandidateController {
      * 파라미터 설명<p>
      * page = 요청할 페이지(default=1) !!자체적으로 -1해서 계산함!!<p>
      * size = 페이지당 볼 게시물 수(default=5)<p>
-     * sort = winCount(1대1 이긴횟수 default), finalWinCount(최종 우승 횟수), matchUpGameCount(1대1 매칭 횟수),
+     * sort = createdAt(생성일시 default), winCount(1대1 이긴횟수), finalWinCount(최종 우승 횟수), matchUpGameCount(1대1 매칭 횟수),
      * matchUpWorldCupCount(월드컵 참가 횟수), name(이름순), finalWinRatio(최종우승비율), winRatio(1대1 승률)<p>
      * direction = DESC(내림차순, default), ASC(오름차순)<p>
      * keyword = 검색어 (name 에서 검색)
      */
     @PostMapping("/worldcups/{worldCupId}/candidates")
     public ResponseEntity requestCandidatesByWorldCupId(@Positive @PathVariable long worldCupId,
-                                                        @Positive @RequestParam(required = false, defaultValue = "1") int page,
-                                                        @Positive @RequestParam(required = false, defaultValue = "5") int size,
-                                                        @RequestParam(required = false, defaultValue = "winCount") String sort,
-                                                        @RequestParam(required = false, defaultValue = "DESC") Sort.Direction direction,
-                                                        @RequestParam(required = false) String keyword,
+                                                        @ModelAttribute @Valid SearchRequestParamDto params,
                                                         @Valid @RequestBody PasswordDto passwordDto) {
+
         worldCupService.verifyPassword(worldCupId, passwordDto.getPassword());
 
-        PageRequest pageRequest = PageRequest.of(page - 1, size, direction, sort);
-        Page<CandidateResponseDto> responseDtos = candidateService.findCandidatesByWorldCupId(worldCupId, keyword, pageRequest);
+        PageRequest pageRequest = PageRequest.of(params.getPage(), params.getSize(), params.getDirection(), params.getSort());
+        Page<CandidateResponseDto> responseDtos = candidateService.findCandidatesByWorldCupId(worldCupId, params.getKeyword(), pageRequest);
 
         return ResponseEntity.ok(new PageResponseDto(responseDtos));
     }
