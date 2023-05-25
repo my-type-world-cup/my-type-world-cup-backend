@@ -86,6 +86,9 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/comments/*/likes").authenticated()
                                 .requestMatchers(HttpMethod.DELETE, "/comments/*/likes").authenticated()
 
+                                // images
+                                .requestMatchers(HttpMethod.GET, "/images").authenticated()
+
                                 .anyRequest().permitAll()
                 )
 
