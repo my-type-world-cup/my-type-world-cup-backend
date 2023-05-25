@@ -20,7 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
 @Validated
 @RestController
@@ -68,7 +68,7 @@ public class WorldCupController {
         Page<WorldCupSimpleResponseDto> responseDtos = worldCupService.searchWorldCups(null, params.getKeyword(), pageRequest);
 
         return ResponseEntity.ok()
-                .cacheControl(CacheControl.maxAge(20, TimeUnit.SECONDS))
+                .cacheControl(CacheControl.maxAge(Duration.ofMinutes(30L)))
                 .body(new PageResponseDto(responseDtos));
     }
 
