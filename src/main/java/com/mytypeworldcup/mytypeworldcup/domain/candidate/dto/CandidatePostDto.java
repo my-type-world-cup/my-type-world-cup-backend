@@ -2,7 +2,7 @@ package com.mytypeworldcup.mytypeworldcup.domain.candidate.dto;
 
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.entity.WorldCup;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,7 +14,7 @@ public class CandidatePostDto {
     private String image;
     @NotBlank
     private String thumb;
-    @NotNull
+    @Positive
     private Long worldCupId;
 
     @Builder
