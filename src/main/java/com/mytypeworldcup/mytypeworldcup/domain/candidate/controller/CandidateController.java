@@ -2,10 +2,10 @@ package com.mytypeworldcup.mytypeworldcup.domain.candidate.controller;
 
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.*;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateService;
-import com.mytypeworldcup.mytypeworldcup.global.common.SearchRequestParamDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
 import com.mytypeworldcup.mytypeworldcup.global.common.PageResponseDto;
 import com.mytypeworldcup.mytypeworldcup.global.common.PasswordDto;
+import com.mytypeworldcup.mytypeworldcup.global.common.SearchRequestParamDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class CandidateController {
 
     @PostMapping("/candidates")
     public ResponseEntity postCandidate(Authentication authentication,
-                                        @RequestBody CandidatePostDto candidatePostDto) {
+                                        @RequestBody @Valid CandidatePostDto candidatePostDto) {
         worldCupService.verifyWorldCupAccess(authentication.getName(), candidatePostDto.getWorldCupId());
         CandidateResponseDto candidateResponseDto = candidateService.createCandidate(candidatePostDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(candidateResponseDto);
