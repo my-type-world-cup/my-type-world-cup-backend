@@ -29,8 +29,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -276,5 +275,23 @@ class CandidateControllerTest {
         String expected = gson.toJson(new PageResponseDto(responseDtos));
 
         Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void deleteCandidate() throws Exception {
+        // given
+        long candidateId = 1L;
+
+        doNothing().when(candidateService).verifyAccess(anyString(), anyLong());
+        doNothing().when(candidateService).deleteCandidate(anyLong());
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                delete("/candidates/{candidateId}", candidateId)
+                        .with(csrf())
+        );
+
+        // then
+        actions.andExpect(status().isNoContent());
     }
 }
