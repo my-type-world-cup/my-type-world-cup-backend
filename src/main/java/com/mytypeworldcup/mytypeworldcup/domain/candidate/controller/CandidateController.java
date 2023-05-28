@@ -45,6 +45,16 @@ public class CandidateController {
         return ResponseEntity.ok(candidateResponseDto);
     }
 
+    @DeleteMapping("/candidates/{candidateId}")
+    public ResponseEntity deleteCandidate(Authentication authentication,
+                                          @Positive @PathVariable long candidateId) {
+
+        candidateService.verifyAccess(authentication.getName(), candidateId);
+        candidateService.deleteCandidate(candidateId);
+
+        return ResponseEntity.noContent().build();
+    }
+
     /**
      * 경기 결과를 반영하는 메서드<p>
      * 결과를 리스트로 받는다

@@ -86,6 +86,11 @@ public class CandidateService {
         return candidateMapper.candidateToCandidateResponseDto(candidate);
     }
 
+    public void deleteCandidate(long candidateId) {
+        Candidate candidate = findVerifiedCandidate(candidateId);
+        candidateRepository.delete(candidate);
+    }
+
     @Transactional(readOnly = true)
     public void verifyAccess(String email, long candidateId) {
         Candidate candidate = findVerifiedCandidate(candidateId);
