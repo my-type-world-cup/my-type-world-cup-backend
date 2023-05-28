@@ -4,8 +4,10 @@ import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.*;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.entity.Candidate;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.exception.CandidateExceptionCode;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.repository.CandidateRepository;
+import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.entity.WorldCup;
 import com.mytypeworldcup.mytypeworldcup.global.error.BusinessLogicException;
+import com.mytypeworldcup.mytypeworldcup.global.error.CommonExceptionCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -174,7 +176,7 @@ class CandidateServiceTest {
 
     @Test
     @DisplayName("경기결과 업데이트 - 최종우승한 경우")
-    void updateMatchResult_finalWin() {
+    void updateMatchResult() {
         // given
         MatchDto matchDto = MatchDto
                 .builder()
@@ -263,5 +265,84 @@ class CandidateServiceTest {
         assertEquals(expected.getTotalElements(), actual.getTotalElements());
         assertEquals(expected.getContent(), actual.getContent());
         assertSame(expected, actual);
+    }
+
+    @Test
+    @DisplayName("후보삭제")
+    void deleteCandidate() {
+        // given
+        long candidateId = 1L;
+        Candidate candidate = new Candidate();
+        given(candidateRepository.findById(anyLong())).willReturn(Optional.ofNullable(candidate));
+
+        // when
+        candidateService.deleteCandidate(candidateId);
+
+        // then
+        verify(candidateRepository).delete(candidate);
+    }
+
+    @Test
+    @DisplayName("후보 수정")
+    void updateCandidate() {
+        // given
+        long candidateId = 1L;
+        Candidate candidate = Candidate.builder()
+                .name("테스트")
+                .image("이미지 url")
+                .thumb("썸네일 url")
+                .build();
+
+        CandidatePatchDto candidatePatchDto = CandidatePatchDto.builder()
+                .name("새로운 후보명")
+                .image("새로운 이미지 url")
+                .thumb("새로운 썸네일 url")
+                .build();
+
+        given(candidateRepository.findById(candidateId)).willReturn(Optional.ofNullable(candidate));
+
+        // when
+        candidateService.updateCandidate(candidateId, candidatePatchDto);
+
+        // then
+        assertEquals(candidatePatchDto.getName(), candidate.getName());
+        assertEquals(candidatePatchDto.getImage(), candidate.getImage());
+        assertEquals(candidatePatchDto.getThumb(), candidate.getThumb());
+        verify(candidateMapper).candidateToCandidateResponseDto(candidate);
+    }
+
+    @Test
+    @DisplayName("접근권한 검증 - 성공")
+    void verifyAccess() {
+        // given
+        String email = "test@test.com";
+        long candidateId = 1L;
+        Member member = Member.builder().email("test@test.com").build();
+        WorldCup worldCup = WorldCup.builder().member(member).build();
+        Candidate candidate = Candidate.builder().worldCup(worldCup).build();
+
+        given(candidateRepository.findById(candidateId)).willReturn(Optional.ofNullable(candidate));
+
+        // when
+        // then
+        candidateService.verifyAccess(email, candidateId);
+    }
+    @Test
+    @DisplayName("접근권한 검증 - 실패")
+    void verifyAccess_bad() {
+        // given
+        String email = "badtest@test.com";
+        long candidateId = 1L;
+        Member member = Member.builder().email("test@test.com").build();
+        WorldCup worldCup = WorldCup.builder().member(member).build();
+        Candidate candidate = Candidate.builder().worldCup(worldCup).build();
+
+        given(candidateRepository.findById(candidateId)).willReturn(Optional.ofNullable(candidate));
+
+        // when
+        BusinessLogicException thrown = assertThrows(BusinessLogicException.class, () -> candidateService.verifyAccess(email, candidateId));
+
+        // then
+        assertEquals(CommonExceptionCode.FORBIDDEN, thrown.getExceptionCode());
     }
 }
