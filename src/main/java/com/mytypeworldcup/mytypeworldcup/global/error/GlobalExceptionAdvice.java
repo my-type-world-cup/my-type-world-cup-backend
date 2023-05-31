@@ -2,6 +2,8 @@ package com.mytypeworldcup.mytypeworldcup.global.error;
 
 import com.mytypeworldcup.mytypeworldcup.global.auth.exception.AuthExceptionCode;
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.validation.ConstraintViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -20,4 +22,9 @@ public class GlobalExceptionAdvice {
         return ResponseEntity.status(AuthExceptionCode.REFRESH_TOKEN_EXPIRED.getStatus()).body(errorResponse);
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException e) {
+        final ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
 }
