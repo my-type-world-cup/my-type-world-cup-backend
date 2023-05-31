@@ -7,6 +7,7 @@ import com.mytypeworldcup.mytypeworldcup.global.common.PageResponseDto;
 import com.mytypeworldcup.mytypeworldcup.global.common.PasswordDto;
 import com.mytypeworldcup.mytypeworldcup.global.common.SearchRequestParamDto;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -75,7 +76,7 @@ public class CandidateController {
      */
     @PostMapping("/worldcups/{worldCupId}/candidates/random")
     public ResponseEntity requestRandomCandidatesByWorldCupId(@Positive @PathVariable long worldCupId,
-                                                              @RequestParam(required = false, defaultValue = "4") Integer teamCount,
+                                                              @RequestParam(defaultValue = "4") @Min(4) int teamCount,
                                                               @Valid @RequestBody PasswordDto passwordDto) {
         worldCupService.verifyPassword(worldCupId, passwordDto.getPassword());
         List<CandidateSimpleResponseDto> responseDtos = candidateService.findRandomCandidates(worldCupId, teamCount);
