@@ -101,4 +101,12 @@ public class WorldCupController {
 
         return ResponseEntity.ok(new PageResponseDto(responseDtos));
     }
+
+    @DeleteMapping("/worldcups/{worldCupId}")
+    public ResponseEntity deleteWorldCup(Authentication authentication,
+                                         @Positive @PathVariable long worldCupId) {
+        worldCupService.verifyWorldCupAccess(authentication.getName(), worldCupId);
+        worldCupService.deleteWorldCup(worldCupId);
+        return ResponseEntity.noContent().build();
+    }
 }
