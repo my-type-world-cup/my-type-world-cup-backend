@@ -87,4 +87,9 @@ public class WorldCupService {
         return worldCupRepository.findById(worldCupId)
                 .orElseThrow(() -> new BusinessLogicException(WorldCupExceptionCode.WORLD_CUP_NOT_FOUND));
     }
+
+    public void deleteWorldCup(long worldCupId) {
+        WorldCup worldCup = findVerifiedWorldCup(worldCupId);
+        worldCupRepository.delete(worldCup);
+    }
 }
