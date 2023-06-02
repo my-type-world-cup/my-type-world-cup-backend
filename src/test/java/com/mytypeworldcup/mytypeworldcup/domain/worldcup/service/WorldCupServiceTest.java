@@ -396,4 +396,22 @@ class WorldCupServiceTest {
         // then
         assertEquals(WorldCupExceptionCode.WORLD_CUP_NOT_FOUND, thrown.getExceptionCode());
     }
+
+    @Test
+    @DisplayName("월드컵 삭제")
+    void deleteWorldCup() {
+        // given
+        long worldCupId = 1L;
+        WorldCup worldCup = new WorldCup();
+        worldCup.setId(worldCupId);
+
+        given(worldCupRepository.findById(worldCupId)).willReturn(Optional.ofNullable(worldCup));
+        doNothing().when(worldCupRepository).delete(worldCup);
+
+        // when
+        worldCupService.deleteWorldCup(worldCupId);
+
+        // then
+        verify(worldCupRepository, times(1)).delete(worldCup);
+    }
 }

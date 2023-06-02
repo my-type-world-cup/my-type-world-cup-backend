@@ -290,4 +290,22 @@ public class WorldCupControllerTest {
 
         Assertions.assertEquals(expected, actual);
     }
+
+    @Test
+    @DisplayName("월드컵 삭제")
+    void deleteWorldCup() throws Exception {
+        // given
+        long worldCupId = 1L;
+        doNothing().when(worldCupService).verifyWorldCupAccess(anyString(), anyLong());
+        doNothing().when(worldCupService).deleteWorldCup(anyLong());
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                delete("/worldcups/{worldCupId}", worldCupId)
+                        .with(csrf())
+        );
+
+        // then
+        actions.andExpect(status().isNoContent());
+    }
 }
