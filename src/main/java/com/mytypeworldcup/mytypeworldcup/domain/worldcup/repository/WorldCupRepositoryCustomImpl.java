@@ -26,6 +26,13 @@ import static com.mytypeworldcup.mytypeworldcup.domain.worldcup.entity.QWorldCup
 public class WorldCupRepositoryCustomImpl implements WorldCupRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
+    /**
+     * <p>월드컵 검색 메서드 : 월드컵과 월드컵에 속한 후보 2명 함께 리턴</p>
+     *
+     * <p>memberId == null 일 경우</p>
+     * <li>검색에서 후보 숫자 4미만은 제외될 것</li>
+     * <li>비밀번호 없는 월드컵만 검색될 것</li>
+     */
     @Override
     public Page<WorldCupSimpleResponseDto> getWorldCupsWithCandidates(Long memberId, String keyword, Pageable pageable) {
         //TODO 추후에 dto 새로 만들어서 한번에 받아오는거 실험해보자...!
@@ -37,7 +44,7 @@ public class WorldCupRepositoryCustomImpl implements WorldCupRepositoryCustom {
                         worldCup.description))
                 .from(worldCup)
                 .where(
-                        getExpressionByMemberId(memberId)
+                        buildWorldCupSearchPredicateByMemberId(memberId)
                                 .and(containsKeyword(keyword))
                 );
 
@@ -77,10 +84,14 @@ public class WorldCupRepositoryCustomImpl implements WorldCupRepositoryCustom {
                 .or(worldCup.description.contains(keyword));
     }
 
-    private BooleanExpression getExpressionByMemberId(Long memberId) {
+    private BooleanExpression buildWorldCupSearchPredicateByMemberId(Long memberId) {
         return memberId == null
-                ? worldCup.password.isNull() // memberId가 없으면 일반적인 검색이므로 공개된 월드컵 조건 리턴
-                : worldCup.member.id.eq(memberId); // memberId가 있으면 내가만든월드컵 검색이므로 eq.memberId 조건 리턴
+                // memberId가 null일 경우
+                ? worldCup.password.isNull() // 비밀번호 없음
+                .and(worldCup.candidates.size().goe(4)) // candidates.size() 4이상
+
+                // memberId가 null이 아닐 경우
+                : worldCup.member.id.eq(memberId); // 입력받은 memberId에 속한 월드컵만 검색
     }
 
     // 정렬조건
