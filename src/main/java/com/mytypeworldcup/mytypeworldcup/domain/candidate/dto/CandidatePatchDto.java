@@ -5,14 +5,16 @@ import lombok.Getter;
 
 @Getter
 public class CandidatePatchDto {
-    private Long id;
-    private Integer matchUpGameCount;
-    private Integer winCount;
+    private String name;
+    private String image;
+    private String thumb;
 
     @Builder
-    public CandidatePatchDto(Long id, Integer matchUpGameCount, Integer winCount) {
-        this.id = id;
-        this.matchUpGameCount = matchUpGameCount;
-        this.winCount = winCount;
+    public CandidatePatchDto(String name,
+                             String image,
+                             String thumb) {
+        this.name = name;
+        this.image = image;
+        this.thumb = thumb;
     }
 }

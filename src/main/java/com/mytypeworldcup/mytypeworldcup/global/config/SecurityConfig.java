@@ -44,7 +44,6 @@ public class SecurityConfig {
         http
                 .headers(headers -> headers
                         .frameOptions().sameOrigin() //동일 출처로부터 들어오는 request만 페이지 렌더링 허용 h2
-                        .cacheControl().disable()
                 )
                 .csrf().disable() // csrf 공격에 대한 설정 비활성화
                 .cors(withDefaults()) // cors설정 -> withDefaults() 일경우 corsConfigurationSource 라는 이름으로 등록된 Bean을 이용함
@@ -68,11 +67,18 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.PATCH, "/members").authenticated()
 
                                 // Auth
-                                .requestMatchers(HttpMethod.DELETE,"/auth/logout").authenticated()
+                                .requestMatchers(HttpMethod.DELETE, "/auth/logout").authenticated()
 
                                 // WorldCup
                                 .requestMatchers(HttpMethod.POST, "/worldcups").authenticated()
-                                .requestMatchers(HttpMethod.GET, "/my/worldcups").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/members/worldcups").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/worldcups/*/details").authenticated()
+                                .requestMatchers(HttpMethod.PATCH, "/worldcups/*").authenticated()
+
+                                // Candidate
+                                .requestMatchers(HttpMethod.POST, "/candidates").authenticated()
+                                .requestMatchers(HttpMethod.PATCH, "/candidates/*").authenticated()
+                                .requestMatchers(HttpMethod.DELETE, "/candidates/*").authenticated()
 
                                 // Comment
                                 .requestMatchers(HttpMethod.POST, "/comments").permitAll()
@@ -80,6 +86,9 @@ public class SecurityConfig {
                                 // Like
                                 .requestMatchers(HttpMethod.POST, "/comments/*/likes").authenticated()
                                 .requestMatchers(HttpMethod.DELETE, "/comments/*/likes").authenticated()
+
+                                // images
+                                .requestMatchers(HttpMethod.GET, "/images").authenticated()
 
                                 .anyRequest().permitAll()
                 )
@@ -118,14 +127,14 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();   // corsConfigurationSource 인터페이스의 구현 클래스인 UrlBasedCorsConfigurationSource 클래스의 객체를 생성
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(); // corsConfigurationSource 인터페이스의 구현 클래스인 UrlBasedCorsConfigurationSource 클래스의 객체를 생성
 
 //        configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(Arrays.asList("*"));   // 모든 출처(Origin)에 대해 스크립트 기반의 HTTP 통신을 허용하도록 설정 -> TODO 운영환경에 맞게 변경할것
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE"));  // setAllowedMethods()를 통해 파라미터로 지정한 HTTP Method에 대한 HTTP 통신을 허용
-        configuration.addAllowedHeader("*");
+        configuration.setAllowedOrigins(Arrays.asList("*")); // 모든 출처(Origin)에 대해 스크립트 기반의 HTTP 통신을 허용하도록 설정 -> TODO 운영환경에 맞게 변경할것
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE")); // setAllowedMethods()를 통해 파라미터로 지정한 HTTP Method에 대한 HTTP 통신을 허용
+        configuration.addAllowedHeader("*"); // 모든 헤더 허용
 
-        source.registerCorsConfiguration("/**", configuration);      // 모든 URL에 앞에서 구성한 CORS 정책(CorsConfiguration)을 적용
+        source.registerCorsConfiguration("/**", configuration); // 모든 URL에 앞에서 구성한 CORS 정책(CorsConfiguration)을 적용
         return source;
     }
 

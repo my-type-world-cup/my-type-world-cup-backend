@@ -1,15 +1,9 @@
 package com.mytypeworldcup.mytypeworldcup.domain.worldcup.controller;
 
 import com.google.gson.Gson;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidatePostDto;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.CandidateSimpleResponseDto;
-import com.mytypeworldcup.mytypeworldcup.domain.candidate.service.CandidateService;
 import com.mytypeworldcup.mytypeworldcup.domain.member.service.MemberService;
-import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupInfoResponseDto;
-import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupPostDto;
-import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupResponseDto;
-import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.WorldCupSimpleResponseDto;
+import com.mytypeworldcup.mytypeworldcup.domain.worldcup.dto.*;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
 import com.mytypeworldcup.mytypeworldcup.global.common.PageResponseDto;
 import org.junit.jupiter.api.Assertions;
@@ -33,8 +27,7 @@ import java.util.List;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -49,8 +42,6 @@ public class WorldCupControllerTest {
     @MockBean
     private WorldCupService worldCupService;
     @MockBean
-    private CandidateService candidateService;
-    @MockBean
     private MemberService memberService;
 
     @Test
@@ -60,41 +51,11 @@ public class WorldCupControllerTest {
         Long memberId = 1L;
         Long worldCupId = 1L;
 
-        List<CandidatePostDto> candidatePostDtos = new ArrayList<>();
-        List<CandidateResponseDto> candidateResponseDtos = new ArrayList<>();
-        for (long i = 1; i <= 10; i++) {
-
-            CandidatePostDto candidatePostDto = CandidatePostDto
-                    .builder()
-                    .name("test name " + i)
-                    .image("test image uri " + i)
-                    .image("test thumb uri " + i)
-                    .build();
-
-            CandidateResponseDto candidateResponseDto = CandidateResponseDto
-                    .builder()
-                    .id(i)
-                    .name(candidatePostDto.getName())
-                    .image(candidatePostDto.getImage())
-                    .thumb(candidatePostDto.getThumb())
-                    .finalWinCount(0)
-                    .winCount(0)
-                    .matchUpWorldCupCount(0)
-                    .matchUpGameCount(0)
-                    .worldCupId(worldCupId)
-                    .build();
-
-            candidatePostDtos.add(candidatePostDto);
-            candidateResponseDtos.add(candidateResponseDto);
-        }
-
         WorldCupPostDto request = WorldCupPostDto
                 .builder()
                 .title("테스트 월드컵의 제목입니다.")
                 .description("테스트 월드컵의 설명입니다.")
-                .visibility(true) // 공개 = true
                 .password(null) // 공개 = null
-                .candidatePostDtos(candidatePostDtos)
                 .build();
 
         WorldCupResponseDto response = WorldCupResponseDto
@@ -102,14 +63,12 @@ public class WorldCupControllerTest {
                 .id(worldCupId)
                 .title(request.getTitle())
                 .description(request.getDescription())
-                .visibility(request.getVisibility())
                 .password(request.getPassword())
                 .memberId(memberId)
                 .build();
 
         given(memberService.findMemberIdByEmail(anyString())).willReturn(memberId);
         given(worldCupService.createWorldCup(any(WorldCupPostDto.class))).willReturn(response);
-        given(candidateService.createCandidates(anyList())).willReturn(candidateResponseDtos);
 
         String content = gson.toJson(request);
 
@@ -128,12 +87,52 @@ public class WorldCupControllerTest {
                 .andExpect(jsonPath("$.id").value(worldCupId))
                 .andExpect(jsonPath("$.title").value(request.getTitle()))
                 .andExpect(jsonPath("$.description").value(request.getDescription()))
-                .andExpect(jsonPath("$.visibility").value(request.getPassword() == null))
                 .andExpect(jsonPath("$.password").isEmpty())
-                .andExpect(jsonPath("$.memberId").value(memberId))
-                .andExpect(jsonPath("$.candidateResponseDtos").isArray());
-//                .andExpect(jsonPath("$.candidateResponseDtos[*].worldCupId").isNumber())
+                .andExpect(jsonPath("$.memberId").value(memberId));
+    }
 
+    @Test
+    @DisplayName("월드컵 정보 수정")
+    void patchWorldCup() throws Exception {
+        // given
+        long worldCupId = 1L;
+        long memberId = 2L;
+        WorldCupPatchDto request = WorldCupPatchDto.builder()
+                .title("제목 수정하기")
+                .description("설명 수정하기")
+                .password("1423")
+                .build();
+
+        WorldCupResponseDto response = WorldCupResponseDto.builder()
+                .id(worldCupId)
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .password(request.getPassword())
+                .memberId(memberId)
+                .build();
+
+        doNothing().when(worldCupService).verifyWorldCupAccess(anyString(), anyLong());
+        given(worldCupService.updateWorldCup(anyLong(), any(WorldCupPatchDto.class))).willReturn(response);
+
+        String content = gson.toJson(request);
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                patch("/worldcups/{worldCupId}", worldCupId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(content)
+                        .with(csrf())
+        );
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(worldCupId))
+                .andExpect(jsonPath("$.title").value(request.getTitle()))
+                .andExpect(jsonPath("$.description").value(request.getDescription()))
+                .andExpect(jsonPath("$.password").value(request.getPassword()))
+                .andExpect(jsonPath("$.memberId").value(memberId));
     }
 
     @DisplayName("월드컵 가져오기 - 메인페이지")
@@ -182,10 +181,10 @@ public class WorldCupControllerTest {
 
     @DisplayName("특정 월드컵 요청")
     @Test
-    void getWorldCup() throws Exception {
+    void getWorldCupPreview() throws Exception {
         // given
         long worldCupId = 1L;
-        WorldCupInfoResponseDto response = WorldCupInfoResponseDto
+        WorldCupPreview response = WorldCupPreview
                 .builder()
                 .id(worldCupId)
                 .title("테스트 타이틀")
@@ -194,7 +193,7 @@ public class WorldCupControllerTest {
                 .candidatesCount(10)
                 .build();
 
-        given(worldCupService.findWorldCup(anyLong())).willReturn(response);
+        given(worldCupService.findWorldCupPreview(anyLong())).willReturn(response);
 
         // when
         ResultActions actions = mockMvc.perform(
@@ -210,6 +209,39 @@ public class WorldCupControllerTest {
 
         Assertions.assertEquals(expected, actual);
 
+    }
+
+    @Test
+    @DisplayName("월드컵 상세정보 보기")
+    void getWorldCupDetails() throws Exception {
+        // given
+        long worldCupId = 1L;
+        long memberId = 2L;
+        WorldCupResponseDto response = WorldCupResponseDto.builder()
+                .id(worldCupId)
+                .title("테스트 월드컵 제목")
+                .description("테스트 월드컵 설명")
+                .password("1423")
+                .memberId(memberId)
+                .build();
+
+        doNothing().when(worldCupService).verifyWorldCupAccess(anyString(), anyLong());
+        given(worldCupService.findWorldCupDetails(anyLong())).willReturn(response);
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                get("/worldcups/{worldCupId}/details", worldCupId)
+                        .accept(MediaType.APPLICATION_JSON)
+        );
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(worldCupId))
+                .andExpect(jsonPath("$.title").value(response.getTitle()))
+                .andExpect(jsonPath("$.description").value(response.getDescription()))
+                .andExpect(jsonPath("$.password").value(response.getPassword()))
+                .andExpect(jsonPath("$.memberId").value(response.getMemberId()));
     }
 
     @Test
@@ -239,7 +271,7 @@ public class WorldCupControllerTest {
 
         // when
         ResultActions actions = mockMvc.perform(
-                get("/my/worldcups")
+                get("/members/worldcups")
                         .param("page", page)
                         .param("size", size)
                         .param("sort", sort)
@@ -257,5 +289,23 @@ public class WorldCupControllerTest {
         String expected = gson.toJson(new PageResponseDto(responseDtos));
 
         Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("월드컵 삭제")
+    void deleteWorldCup() throws Exception {
+        // given
+        long worldCupId = 1L;
+        doNothing().when(worldCupService).verifyWorldCupAccess(anyString(), anyLong());
+        doNothing().when(worldCupService).deleteWorldCup(anyLong());
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                delete("/worldcups/{worldCupId}", worldCupId)
+                        .with(csrf())
+        );
+
+        // then
+        actions.andExpect(status().isNoContent());
     }
 }

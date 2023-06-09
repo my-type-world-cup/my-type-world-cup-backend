@@ -103,6 +103,8 @@ public class CandidateRepositoryCustomImpl implements CandidateRepositoryCustom 
                 return candidate.matchUpGameCount;
             case "finalWinCount": // 최종 우승 횟수
                 return candidate.finalWinCount;
+            case "createdAt": // 생성일시
+                return candidate.createdAt;
             default: // 1대1 이긴 횟수
                 return candidate.winCount;
         }

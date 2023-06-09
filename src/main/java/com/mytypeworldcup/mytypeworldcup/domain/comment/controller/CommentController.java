@@ -4,6 +4,7 @@ import com.mytypeworldcup.mytypeworldcup.domain.comment.dto.CommentPostDto;
 import com.mytypeworldcup.mytypeworldcup.domain.comment.dto.CommentResponseDto;
 import com.mytypeworldcup.mytypeworldcup.domain.comment.service.CommentService;
 import com.mytypeworldcup.mytypeworldcup.domain.member.service.MemberService;
+import com.mytypeworldcup.mytypeworldcup.global.common.SearchRequestParamDto;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService;
 import com.mytypeworldcup.mytypeworldcup.global.common.PageResponseDto;
 import jakarta.validation.Valid;
@@ -11,7 +12,6 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -32,7 +32,7 @@ public class CommentController {
             commentPostDto.setMemberId(memberId);
         }
 
-        worldCupService.findWorldCup(commentPostDto.getWorldCupId()); // 월드컵 존재여부 확인
+        worldCupService.findVerifiedWorldCup(commentPostDto.getWorldCupId()); // 월드컵 존재여부 확인
 
         CommentResponseDto response = commentService.createComment(commentPostDto);
 
@@ -41,17 +41,15 @@ public class CommentController {
 
     @GetMapping("/comments")
     public ResponseEntity getCommentsByWorldCupId(Authentication authentication,
-                                                  @Positive @RequestParam(required = false, defaultValue = "1") int page,
-                                                  @Positive @RequestParam(required = false, defaultValue = "5") int size,
-                                                  @RequestParam(required = false, defaultValue = "likesCount") String sort,
-                                                  @RequestParam(required = false, defaultValue = "DESC") Sort.Direction direction,
+                                                  @ModelAttribute @Valid SearchRequestParamDto params,
                                                   @Positive @RequestParam Long worldCupId) {
+
         Long memberId = null;
         if (authentication != null) {
             memberId = memberService.findMemberIdByEmail(authentication.getName()); // 현재 로그인한 멤버 확인
         }
 
-        PageRequest pageRequest = PageRequest.of(page - 1, size, direction, sort);
+        PageRequest pageRequest = PageRequest.of(params.getPage(), params.getSize(), params.getDirection(), params.getSort());
         Page<CommentResponseDto> responseDtos = commentService.findCommentsByWorldCupId(worldCupId, memberId, pageRequest);
 
         return ResponseEntity.ok(new PageResponseDto(responseDtos));

@@ -4,8 +4,10 @@ import com.mytypeworldcup.mytypeworldcup.domain.candidate.dto.*;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.entity.Candidate;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.exception.CandidateExceptionCode;
 import com.mytypeworldcup.mytypeworldcup.domain.candidate.repository.CandidateRepository;
+import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.entity.WorldCup;
 import com.mytypeworldcup.mytypeworldcup.global.error.BusinessLogicException;
+import com.mytypeworldcup.mytypeworldcup.global.error.CommonExceptionCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,8 +43,8 @@ class CandidateServiceTest {
                 .name("카리나")
                 .image("카리나이미지링크")
                 .thumb("카리나썸네일링크")
+                .worldCupId(1L)
                 .build();
-        candidatePostDto.setWorldCupId(1L);
 
         CandidateResponseDto expected = CandidateResponseDto
                 .builder()
@@ -76,29 +78,30 @@ class CandidateServiceTest {
         assertEquals(expected.getWorldCupId(), actual.getWorldCupId());
     }
 
-    @Test
-    @DisplayName("후보 단체 등록")
-    void createCandidates() {
-        // given
-        List<CandidatePostDto> candidatePostDtos = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            candidatePostDtos.add(CandidatePostDto.builder().build());
+    /*
+        @Test
+        @DisplayName("후보 단체 등록")
+        void createCandidates() {
+            // given
+            List<CandidatePostDto> candidatePostDtos = new ArrayList<>();
+            for (int i = 0; i < 10; i++) {
+                candidatePostDtos.add(CandidatePostDto.builder().build());
+            }
+
+            given(candidateMapper.candidatePostDtoToCandidate(any(CandidatePostDto.class))).willReturn(new Candidate());
+            given(candidateRepository.save(any(Candidate.class))).willReturn(new Candidate());
+            given(candidateMapper.candidateToCandidateResponseDto(any(Candidate.class))).willReturn(CandidateResponseDto.builder().build());
+
+            // when
+            List<CandidateResponseDto> actual = candidateService.createCandidates(candidatePostDtos);
+
+            // then
+            verify(candidateMapper, times(candidatePostDtos.size())).candidatePostDtoToCandidate(any(CandidatePostDto.class));
+            verify(candidateRepository, times(candidatePostDtos.size())).save(any(Candidate.class));
+            verify(candidateMapper, times(candidatePostDtos.size())).candidateToCandidateResponseDto(any(Candidate.class));
+            assertEquals(candidatePostDtos.size(), actual.size());
         }
-
-        given(candidateMapper.candidatePostDtoToCandidate(any(CandidatePostDto.class))).willReturn(new Candidate());
-        given(candidateRepository.save(any(Candidate.class))).willReturn(new Candidate());
-        given(candidateMapper.candidateToCandidateResponseDto(any(Candidate.class))).willReturn(CandidateResponseDto.builder().build());
-
-        // when
-        List<CandidateResponseDto> actual = candidateService.createCandidates(candidatePostDtos);
-
-        // then
-        verify(candidateMapper, times(candidatePostDtos.size())).candidatePostDtoToCandidate(any(CandidatePostDto.class));
-        verify(candidateRepository, times(candidatePostDtos.size())).save(any(Candidate.class));
-        verify(candidateMapper, times(candidatePostDtos.size())).candidateToCandidateResponseDto(any(Candidate.class));
-        assertEquals(candidatePostDtos.size(), actual.size());
-    }
-
+    */
     @Test
     @DisplayName("랜덤후보 뽑아오기 - 요청한 갯수만큼 리턴하는지 검증")
     void findRandomCandidates() {
@@ -125,7 +128,7 @@ class CandidateServiceTest {
     @DisplayName("경기결과 업데이트 - 유효한 후보가 없을 경우")
     void updateMatchResult_CANDIDATE_NOT_FOUND() {
         // given
-        CandidatePatchDto candidatePatchDto = CandidatePatchDto
+        MatchDto matchDto = MatchDto
                 .builder()
                 .id(1L)
                 .build();
@@ -133,7 +136,7 @@ class CandidateServiceTest {
         given(candidateRepository.findById(anyLong())).willReturn(Optional.ofNullable(null));
 
         // when
-        BusinessLogicException actual = assertThrows(BusinessLogicException.class, () -> candidateService.updateMatchResult(candidatePatchDto));
+        BusinessLogicException actual = assertThrows(BusinessLogicException.class, () -> candidateService.updateMatchResult(matchDto));
 
         // then
         assertEquals(CandidateExceptionCode.CANDIDATE_NOT_FOUND, actual.getExceptionCode());
@@ -143,7 +146,7 @@ class CandidateServiceTest {
     @DisplayName("경기결과 업데이트 - 최종우승하지 못한 경우")
     void updateMatchResult_notFinalWin() {
         // given
-        CandidatePatchDto candidatePatchDto = CandidatePatchDto
+        MatchDto matchDto = MatchDto
                 .builder()
                 .id(1L)
                 .matchUpGameCount(4)
@@ -160,12 +163,12 @@ class CandidateServiceTest {
         given(candidateRepository.findById(anyLong())).willReturn(Optional.ofNullable(candidate));
 
         // when
-        candidateService.updateMatchResult(candidatePatchDto);
+        candidateService.updateMatchResult(matchDto);
 
         // then
         assertEquals(1, candidate.getMatchUpWorldCupCount()); // 월드컵에 출전한 횟수이므로 무조건 1증가
-        assertEquals(candidatePatchDto.getMatchUpGameCount(), candidate.getMatchUpGameCount());
-        assertEquals(candidatePatchDto.getWinCount(), candidate.getWinCount());
+        assertEquals(matchDto.getMatchUpGameCount(), candidate.getMatchUpGameCount());
+        assertEquals(matchDto.getWinCount(), candidate.getWinCount());
         // 최종우승하지 못했으므로 if문 동작하지 않으므로 0
         assertEquals(0, candidate.getFinalWinCount());
         assertEquals(0, worldCup.getPlayCount());
@@ -173,9 +176,9 @@ class CandidateServiceTest {
 
     @Test
     @DisplayName("경기결과 업데이트 - 최종우승한 경우")
-    void updateMatchResult_finalWin() {
+    void updateMatchResult() {
         // given
-        CandidatePatchDto candidatePatchDto = CandidatePatchDto
+        MatchDto matchDto = MatchDto
                 .builder()
                 .id(1L)
                 .matchUpGameCount(4)
@@ -192,12 +195,12 @@ class CandidateServiceTest {
         given(candidateRepository.findById(anyLong())).willReturn(Optional.ofNullable(candidate));
 
         // when
-        candidateService.updateMatchResult(candidatePatchDto);
+        candidateService.updateMatchResult(matchDto);
 
         // then
         assertEquals(1, candidate.getMatchUpWorldCupCount()); // 월드컵에 출전한 횟수이므로 무조건 1증가
-        assertEquals(candidatePatchDto.getMatchUpGameCount(), candidate.getMatchUpGameCount());
-        assertEquals(candidatePatchDto.getWinCount(), candidate.getWinCount());
+        assertEquals(matchDto.getMatchUpGameCount(), candidate.getMatchUpGameCount());
+        assertEquals(matchDto.getWinCount(), candidate.getWinCount());
         assertEquals(1, candidate.getFinalWinCount()); // 최종우승여부이므로 무조건 1증가
         assertEquals(1, worldCup.getPlayCount()); // 플레이된 횟수이므로 1증가
     }
@@ -206,24 +209,24 @@ class CandidateServiceTest {
     @DisplayName("경기결과 리스트 업데이트")
     void updateMatchResults() {
         // given
-        List<CandidatePatchDto> candidatePatchDtos = new ArrayList<>();
+        List<MatchDto> matchDtos = new ArrayList<>();
         for (long i = 1; i <= 4; i++) {
-            CandidatePatchDto candidatePatchDto = CandidatePatchDto
+            MatchDto matchDto = MatchDto
                     .builder()
                     .id(i)
                     .winCount(1)
                     .matchUpGameCount(2)
                     .build();
-            candidatePatchDtos.add(candidatePatchDto);
+            matchDtos.add(matchDto);
         }
 
         given(candidateRepository.findById(anyLong())).willReturn(Optional.ofNullable(new Candidate()));
 
         // when
-        candidateService.updateMatchResults(candidatePatchDtos);
+        candidateService.updateMatchResults(matchDtos);
 
         // then
-        verify(candidateRepository, times(candidatePatchDtos.size())).findById(anyLong());
+        verify(candidateRepository, times(matchDtos.size())).findById(anyLong());
     }
 
     @Test
@@ -262,5 +265,84 @@ class CandidateServiceTest {
         assertEquals(expected.getTotalElements(), actual.getTotalElements());
         assertEquals(expected.getContent(), actual.getContent());
         assertSame(expected, actual);
+    }
+
+    @Test
+    @DisplayName("후보삭제")
+    void deleteCandidate() {
+        // given
+        long candidateId = 1L;
+        Candidate candidate = new Candidate();
+        given(candidateRepository.findById(anyLong())).willReturn(Optional.ofNullable(candidate));
+
+        // when
+        candidateService.deleteCandidate(candidateId);
+
+        // then
+        verify(candidateRepository).delete(candidate);
+    }
+
+    @Test
+    @DisplayName("후보 수정")
+    void updateCandidate() {
+        // given
+        long candidateId = 1L;
+        Candidate candidate = Candidate.builder()
+                .name("테스트")
+                .image("이미지 url")
+                .thumb("썸네일 url")
+                .build();
+
+        CandidatePatchDto candidatePatchDto = CandidatePatchDto.builder()
+                .name("새로운 후보명")
+                .image("새로운 이미지 url")
+                .thumb("새로운 썸네일 url")
+                .build();
+
+        given(candidateRepository.findById(candidateId)).willReturn(Optional.ofNullable(candidate));
+
+        // when
+        candidateService.updateCandidate(candidateId, candidatePatchDto);
+
+        // then
+        assertEquals(candidatePatchDto.getName(), candidate.getName());
+        assertEquals(candidatePatchDto.getImage(), candidate.getImage());
+        assertEquals(candidatePatchDto.getThumb(), candidate.getThumb());
+        verify(candidateMapper).candidateToCandidateResponseDto(candidate);
+    }
+
+    @Test
+    @DisplayName("접근권한 검증 - 성공")
+    void verifyAccess() {
+        // given
+        String email = "test@test.com";
+        long candidateId = 1L;
+        Member member = Member.builder().email("test@test.com").build();
+        WorldCup worldCup = WorldCup.builder().member(member).build();
+        Candidate candidate = Candidate.builder().worldCup(worldCup).build();
+
+        given(candidateRepository.findById(candidateId)).willReturn(Optional.ofNullable(candidate));
+
+        // when
+        // then
+        candidateService.verifyAccess(email, candidateId);
+    }
+    @Test
+    @DisplayName("접근권한 검증 - 실패")
+    void verifyAccess_bad() {
+        // given
+        String email = "badtest@test.com";
+        long candidateId = 1L;
+        Member member = Member.builder().email("test@test.com").build();
+        WorldCup worldCup = WorldCup.builder().member(member).build();
+        Candidate candidate = Candidate.builder().worldCup(worldCup).build();
+
+        given(candidateRepository.findById(candidateId)).willReturn(Optional.ofNullable(candidate));
+
+        // when
+        BusinessLogicException thrown = assertThrows(BusinessLogicException.class, () -> candidateService.verifyAccess(email, candidateId));
+
+        // then
+        assertEquals(CommonExceptionCode.FORBIDDEN, thrown.getExceptionCode());
     }
 }

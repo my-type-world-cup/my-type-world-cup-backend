@@ -27,8 +27,8 @@ class CandidateMapperTest {
                 .name("테스트")
                 .image("이미지url")
                 .thumb("썸네일url")
+                .worldCupId(1L)
                 .build();
-        candidatePostDto.setWorldCupId(1L);
 
         // when
         Candidate candidate = candidateMapper.candidatePostDtoToCandidate(candidatePostDto);

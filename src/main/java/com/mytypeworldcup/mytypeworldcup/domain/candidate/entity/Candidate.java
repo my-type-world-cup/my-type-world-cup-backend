@@ -65,6 +65,18 @@ public class Candidate extends Auditable {
         return this.worldCup.getId();
     }
 
+    public void updateName(String name) {
+        this.name = name;
+    }
+
+    public void updateImage(String image) {
+        this.image = image;
+    }
+
+    public void updateThumb(String thumb) {
+        this.thumb = thumb;
+    }
+
     public void updateFinalWinCount() {
         this.finalWinCount++;
     }

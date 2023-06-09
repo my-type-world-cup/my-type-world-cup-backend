@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -31,15 +33,37 @@ public class WorldCupService {
         return worldCupMapper.worldCupToWorldCupResponseDto(savedWorldCup);
     }
 
+    public WorldCupResponseDto updateWorldCup(long worldCupId, WorldCupPatchDto worldCupPatchDto) {
+        WorldCup worldCup = findVerifiedWorldCup(worldCupId);
+
+        Optional.ofNullable(worldCupPatchDto.getTitle()).ifPresent(data -> worldCup.updateTitle(data));
+        Optional.ofNullable(worldCupPatchDto.getDescription()).ifPresent(data -> worldCup.updateDescription(data));
+        Optional.ofNullable(worldCupPatchDto.getPassword()).ifPresent(data -> {
+            if (data.equals("null")) {
+                worldCup.updatePassword(null);
+            } else {
+                worldCup.updatePassword(data);
+            }
+        });
+
+        return worldCupMapper.worldCupToWorldCupResponseDto(worldCup);
+    }
+
     @Transactional(readOnly = true)
     public Page<WorldCupSimpleResponseDto> searchWorldCups(Long memberId, String keyword, Pageable pageable) {
         return worldCupRepository.getWorldCupsWithCandidates(memberId, keyword, pageable);
     }
 
     @Transactional(readOnly = true)
-    public WorldCupInfoResponseDto findWorldCup(long worldCupId) {
+    public WorldCupPreview findWorldCupPreview(long worldCupId) {
         WorldCup worldCup = findVerifiedWorldCup(worldCupId);
-        return worldCupMapper.worldCupToWorldCupInfoResponseDto(worldCup);
+        return worldCupMapper.worldCupToWorldCupPreview(worldCup);
+    }
+
+    @Transactional(readOnly = true)
+    public WorldCupResponseDto findWorldCupDetails(long worldCupId) {
+        WorldCup worldCup = findVerifiedWorldCup(worldCupId);
+        return worldCupMapper.worldCupToWorldCupResponseDto(worldCup);
     }
 
     @Transactional(readOnly = true)
@@ -51,8 +75,21 @@ public class WorldCupService {
     }
 
     @Transactional(readOnly = true)
-    private WorldCup findVerifiedWorldCup(long worldCupId) {
+    public void verifyWorldCupAccess(String email, long worldCupId) {
+        WorldCup worldCup = findVerifiedWorldCup(worldCupId);
+        if (!worldCup.getMember().getEmail().equals(email)) {
+            throw new BusinessLogicException(CommonExceptionCode.FORBIDDEN);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public WorldCup findVerifiedWorldCup(long worldCupId) {
         return worldCupRepository.findById(worldCupId)
                 .orElseThrow(() -> new BusinessLogicException(WorldCupExceptionCode.WORLD_CUP_NOT_FOUND));
+    }
+
+    public void deleteWorldCup(long worldCupId) {
+        WorldCup worldCup = findVerifiedWorldCup(worldCupId);
+        worldCupRepository.delete(worldCup);
     }
 }
