@@ -33,7 +33,7 @@ jobs:
     # 2. yml 세팅
     - name: Set up yml
       run: |
-        echo "${{ secrets.PROD_YML }}" > ./src/main/resources/application-prod.yml
+        echo "${{ secrets.PROD_YML }}" > ./src/main/resources/application.yml
         echo "${{ secrets.SECRET_YML }}" > ./src/main/resources/application-secret.yml
 
     # 3. Spring Boot 애플리케이션 빌드
