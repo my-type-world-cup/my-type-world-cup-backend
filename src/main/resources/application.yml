@@ -1,18 +1,26 @@
 spring:
   profiles:
-    active: dev
     include: secret
   servlet:
     multipart:
       max-file-size: 10MB # 개별 파일 최대 크기
       max-request-size: 10MB # 요청당 최대 크기
+  jpa:
+    hibernate:
+      ddl-auto: update  # 서버 시작 시 변경사항만 update
+    show-sql: true      # 쿼리문 보여줌
+    properties:
+      hibernate:
+        format_sql: true  # 쿼리문 가독성 있게 띄워줌
+        #        use_sql_comments: true # JPQL 쿼리문 보기
+        default_batch_fetch_size: 100
 
 logging:
   level:
     org:
       springframework:
         orm:
-          jpa: DEBUG # JPA 관련 로그메시지 DEBUG 레벨로 출력 -> 분리할 것
+          jpa: DEBUG # JPA 관련 로그메시지 DEBUG 레벨로 출력
 
 server:
   servlet:
