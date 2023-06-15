@@ -11,6 +11,7 @@ import com.mytypeworldcup.mytypeworldcup.global.auth.oauth2.service.CustomOAuth2
 import com.mytypeworldcup.mytypeworldcup.global.auth.service.RefreshService;
 import com.mytypeworldcup.mytypeworldcup.global.util.CustomAuthorityUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -38,6 +39,8 @@ public class SecurityConfig {
     private final CustomAuthorityUtils authorityUtils;
     private final CustomOAuth2UserService oAuth2UserService;
     private final RefreshService refreshService;
+    @Value("${dolphin.domain}")
+    private String domain;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -129,8 +132,10 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(); // corsConfigurationSource 인터페이스의 구현 클래스인 UrlBasedCorsConfigurationSource 클래스의 객체를 생성
 
-//        configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(Arrays.asList("*")); // 모든 출처(Origin)에 대해 스크립트 기반의 HTTP 통신을 허용하도록 설정 -> TODO 운영환경에 맞게 변경할것
+        configuration.setAllowCredentials(true); // 요청시 쿠키값 포함; 해당 설정 true 시 모든 출처 허용대신 특정 해줘야함
+//        configuration.setAllowedOrigins(Arrays.asList("*")); // 모든 출처(Origin)에 대해 스크립트 기반의 HTTP 통신을 허용하도록 설정
+        configuration.addAllowedOrigin(domain);
+
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE")); // setAllowedMethods()를 통해 파라미터로 지정한 HTTP Method에 대한 HTTP 통신을 허용
         configuration.addAllowedHeader("*"); // 모든 헤더 허용
 
