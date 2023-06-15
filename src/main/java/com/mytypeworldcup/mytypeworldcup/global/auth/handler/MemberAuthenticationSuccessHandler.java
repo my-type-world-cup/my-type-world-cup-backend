@@ -7,6 +7,7 @@ import com.mytypeworldcup.mytypeworldcup.global.util.CustomAuthorityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -21,6 +22,8 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
     private final RefreshService refreshService;
+    @Value("${dolphin.domain}")
+    private String domain;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -46,19 +49,14 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         addHttpOnlyCookie(response, "RefreshToken", refreshToken, jwtTokenizer.getRefreshTokenExpirationMinutes());
 
         // 리다이렉트 URI 설정
-        String referer = request.getHeader("Referer");
-        String uri = createURI(accessToken, referer);
+        String uri = createURI(accessToken);
 
         getRedirectStrategy().sendRedirect(request, response, uri);
     }
 
-    private String createURI(String accessToken, String referer) {
-        if (referer == null) {
-            referer = "http://localhost:3000";
-        }
-        //Todo: 본 주소와 비교하는 로직 추가해야함
+    private String createURI(String accessToken) {
         return UriComponentsBuilder
-                .fromUriString(referer)
+                .fromUriString(domain)
                 .queryParam("access_token", accessToken)
                 .build()
                 .toUriString();
