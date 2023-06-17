@@ -7,7 +7,6 @@ import com.mytypeworldcup.mytypeworldcup.global.util.CustomAuthorityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -22,8 +21,7 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
     private final RefreshService refreshService;
-    @Value("${dolphin.domain}")
-    private String domain;
+    private final String domain;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -46,7 +44,7 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         refreshService.saveRefreshToken(member.getEmail(), refreshToken, jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes()));
 
         // 쿠키 설정
-        addHttpOnlyCookie(response, "RefreshToken", refreshToken, jwtTokenizer.getRefreshTokenExpirationMinutes());
+        addHttpOnlyCookie(response, "RefreshToken", refreshToken, jwtTokenizer.getRefreshTokenExpirationMinutes(),domain);
 
         // 리다이렉트 URI 설정
         String uri = createURI(accessToken);

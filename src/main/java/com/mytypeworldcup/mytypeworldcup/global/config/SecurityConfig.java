@@ -114,7 +114,7 @@ public class SecurityConfig {
                 .userInfoEndpoint()
                 .userService(oAuth2UserService)
                 .and()
-                .successHandler(new MemberAuthenticationSuccessHandler(jwtTokenizer, authorityUtils, refreshService))
+                .successHandler(new MemberAuthenticationSuccessHandler(jwtTokenizer, authorityUtils, refreshService, domain))
         ;
         return http.build();
     }
@@ -152,7 +152,7 @@ public class SecurityConfig {
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer);
             jwtAuthenticationFilter.setFilterProcessesUrl("/login/native");
 
-            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler(jwtTokenizer, authorityUtils, refreshService));
+            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler(jwtTokenizer, authorityUtils, refreshService, domain));
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
 
             JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils);
