@@ -6,7 +6,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.util.SerializationUtils;
 
@@ -14,9 +13,6 @@ import java.util.Base64;
 
 @Slf4j
 public class CookieUtil {
-    @Value("${dolphin.domain}")
-    private static String domain;
-
     public static Cookie getCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
 
@@ -31,7 +27,7 @@ public class CookieUtil {
         throw new BusinessLogicException(CommonExceptionCode.BAD_REQUEST);
     }
 
-    public static void addHttpOnlyCookie(HttpServletResponse response, String name, String value, int maxAge) {
+    public static void addHttpOnlyCookie(HttpServletResponse response, String name, String value, int maxAge, String domain) {
         ResponseCookie cookie = ResponseCookie.from(name, value)
                 .sameSite("None") // 동일 사이트, 크로스 사이트에 모두 쿠키 전송 가능
                 .secure(false) // https 환경에서만 쿠키 작동
@@ -39,6 +35,7 @@ public class CookieUtil {
                 .maxAge(maxAge)
                 .httpOnly(true) // 브라우저에서 쿠키에 접근 불가 제한
                 .build();
+        // 쿠키가 등록이 안된다 ??
         response.addHeader("Set-Cookie", cookie.toString());
     }
 
