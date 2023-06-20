@@ -42,7 +42,9 @@ public class CookieUtil {
 
     public static void addHttpOnlyCookie(String name, String value, int maxAge, HttpServletResponse response) {
         Cookie cookie = new Cookie(name, value);
-        cookie.setSecure(false);
+        cookie.setSecure(true);
+        cookie.setAttribute("SameSite", "None"); // SameSite None 사용하려면 Secure true가 되어야함
+        cookie.setDomain("port-0-my-type-world-cup-backend-17xqnr2llgu87xna.sel3.cloudtype.app");
         cookie.setPath("/");
         cookie.setMaxAge(maxAge);
         cookie.setHttpOnly(true);
