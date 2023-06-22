@@ -16,12 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final RefreshService refreshService;
 
-//    @PostMapping("/auth/refresh")
-//    public ResponseEntity getAccessTokenByRefreshToken(HttpServletRequest request, HttpServletResponse response) {
-//        refreshService.refreshAccessToken(request, response);
-//        return ResponseEntity.ok().build();
-//    }
-
     @PostMapping("/auth/refresh")
     public ResponseEntity refresh(@CookieValue(value = "RefreshToken") Cookie refreshTokenCookie, HttpServletResponse response) {
         String accessToken = refreshService.refreshAccessToken(refreshTokenCookie, response);

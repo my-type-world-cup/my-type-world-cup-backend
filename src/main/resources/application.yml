@@ -29,4 +29,5 @@ server:
 
 # 도메인 주소
 dolphin:
-  domain: http://localhost:3000
+  client:
+    url: http://localhost:3000

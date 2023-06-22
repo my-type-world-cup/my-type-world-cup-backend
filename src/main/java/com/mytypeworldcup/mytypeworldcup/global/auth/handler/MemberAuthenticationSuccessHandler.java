@@ -21,7 +21,7 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
     private final RefreshService refreshService;
-    private final String domain;
+    private final String clientUrl;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -44,8 +44,7 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         refreshService.saveRefreshToken(member.getEmail(), refreshToken, jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes()));
 
         // 쿠키 설정
-//        addHttpOnlyCookie(response, "RefreshToken", refreshToken, jwtTokenizer.getRefreshTokenExpirationMinutes(),domain);
-        addHttpOnlyCookie("RefreshToken", refreshToken, jwtTokenizer.getRefreshTokenExpirationMinutes(), response);
+        addHttpOnlyCookie("RefreshToken", refreshToken, request.getServerName(), jwtTokenizer.getRefreshTokenExpirationMinutes(), response);
 
         // 리다이렉트 URI 설정
         String uri = createURI(accessToken);
@@ -55,7 +54,7 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private String createURI(String accessToken) {
         return UriComponentsBuilder
-                .fromUriString(domain)
+                .fromUriString(clientUrl)
                 .queryParam("access_token", accessToken)
                 .build()
                 .toUriString();
