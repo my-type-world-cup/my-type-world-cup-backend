@@ -10,10 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 
+import static com.mytypeworldcup.mytypeworldcup.global.auth.utils.CookieUtil.addCookie;
 import static com.mytypeworldcup.mytypeworldcup.global.auth.utils.CookieUtil.addHttpOnlyCookie;
 
 @RequiredArgsConstructor
@@ -21,6 +21,7 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
     private final RefreshService refreshService;
+    private final String clientUrl;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -39,31 +40,16 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String accessToken = jwtTokenizer.delegateAccessToken(member);
         String refreshToken = jwtTokenizer.delegateRefreshToken(member);
 
+        // 쿠키 설정
+        addCookie("AccessToken", accessToken, request.getServerName(), jwtTokenizer.getAccessTokenExpirationMinutes(), response);
+        addHttpOnlyCookie("RefreshToken", refreshToken, request.getServerName(), jwtTokenizer.getRefreshTokenExpirationMinutes(), response);
+
         // RefreshToken 저장
         refreshService.saveRefreshToken(member.getEmail(), refreshToken, jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes()));
 
-        // 쿠키 설정
-        addHttpOnlyCookie(response, "RefreshToken", refreshToken, jwtTokenizer.getRefreshTokenExpirationMinutes());
-
         // 리다이렉트 URI 설정
-        String referer = request.getHeader("Referer");
-        String uri = createURI(accessToken, referer);
-
-        getRedirectStrategy().sendRedirect(request, response, uri);
+        getRedirectStrategy().sendRedirect(request, response, clientUrl);
     }
-
-    private String createURI(String accessToken, String referer) {
-        if (referer == null) {
-            referer = "http://localhost:3000";
-        }
-        //Todo: 본 주소와 비교하는 로직 추가해야함
-        return UriComponentsBuilder
-                .fromUriString(referer)
-                .queryParam("access_token", accessToken)
-                .build()
-                .toUriString();
-    }
-
 
     Member emailToMember(String email) {
         // 이메일과 역할 세팅

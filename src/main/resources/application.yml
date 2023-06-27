@@ -26,3 +26,8 @@ server:
   servlet:
     encoding:
       force-response: true # 모든 응답의 문자 인코딩을 강제
+
+# 도메인 주소
+dolphin:
+  client:
+    url: http://localhost:3000
