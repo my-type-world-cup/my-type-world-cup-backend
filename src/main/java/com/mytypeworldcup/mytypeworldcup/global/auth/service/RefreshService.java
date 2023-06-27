@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.Date;
 
+import static com.mytypeworldcup.mytypeworldcup.global.auth.utils.CookieUtil.addCookie;
 import static com.mytypeworldcup.mytypeworldcup.global.auth.utils.CookieUtil.deleteCookie;
 
 @Service
@@ -37,7 +38,7 @@ public class RefreshService {
         refreshTokenRepository.save(token);
     }
 
-    public String refreshAccessToken(Cookie refreshTokenCookie, HttpServletResponse response) {
+    public void refreshAccessToken(Cookie refreshTokenCookie, String domain, HttpServletResponse response) {
         // 리프레쉬토큰을 찾는다
         // 존재하지않으면 예외발생
         RefreshToken refreshToken = findVerifiedRefreshToken(refreshTokenCookie.getValue());
@@ -58,7 +59,7 @@ public class RefreshService {
                 .build();
         String accessToken = jwtTokenizer.delegateAccessToken(member);
 
-        return accessToken;
+        addCookie("AccessToken", accessToken, domain, jwtTokenizer.getAccessTokenExpirationMinutes(), response);
     }
 
     @Transactional
