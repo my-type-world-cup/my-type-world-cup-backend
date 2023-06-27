@@ -59,7 +59,7 @@ public class RefreshService {
                 .build();
         String accessToken = jwtTokenizer.delegateAccessToken(member);
 
-        addCookie("AccessToken", accessToken, domain, jwtTokenizer.getAccessTokenExpirationMinutes(), response);
+        addCookie("AccessToken", accessToken, domain, jwtTokenizer.getAccessTokenExpirationSeconds(), response);
     }
 
     @Transactional

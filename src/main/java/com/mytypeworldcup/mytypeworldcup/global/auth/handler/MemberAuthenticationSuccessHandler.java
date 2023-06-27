@@ -41,11 +41,11 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String refreshToken = jwtTokenizer.delegateRefreshToken(member);
 
         // 쿠키 설정
-        addCookie("AccessToken", accessToken, request.getServerName(), jwtTokenizer.getAccessTokenExpirationMinutes(), response);
-        addHttpOnlyCookie("RefreshToken", refreshToken, request.getServerName(), jwtTokenizer.getRefreshTokenExpirationMinutes(), response);
+        addCookie("AccessToken", accessToken, request.getServerName(), jwtTokenizer.getAccessTokenExpirationSeconds(), response);
+        addHttpOnlyCookie("RefreshToken", refreshToken, request.getServerName(), jwtTokenizer.getRefreshTokenExpirationSeconds(), response);
 
         // RefreshToken 저장
-        refreshService.saveRefreshToken(member.getEmail(), refreshToken, jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes()));
+        refreshService.saveRefreshToken(member.getEmail(), refreshToken, jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationSeconds()));
 
         // 리다이렉트 URI 설정
         getRedirectStrategy().sendRedirect(request, response, clientUrl);
