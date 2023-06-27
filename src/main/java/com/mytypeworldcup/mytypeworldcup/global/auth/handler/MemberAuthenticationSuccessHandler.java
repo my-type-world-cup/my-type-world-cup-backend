@@ -10,10 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 
+import static com.mytypeworldcup.mytypeworldcup.global.auth.utils.CookieUtil.addCookie;
 import static com.mytypeworldcup.mytypeworldcup.global.auth.utils.CookieUtil.addHttpOnlyCookie;
 
 @RequiredArgsConstructor
@@ -40,26 +40,16 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String accessToken = jwtTokenizer.delegateAccessToken(member);
         String refreshToken = jwtTokenizer.delegateRefreshToken(member);
 
+        // 쿠키 설정
+        addCookie("AccessToken", accessToken, request.getServerName(), jwtTokenizer.getAccessTokenExpirationMinutes(), response);
+        addHttpOnlyCookie("RefreshToken", refreshToken, request.getServerName(), jwtTokenizer.getRefreshTokenExpirationMinutes(), response);
+
         // RefreshToken 저장
         refreshService.saveRefreshToken(member.getEmail(), refreshToken, jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes()));
 
-        // 쿠키 설정
-        addHttpOnlyCookie("RefreshToken", refreshToken, request.getServerName(), jwtTokenizer.getRefreshTokenExpirationMinutes(), response);
-
         // 리다이렉트 URI 설정
-        String uri = createURI(accessToken);
-
-        getRedirectStrategy().sendRedirect(request, response, uri);
+        getRedirectStrategy().sendRedirect(request, response, clientUrl);
     }
-
-    private String createURI(String accessToken) {
-        return UriComponentsBuilder
-                .fromUriString(clientUrl)
-                .queryParam("access_token", accessToken)
-                .build()
-                .toUriString();
-    }
-
 
     Member emailToMember(String email) {
         // 이메일과 역할 세팅
