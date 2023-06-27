@@ -13,7 +13,10 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class JwtTokenizer {
@@ -22,12 +25,12 @@ public class JwtTokenizer {
     private String secretKey;
 
     @Getter
-    @Value("${jwt.access-token-expiration-minutes}")
-    private int accessTokenExpirationMinutes;
+    @Value("${jwt.access-token-expiration-seconds}")
+    private int accessTokenExpirationSeconds;
 
     @Getter
-    @Value("${jwt.refresh-token-expiration-minutes}")
-    private int refreshTokenExpirationMinutes;
+    @Value("${jwt.refresh-token-expiration-seconds}")
+    private int refreshTokenExpirationSeconds;
 
     public String encodeBase64SecretKey(String secretKey) {
         return Encoders.BASE64.encode(secretKey.getBytes(StandardCharsets.UTF_8));
@@ -80,11 +83,10 @@ public class JwtTokenizer {
                 .parseClaimsJws(jws);
     }
 
-    public Date getTokenExpiration(int expirationMinutes) {
+    public Date getTokenExpiration(int expirationSeconds) {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, expirationMinutes);
+        calendar.add(Calendar.SECOND, expirationSeconds);
         Date expiration = calendar.getTime();
-
         return expiration;
     }
 
@@ -102,7 +104,7 @@ public class JwtTokenizer {
         claims.put("roles", member.getRoles());
 
         String subject = member.getEmail();
-        Date expiration = this.getTokenExpiration(this.getAccessTokenExpirationMinutes());
+        Date expiration = this.getTokenExpiration(this.getAccessTokenExpirationSeconds());
 
         String base64EncodedSecretKey = this.encodeBase64SecretKey(this.getSecretKey());
 
@@ -114,22 +116,12 @@ public class JwtTokenizer {
     // Refresh Token 생성 로직
     public String delegateRefreshToken(Member member) {
         String subject = member.getEmail();
-        Date expiration = this.getTokenExpiration(this.getRefreshTokenExpirationMinutes());
+        Date expiration = this.getTokenExpiration(this.getRefreshTokenExpirationSeconds());
         String base64EncodedSecretKey = this.encodeBase64SecretKey(this.getSecretKey());
 
         String refreshToken = this.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
 
         return refreshToken;
-    }
-
-    // 만료된 액세트 토큰에서 Claims 추출하는 메서드
-    public Claims extractClaimsFromAccessToken(String accessToken) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getKeyFromBase64EncodedKey(encodeBase64SecretKey(secretKey)))
-                .setAllowedClockSkewSeconds((refreshTokenExpirationMinutes - accessTokenExpirationMinutes) * 60)
-                .build()
-                .parseClaimsJws(accessToken)
-                .getBody();
     }
 
 }
