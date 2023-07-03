@@ -10,10 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 
-import static com.mytypeworldcup.mytypeworldcup.global.auth.utils.CookieUtil.addCookie;
 import static com.mytypeworldcup.mytypeworldcup.global.auth.utils.CookieUtil.addHttpOnlyCookie;
 
 @RequiredArgsConstructor
@@ -41,14 +41,14 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String refreshToken = jwtTokenizer.delegateRefreshToken(member);
 
         // 쿠키 설정
-        addCookie("AccessToken", accessToken, "localhost", jwtTokenizer.getAccessTokenExpirationSeconds(), response);
+//        addCookie("AccessToken", accessToken, "localhost", jwtTokenizer.getAccessTokenExpirationSeconds(), response);
         addHttpOnlyCookie("RefreshToken", refreshToken, request.getServerName(), jwtTokenizer.getRefreshTokenExpirationSeconds(), response);
 
         // RefreshToken 저장
         refreshService.saveRefreshToken(member.getEmail(), refreshToken, jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationSeconds()));
 
         // 리다이렉트 URI 설정
-        getRedirectStrategy().sendRedirect(request, response, clientUrl);
+        getRedirectStrategy().sendRedirect(request, response, createURI(accessToken));
     }
 
     Member emailToMember(String email) {
@@ -59,5 +59,13 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 .email(email)
                 .roles(authorityUtils.createRoles(email))
                 .build();
+    }
+
+    private String createURI(String accessToken) {
+        return UriComponentsBuilder
+                .fromUriString(clientUrl)
+                .queryParam("access_token", accessToken)
+                .build()
+                .toUriString();
     }
 }
