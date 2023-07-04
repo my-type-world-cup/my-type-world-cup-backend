@@ -64,6 +64,7 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private String createURI(String accessToken) {
         return UriComponentsBuilder
                 .fromUriString(clientUrl)
+                .path("callback")
                 .queryParam("access_token", accessToken)
                 .build()
                 .toUriString();
