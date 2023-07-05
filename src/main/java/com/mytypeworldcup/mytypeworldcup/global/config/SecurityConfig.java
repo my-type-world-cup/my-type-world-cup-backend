@@ -135,6 +135,7 @@ public class SecurityConfig {
         configuration.setAllowCredentials(true); // 요청시 쿠키값 포함; 해당 설정 true 시 모든 출처 허용대신 특정 해줘야함
 //        configuration.setAllowedOrigins(Arrays.asList("*")); // 모든 출처(Origin)에 대해 스크립트 기반의 HTTP 통신을 허용하도록 설정
         configuration.addAllowedOrigin(clientUrl);
+        configuration.addAllowedOrigin("http://localhost:3000");
 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE")); // setAllowedMethods()를 통해 파라미터로 지정한 HTTP Method에 대한 HTTP 통신을 허용
         configuration.addAllowedHeader("*"); // 모든 헤더 허용
