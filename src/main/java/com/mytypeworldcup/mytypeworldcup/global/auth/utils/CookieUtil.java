@@ -11,6 +11,7 @@ public class CookieUtil {
         ResponseCookie cookie = ResponseCookie.from(name, value)
                 .secure(true)
                 .sameSite("None") // SameSite None 사용하려면 Secure true가 되어야함
+                .domain(domain)
                 .path("/")
                 .maxAge(maxAge)
                 .httpOnly(true)
