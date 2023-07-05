@@ -42,6 +42,7 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         // 쿠키 설정
 //        addCookie("AccessToken", accessToken, "localhost", jwtTokenizer.getAccessTokenExpirationSeconds(), response);
+        System.out.println(request.getServerName());
         addHttpOnlyCookie("RefreshToken", refreshToken, request.getServerName(), jwtTokenizer.getRefreshTokenExpirationSeconds(), response);
 
         // RefreshToken 저장
