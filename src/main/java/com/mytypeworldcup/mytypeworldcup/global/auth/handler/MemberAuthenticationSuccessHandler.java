@@ -22,6 +22,7 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final CustomAuthorityUtils authorityUtils;
     private final RefreshService refreshService;
     private final String clientUrl;
+    private final String serverDomain;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -42,8 +43,7 @@ public class MemberAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         // 쿠키 설정
 //        addCookie("AccessToken", accessToken, "localhost", jwtTokenizer.getAccessTokenExpirationSeconds(), response);
-        System.out.println(request.getServerName());
-        addHttpOnlyCookie("RefreshToken", refreshToken, request.getServerName(), jwtTokenizer.getRefreshTokenExpirationSeconds(), response);
+        addHttpOnlyCookie("RefreshToken", refreshToken, serverDomain, jwtTokenizer.getRefreshTokenExpirationSeconds(), response);
 
         // RefreshToken 저장
         refreshService.saveRefreshToken(member.getEmail(), refreshToken, jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationSeconds()));
