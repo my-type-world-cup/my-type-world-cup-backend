@@ -41,6 +41,8 @@ public class SecurityConfig {
     private final RefreshService refreshService;
     @Value("${dolphin.client.url}")
     private String clientUrl;
+    @Value("${dolphin.server.domain}")
+    private String serverDomain;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -114,7 +116,7 @@ public class SecurityConfig {
                 .userInfoEndpoint()
                 .userService(oAuth2UserService)
                 .and()
-                .successHandler(new MemberAuthenticationSuccessHandler(jwtTokenizer, authorityUtils, refreshService, clientUrl))
+                .successHandler(new MemberAuthenticationSuccessHandler(jwtTokenizer, authorityUtils, refreshService, clientUrl, serverDomain))
         ;
         return http.build();
     }
@@ -134,7 +136,7 @@ public class SecurityConfig {
 
         configuration.setAllowCredentials(true); // 요청시 쿠키값 포함; 해당 설정 true 시 모든 출처 허용대신 특정 해줘야함
 //        configuration.setAllowedOrigins(Arrays.asList("*")); // 모든 출처(Origin)에 대해 스크립트 기반의 HTTP 통신을 허용하도록 설정
-//        configuration.addAllowedOrigin(clientUrl);
+        configuration.addAllowedOrigin(clientUrl);
         configuration.addAllowedOrigin("http://localhost:3000");
 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE")); // setAllowedMethods()를 통해 파라미터로 지정한 HTTP Method에 대한 HTTP 통신을 허용
@@ -153,7 +155,7 @@ public class SecurityConfig {
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer);
             jwtAuthenticationFilter.setFilterProcessesUrl("/login/native");
 
-            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler(jwtTokenizer, authorityUtils, refreshService, clientUrl));
+            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler(jwtTokenizer, authorityUtils, refreshService, clientUrl, serverDomain));
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
 
             JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils);

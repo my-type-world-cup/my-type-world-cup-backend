@@ -31,3 +31,6 @@ server:
 dolphin:
   client:
     url: http://localhost:3000
+
+  server:
+    domain: ${DOLPHIN_SERVER_DOMAIN}
