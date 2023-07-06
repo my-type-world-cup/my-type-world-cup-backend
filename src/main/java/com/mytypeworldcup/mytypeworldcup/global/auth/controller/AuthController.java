@@ -7,10 +7,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +21,16 @@ public class AuthController {
     public ResponseEntity refresh(@CookieValue(value = "RefreshToken") Cookie refreshTokenCookie, HttpServletRequest request, HttpServletResponse response) {
         refreshService.refreshAccessToken(refreshTokenCookie, request.getServerName(), response);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/auth/test")
+    public ResponseEntity test(HttpServletRequest request) {
+        Map<String, String> map = new HashMap<>();
+        map.put("getServerName", request.getServerName());
+        map.put("getRequestURI", request.getRequestURI());
+        map.put("toString", request.toString());
+
+        return ResponseEntity.ok(map);
     }
 
     @DeleteMapping("/auth/logout")
