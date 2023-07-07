@@ -146,8 +146,8 @@ public class SecurityConfig {
         configuration.addAllowedOrigin("http://localhost:3000");
         configuration.addAllowedOrigin("https://my-type-world-cup-frontend-x37l.vercel.app");
 
-//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE")); // setAllowedMethods()를 통해 파라미터로 지정한 HTTP Method에 대한 HTTP 통신을 허용
-        configuration.addAllowedMethod("*");
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE")); // setAllowedMethods()를 통해 파라미터로 지정한 HTTP Method에 대한 HTTP 통신을 허용
+//        configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*"); // 모든 헤더 허용
 
         source.registerCorsConfiguration("/**", configuration); // 모든 URL에 앞에서 구성한 CORS 정책(CorsConfiguration)을 적용
