@@ -113,12 +113,14 @@ public class SecurityConfig {
                 // OAuth2.0 로그인 설정
                 .oauth2Login()
 //                .defaultSuccessUrl(redirectUrl) // 임시 리다이렉트
-                .authorizationEndpoint()
-                .baseUri("/oauth2/authorization")
-                .and()
-                .redirectionEndpoint()
-                .baseUri("/*/oauth2/code/*")
-                .and()
+
+//                .authorizationEndpoint()
+//                .baseUri("/oauth2/authorization")
+//                .and()
+//                .redirectionEndpoint()
+//                .baseUri("/*/oauth2/code/*")
+//                .and()
+
                 .userInfoEndpoint()
                 .userService(oAuth2UserService)
                 .and()
