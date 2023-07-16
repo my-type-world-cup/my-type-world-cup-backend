@@ -8,15 +8,12 @@ import com.mytypeworldcup.mytypeworldcup.global.auth.repository.RefreshTokenRepo
 import com.mytypeworldcup.mytypeworldcup.global.error.BusinessLogicException;
 import com.mytypeworldcup.mytypeworldcup.global.util.CustomAuthorityUtils;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Date;
-
-import static com.mytypeworldcup.mytypeworldcup.global.auth.utils.CookieUtil.deleteCookie;
 
 @Service
 //@Transactional
@@ -37,16 +34,13 @@ public class RefreshService {
         refreshTokenRepository.save(token);
     }
 
-    public String refreshAccessToken(Cookie refreshTokenCookie, HttpServletResponse response) {
+    public String refreshAccessToken(Cookie refreshTokenCookie) {
         // 리프레쉬토큰을 찾는다
         // 존재하지않으면 예외발생
         RefreshToken refreshToken = findVerifiedRefreshToken(refreshTokenCookie.getValue());
 
         // 유효기간확인
-        // 유효기간 만료됬을경우 디비에서 토큰삭제 및 브라우저 토큰 삭제
         if (refreshToken.getExpiryDate().toInstant().isBefore(Instant.now())) { // 토큰의 만료일과 현재시간을 비교
-            refreshTokenRepository.delete(refreshToken);
-            deleteCookie(refreshTokenCookie, response);
             // 로그인 유도
             throw new BusinessLogicException(AuthExceptionCode.REFRESH_TOKEN_EXPIRED);
         }
@@ -56,6 +50,7 @@ public class RefreshService {
                 .email(refreshToken.getEmail())
                 .roles(authorityUtils.createRoles(refreshToken.getEmail()))
                 .build();
+
         return jwtTokenizer.delegateAccessToken(member);
     }
 
