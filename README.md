@@ -1,8 +1,10 @@
-<img src="https://avatars.githubusercontent.com/u/130832681?s=200&v=4">
+![img](https://github.com/my-type-world-cup/my-type-world-cup-backend/assets/107738517/ddaeee3c-0af0-47ee-8bfc-9be784b56d0f)
 
 ## **프로젝트 소개**
 
-이상형월드컵 - 돌픽 백엔드 깃허브 레포지토리 입니다.
+https://www.dolpick.com
+
+이상형월드컵 `돌픽` 백엔드 깃허브 레포지토리 입니다.
 
 ## **🛠 ️기술 스택**
 
@@ -24,3 +26,13 @@
 ### Communication
 
 <img src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white"> <img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=Discord&logoColor=white"> <img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white">
+
+## **📑 ️아키텍처 & CI/CD 구조**
+
+### 아키텍처
+
+![BackEnd 아키텍처](https://github.com/my-type-world-cup/my-type-world-cup-backend/assets/107738517/fbe00708-2baa-4919-ad23-35afcdfecdd7)
+
+### CI/CD
+
+![CI:CD 구조](https://github.com/my-type-world-cup/my-type-world-cup-backend/assets/107738517/cb0f5bf0-09eb-443b-ab23-9151a3ec18bf)
