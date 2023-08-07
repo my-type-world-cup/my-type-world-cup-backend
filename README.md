@@ -31,7 +31,7 @@ https://www.dolpick.com
 
 ### 아키텍처
 
-![BackEnd 아키텍처](https://github.com/my-type-world-cup/my-type-world-cup-backend/assets/107738517/fbe00708-2baa-4919-ad23-35afcdfecdd7)
+![BackEnd 아키텍처](https://github.com/my-type-world-cup/my-type-world-cup-backend/assets/107738517/eff65b91-4adc-449b-b4cc-4e24043a8461)
 
 ### CI/CD
 
