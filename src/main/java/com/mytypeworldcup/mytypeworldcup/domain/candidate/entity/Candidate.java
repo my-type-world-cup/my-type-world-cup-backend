@@ -21,7 +21,7 @@ public class Candidate extends Auditable {
     private Long id;
 
     // 후보의 이름 또는 간략한 설명으로써, 이용자들에게 보여질 이름
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String name;
 
     // 이미지 링크
