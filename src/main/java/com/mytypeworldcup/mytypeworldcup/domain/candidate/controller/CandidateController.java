@@ -40,7 +40,7 @@ public class CandidateController {
     @PatchMapping("/candidates/{candidateId}")
     public ResponseEntity patchCandidate(Authentication authentication,
                                          @Positive @PathVariable long candidateId,
-                                         @RequestBody CandidatePatchDto candidatePatchDto) {
+                                         @RequestBody @Valid CandidatePatchDto candidatePatchDto) {
         candidateService.verifyAccess(authentication.getName(), candidateId);
         CandidateResponseDto candidateResponseDto = candidateService.updateCandidate(candidateId, candidatePatchDto);
         return ResponseEntity.ok(candidateResponseDto);
