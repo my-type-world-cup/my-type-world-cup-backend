@@ -26,10 +26,11 @@ public class WorldCup extends Auditable {
     private Long id;
 
     // 월드컵의 제목
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String title;
 
     // 월드컵의 설명
+    @Column(length = 200)
     private String description;
 
     // 비밀번호 -> 공개일경우 해당 필드 null, 비공개일경우 Null이 아님
