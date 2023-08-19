@@ -8,7 +8,9 @@ import org.hibernate.validator.constraints.Length;
 public class CandidatePatchDto {
     @Length(min = 1, max = 50)
     private String name;
+    @Length(min = 1, max = 255)
     private String image;
+    @Length(min = 1, max = 255)
     private String thumb;
 
     @Builder
