@@ -2,17 +2,20 @@ package com.mytypeworldcup.mytypeworldcup.domain.comment.dto;
 
 import com.mytypeworldcup.mytypeworldcup.domain.member.entity.Member;
 import com.mytypeworldcup.mytypeworldcup.domain.worldcup.entity.WorldCup;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 @NoArgsConstructor
 @Getter
 public class CommentPostDto {
-    @NotBlank
+    @NotNull
+    @Length(min = 1, max = 255)
     private String content;
+    @Length(max = 50)
     private String candidateName;
     private Long worldCupId;
     @Setter

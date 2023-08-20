@@ -23,6 +23,7 @@ public class Comment extends Auditable {
     @Column(nullable = false)
     private String content;
 
+    @Column(length = 50)
     private String candidateName;
 
     @ManyToOne
