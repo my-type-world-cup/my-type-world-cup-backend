@@ -20,9 +20,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class LikeServiceTest {
+class LikeServiceImplTest {
     @InjectMocks
-    private LikeService likeService;
+    private LikeServiceImpl likeService;
     @Mock
     private LikeRepository likeRepository;
 

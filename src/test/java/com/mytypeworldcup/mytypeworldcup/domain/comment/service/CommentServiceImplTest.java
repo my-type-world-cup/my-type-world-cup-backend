@@ -27,9 +27,9 @@ import static org.mockito.Mockito.any;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @ExtendWith(MockitoExtension.class)
-class CommentServiceTest {
+class CommentServiceImplTest {
     @InjectMocks
-    private CommentService commentService;
+    private CommentServiceImpl commentService;
     @Mock
     private CommentRepository commentRepository;
     @Mock

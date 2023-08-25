@@ -105,7 +105,7 @@ public class CandidateController {
         PageRequest pageRequest = PageRequest.of(params.getPage(), params.getSize(), params.getDirection(), params.getSort());
         Page<CandidateResponseDto> responseDtos = candidateService.findCandidatesByWorldCupId(worldCupId, params.getKeyword(), pageRequest);
 
-        return ResponseEntity.ok(new PageResponseDto(responseDtos));
+        return ResponseEntity.ok(new PageResponseDto<>(responseDtos));
     }
 
 }
