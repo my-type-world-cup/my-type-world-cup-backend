@@ -25,9 +25,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CandidateServiceTest {
+class CandidateServiceImplTest {
     @InjectMocks
-    private CandidateService candidateService;
+    private CandidateServiceImpl candidateService;
 
     @Mock
     private CandidateMapper candidateMapper;
@@ -327,6 +327,7 @@ class CandidateServiceTest {
         // then
         candidateService.verifyAccess(email, candidateId);
     }
+
     @Test
     @DisplayName("접근권한 검증 - 실패")
     void verifyAccess_bad() {
