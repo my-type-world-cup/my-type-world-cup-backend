@@ -30,9 +30,9 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 
 
 @ExtendWith(MockitoExtension.class)
-class WorldCupServiceTest {
+class WorldCupServiceImplTest {
     @InjectMocks
-    private WorldCupService worldCupService;
+    private WorldCupServiceImpl worldCupService;
     @Mock
     private WorldCupMapper worldCupMapper;
     @Mock
