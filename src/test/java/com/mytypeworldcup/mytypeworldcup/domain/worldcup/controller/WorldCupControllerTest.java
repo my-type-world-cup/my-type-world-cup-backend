@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -26,12 +29,16 @@ import java.util.List;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(WorldCupController.class)
+@AutoConfigureRestDocs
 @MockBean(JpaMetamodelMappingContext.class)
 @WithMockUser(roles = {"USER", "ADMIN"})
 public class WorldCupControllerTest {
@@ -55,7 +62,7 @@ public class WorldCupControllerTest {
                 .builder()
                 .title("테스트 월드컵의 제목입니다.")
                 .description("테스트 월드컵의 설명입니다.")
-                .password(null) // 공개 = null
+                .password("1234")
                 .build();
 
         WorldCupResponseDto response = WorldCupResponseDto
@@ -74,7 +81,7 @@ public class WorldCupControllerTest {
 
         // when
         ResultActions actions = mockMvc.perform(
-                post("/worldcups")
+                RestDocumentationRequestBuilders.post("/worldcups")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(csrf())
@@ -87,8 +94,28 @@ public class WorldCupControllerTest {
                 .andExpect(jsonPath("$.id").value(worldCupId))
                 .andExpect(jsonPath("$.title").value(request.getTitle()))
                 .andExpect(jsonPath("$.description").value(request.getDescription()))
-                .andExpect(jsonPath("$.password").isEmpty())
-                .andExpect(jsonPath("$.memberId").value(memberId));
+                .andExpect(jsonPath("$.password").value(request.getPassword()))
+                .andExpect(jsonPath("$.memberId").value(memberId))
+                .andDo(document(
+                        "postWorldCup",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        // 리퀘스트 바디
+                        requestFields(
+                                fieldWithPath("title").type(JsonFieldType.STRING).description("월드컵 제목"),
+                                fieldWithPath("description").type(JsonFieldType.STRING).description("월드컵 설명"),
+                                fieldWithPath("password").type(JsonFieldType.STRING).description("월드컵 암호").optional()
+                        ),
+                        // 리스폰스 바디
+                        responseFields(
+                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("월드컵 식별자"),
+                                fieldWithPath("title").type(JsonFieldType.STRING).description("월드컵 제목"),
+                                fieldWithPath("description").type(JsonFieldType.STRING).description("월드컵 설명"),
+                                fieldWithPath("password").type(JsonFieldType.STRING).description("월드컵 암호"),
+                                fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("멤버 식별자")
+                        )
+                ))
+        ;
     }
 
     @Test
