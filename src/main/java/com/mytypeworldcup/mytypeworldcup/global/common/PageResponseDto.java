@@ -8,11 +8,10 @@ import java.util.List;
 @Getter
 public class PageResponseDto<T> {
 
-    private List<T> data;
     private PageInfo pageInfo;
+    private List<T> data;
 
     public PageResponseDto(Page<T> data) {
-        this.data = data.getContent();
         this.pageInfo = PageInfo
                 .builder()
                 .first(data.isFirst())
@@ -22,6 +21,7 @@ public class PageResponseDto<T> {
                 .totalPages(data.getTotalPages())
                 .last(data.isLast())
                 .build();
+        this.data = data.getContent();
     }
 
 }
