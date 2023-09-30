@@ -104,9 +104,9 @@ public class WorldCupControllerTest {
                         // 리퀘스트 바디
                         requestFields(
                                 fieldWithPath("title").type(JsonFieldType.STRING).description("worldCup 제목")
-                                        .attributes(key("constraints").value("1이상 50이하")),
+                                        .attributes(key("constraints").value("length : 1이상 50이하")),
                                 fieldWithPath("description").type(JsonFieldType.STRING).description("worldCup 설명").optional()
-                                        .attributes(key("constraints").value("200이하")),
+                                        .attributes(key("constraints").value("length : 200이하")),
                                 fieldWithPath("password").type(JsonFieldType.STRING).description("worldCup 암호").optional()
                                         .attributes(key("constraints").value("4자리 숫자"))
                         ),
@@ -168,12 +168,16 @@ public class WorldCupControllerTest {
                         "patchWorldCup",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        // 패스 파라미터
+                        pathParameters(
+                                parameterWithName("worldCupId").description("worldCup 식별자")
+                                        .attributes(key("constraints").value("1이상"))),
                         // 리퀘스트 바디
                         requestFields(
                                 fieldWithPath("title").type(JsonFieldType.STRING).description("worldCup 제목")
-                                        .attributes(key("constraints").value("1이상 50이하")),
+                                        .attributes(key("constraints").value("length : 1이상 50이하")),
                                 fieldWithPath("description").type(JsonFieldType.STRING).description("worldCup 설명").optional()
-                                        .attributes(key("constraints").value("200이하")),
+                                        .attributes(key("constraints").value("length : 200이하")),
                                 fieldWithPath("password").type(JsonFieldType.STRING).description("worldCup 암호").optional()
                                         .attributes(key("constraints").value("4자리 숫자" +
                                                 " +\n" +
