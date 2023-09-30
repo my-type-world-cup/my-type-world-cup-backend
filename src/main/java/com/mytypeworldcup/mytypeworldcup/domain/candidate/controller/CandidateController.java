@@ -61,7 +61,7 @@ public class CandidateController {
      * 결과를 리스트로 받는다
      */
     @PatchMapping("/candidates")
-    public ResponseEntity patchMatchResults(@RequestBody List<MatchDto> matchDtos) {
+    public ResponseEntity patchMatchResults(@RequestBody @Valid List<MatchDto> matchDtos) {
         candidateService.updateMatchResults(matchDtos);
 
         Map<String, Integer> result = new HashMap<>();
