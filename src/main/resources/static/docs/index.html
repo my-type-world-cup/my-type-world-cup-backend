@@ -458,6 +458,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_2_7_특정_월드컵_삭제">2 - 7. 특정 월드컵 삭제</a></li>
 </ul>
 </li>
+<li><a href="#_3_candidate_api">3. Candidate API</a>
+<ul class="sectlevel2">
+<li><a href="#_3_1_후보_생성">3 - 1. 후보 생성</a></li>
+<li><a href="#_3_2_특정_후보_수정">3 - 2. 특정 후보 수정</a></li>
+<li><a href="#_3_3_월드컵_결과_반영">3 - 3. 월드컵 결과 반영</a></li>
+<li><a href="#_3_4_랜덤_이미지_요청">3 - 4 랜덤 이미지 요청</a></li>
+<li><a href="#_3_5_후보_목록_가져오기">3 - 5 후보 목록 가져오기</a></li>
+<li><a href="#_3_6_특정_후보_삭제">3 - 6 특정 후보 삭제</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -491,7 +501,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h4 id="_2_1_월드컵_생성_http_request"><a class="link" href="#_2_1_월드컵_생성_http_request">HTTP request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /worldcups?_csrf=9KUs0OG1L90S0e4sijIBkdDGcW5IeLNQgG-kSUbZUW0CzFDpwsEa4ICAHek_t9sbsh81oLX-XFYsSNZ9sV-XKCTvMlpm_TbR HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /worldcups?_csrf=uPNZJrkq7qe4XLLDuA5f8dTCvHxYBM2ZEZ2_BA63OCz52yDojstgF90Z15GVONPy3SNrxeDzkR1vZqu0JavaM2iCChqc6Rjc HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
 Content-Length: 141
@@ -529,14 +539,14 @@ Host: secure-a-server.dolpick.com
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>title</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1이상 50이하</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">length : 1이상 50이하</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">worldCup 제목</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">200이하</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">length : 200이하</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">worldCup 설명</p></td>
 </tr>
 <tr>
@@ -650,7 +660,7 @@ Content-Length: 171
 <h4 id="_2_2_특정_월드컵_수정_http_request"><a class="link" href="#_2_2_특정_월드컵_수정_http_request">HTTP request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /worldcups/1?_csrf=bs3ki0kUA2jTY6Q8qZyJvQE5bWt65bh7PlK0tuPnt1_LJHhjXK7Wsy13Zlz-W50Kn7G9hDYKQAkehtxWDmvX0tPW1G6qR0ta HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /worldcups/1?_csrf=J-FYKEDnS81hnouhs3TT43qvuoRtcgqa53sn4UKHbks3MCIxFIVtHnXRKKlMrbPEglnn206al70MEz631k0TgHTkCipVBxQF HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
 Content-Length: 101
@@ -663,6 +673,31 @@ Host: secure-a-server.dolpick.com
 }</code></pre>
 </div>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_2_2_특정_월드컵_수정_path_parameters"><a class="link" href="#_2_2_특정_월드컵_수정_path_parameters">Path parameters</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. /worldcups/{worldCupId}</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Constraints</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>worldCupId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1이상</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">worldCup 식별자</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_2_2_특정_월드컵_수정_request_fields"><a class="link" href="#_2_2_특정_월드컵_수정_request_fields">Request fields</a></h4>
@@ -688,14 +723,14 @@ Host: secure-a-server.dolpick.com
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>title</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1이상 50이하</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">length : 1이상 50이하</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">worldCup 제목</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>description</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">200이하</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">length : 200이하</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">worldCup 설명</p></td>
 </tr>
 <tr>
@@ -1591,7 +1626,7 @@ Content-Type: application/x-www-form-urlencoded
 Host: secure-a-server.dolpick.com
 Content-Length: 102
 
-_csrf=fUHYFsjty8AX3Mtjq8O7VQemiEVkCnJeqVB7wX7q5PZHiMBhSXbrJ_rV-KU65ahUze6PZGKfpX1cbkVzmWYe8xvdhcB-ufYF</code></pre>
+_csrf=bugA_HhKBvJNT9QZItqOPgYxYODoB9VtyzxxWZFjmBWjYwPiXto4yxx_Zcdgf-QoRve6WGdSTYKNYeZA_w9BafJTrHeWVGXa</code></pre>
 </div>
 </div>
 </div>
@@ -1667,11 +1702,1201 @@ X-Frame-Options: DENY</code></pre>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_3_candidate_api"><a class="link" href="#_3_candidate_api">3. Candidate API</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_3_1_후보_생성"><a class="link" href="#_3_1_후보_생성">3 - 1. 후보 생성</a></h3>
+<div class="sect3">
+<h4 id="_3_1_후보_생성_http_request"><a class="link" href="#_3_1_후보_생성_http_request">HTTP request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /candidates?_csrf=DWiZJFIzG1BpeNzencEDIQn1IwUUJUomb8es99IPXM_-0aJgNF6pF2JWLDREHO3uquw3ETnMDjwlEykLXvbIxeo_bvbP55NR HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Accept: application/json
+Content-Length: 96
+Host: secure-a-server.dolpick.com
+
+{
+  "name" : "테스트",
+  "image" : "image Url",
+  "thumb" : "thumb Url",
+  "worldCupId" : 1
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_3_1_후보_생성_request_fields"><a class="link" href="#_3_1_후보_생성_request_fields">Request fields</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Constraints</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">length : 1이상 50이하</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">candidate 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>image</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">length : 1이상 255이하</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이미지 주소</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thumb</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">length : 1이상 255이하</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">썸네일 이미지 주소</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>worldCupId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1이상</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">worldCup 식별자</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_3_1_후보_생성_http_response"><a class="link" href="#_3_1_후보_생성_http_response">HTTP response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 201 Created
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Length: 205
+
+{
+  "id" : 3,
+  "name" : "테스트",
+  "image" : "image Url",
+  "thumb" : "thumb Url",
+  "finalWinCount" : 0,
+  "winCount" : 0,
+  "matchUpWorldCupCount" : 0,
+  "matchUpGameCount" : 0,
+  "worldCupId" : 1
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_3_1_후보_생성_response_fields"><a class="link" href="#_3_1_후보_생성_response_fields">Response fields</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">candidate 식별자</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">candidate 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>image</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이미지 주소</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thumb</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">썸네일 이미지 주소</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>finalWinCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">최종 우승 횟수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>winCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1대1 승리 횟수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>matchUpWorldCupCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">월드컵 참가 횟수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>matchUpGameCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1대1 매칭 횟수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>worldCupId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">worldCup 식별자</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_error_8"><a class="link" href="#_error_8">Error</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>400 Bad Request</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">제약조건 미충족</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>401 Unauthorized</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">잘못된 인증 정보</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>404 Not Found</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">존재하지 않는 리소스</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_3_2_특정_후보_수정"><a class="link" href="#_3_2_특정_후보_수정">3 - 2. 특정 후보 수정</a></h3>
+<div class="sect3">
+<h4 id="_3_2_특정_후보_수정_http_request"><a class="link" href="#_3_2_특정_후보_수정_http_request">HTTP request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /candidates/1?_csrf=7_VaKwh-FpFaErhW6SdQNYwhVrr5Ei-l5OiyR0Cttm88zkIm2MdtTz9KL_B3Io9mjwpkULkUe4OfcRaIht-CciKahgpYqicX HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Accept: application/json
+Content-Length: 76
+Host: secure-a-server.dolpick.com
+
+{
+  "name" : "테스트",
+  "image" : "image Url",
+  "thumb" : "thumb Url"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_3_2_특정_후보_수정_path_parameters"><a class="link" href="#_3_2_특정_후보_수정_path_parameters">Path parameters</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. /candidates/{candidateId}</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Constraints</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>candidateId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1이상</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">candidate 식별자</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_3_2_특정_후보_수정_request_fields"><a class="link" href="#_3_2_특정_후보_수정_request_fields">Request fields</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Constraints</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">length : 1이상 50이하</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">candidate 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>image</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">length : 1이상 255이하</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이미지 주소</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thumb</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">length : 1이상 255이하</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">썸네일 이미지 주소</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_3_2_특정_후보_수정_http_response"><a class="link" href="#_3_2_특정_후보_수정_http_response">HTTP response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Length: 205
+
+{
+  "id" : 1,
+  "name" : "테스트",
+  "image" : "image Url",
+  "thumb" : "thumb Url",
+  "finalWinCount" : 0,
+  "winCount" : 0,
+  "matchUpWorldCupCount" : 0,
+  "matchUpGameCount" : 0,
+  "worldCupId" : 1
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_3_2_특정_후보_수정_response_fields"><a class="link" href="#_3_2_특정_후보_수정_response_fields">Response fields</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">candidate 식별자</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">candidate 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>image</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이미지 주소</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thumb</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">썸네일 이미지 주소</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>finalWinCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">최종 우승 횟수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>winCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1대1 승리 횟수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>matchUpWorldCupCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">월드컵 참가 횟수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>matchUpGameCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1대1 매칭 횟수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>worldCupId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">worldCup 식별자</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_error_9"><a class="link" href="#_error_9">Error</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>400 Bad Request</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">제약조건 미충족</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>401 Unauthorized</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">잘못된 인증 정보</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>404 Not Found</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">존재하지 않는 리소스</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_3_3_월드컵_결과_반영"><a class="link" href="#_3_3_월드컵_결과_반영">3 - 3. 월드컵 결과 반영</a></h3>
+<div class="sect3">
+<h4 id="_3_3_월드컵_결과_반영_http_request"><a class="link" href="#_3_3_월드컵_결과_반영_http_request">HTTP request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /candidates?_csrf=STONPM4opyGxvKs-shFH-unXCJ1II3ERHdIjXt_577bcBi39LAC7DP8blUCcjshYhTxzm4rnJaV6E0k8JbRAOuzPi4DtMR3E HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Accept: application/json
+Content-Length: 242
+Host: secure-a-server.dolpick.com
+
+[ {
+  "id" : 1,
+  "matchUpGameCount" : 4,
+  "winCount" : 1
+}, {
+  "id" : 1,
+  "matchUpGameCount" : 4,
+  "winCount" : 1
+}, {
+  "id" : 1,
+  "matchUpGameCount" : 4,
+  "winCount" : 1
+}, {
+  "id" : 1,
+  "matchUpGameCount" : 4,
+  "winCount" : 1
+} ]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_3_3_월드컵_결과_반영_request_fields"><a class="link" href="#_3_3_월드컵_결과_반영_request_fields">Request fields</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Constraints</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[*].id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1이상</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">candidate 식별자</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[*].matchUpGameCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1이상</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1대1 매칭 횟수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[*].winCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0이상</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1대1 승리 횟수</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_3_3_월드컵_결과_반영_http_response"><a class="link" href="#_3_3_월드컵_결과_반영_http_response">HTTP response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Length: 29
+
+{
+  "updatedCandidates" : 4
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_3_3_월드컵_결과_반영_response_fields"><a class="link" href="#_3_3_월드컵_결과_반영_response_fields">Response fields</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>updatedCandidates</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">업데이트 된 candidate 횟수</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_error_10"><a class="link" href="#_error_10">Error</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>400 Bad Request</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">제약조건 미충족</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>404 Not Found</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">존재하지 않는 리소스</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_3_4_랜덤_이미지_요청"><a class="link" href="#_3_4_랜덤_이미지_요청">3 - 4 랜덤 이미지 요청</a></h3>
+<div class="sect3">
+<h4 id="_3_4_랜덤_이미지_요청_http_request"><a class="link" href="#_3_4_랜덤_이미지_요청_http_request">HTTP request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /worldcups/1/candidates/random?teamCount=4 HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Accept: application/json
+Content-Length: 25
+Host: secure-a-server.dolpick.com
+
+{
+  "password" : "1234"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_3_4_랜덤_이미지_요청_path_parameters"><a class="link" href="#_3_4_랜덤_이미지_요청_path_parameters">Path parameters</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. /worldcups/{worldCupId}/candidates/random</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Constraints</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>worldCupId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1이상</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">worldCup 식별자</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_3_4_랜덤_이미지_요청_query_parameters"><a class="link" href="#_3_4_랜덤_이미지_요청_query_parameters">Query parameters</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Constraints</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>teamCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4, 8, 16, 32, &#8230;&#8203; 1024</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">요청할 candidate 갯수</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_3_4_랜덤_이미지_요청_request_fields"><a class="link" href="#_3_4_랜덤_이미지_요청_request_fields">Request fields</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Constraints</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">미입력(null) 또는 4자리 숫자</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">worldCup 암호</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_3_4_랜덤_이미지_요청_http_response"><a class="link" href="#_3_4_랜덤_이미지_요청_http_response">HTTP response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Length: 486
+
+[ {
+  "id" : 1,
+  "name" : "테스트1",
+  "image" : "테스트 이미지 url1",
+  "thumb" : "테스트 썸네일 url1"
+}, {
+  "id" : 2,
+  "name" : "테스트2",
+  "image" : "테스트 이미지 url2",
+  "thumb" : "테스트 썸네일 url2"
+}, {
+  "id" : 3,
+  "name" : "테스트3",
+  "image" : "테스트 이미지 url3",
+  "thumb" : "테스트 썸네일 url3"
+}, {
+  "id" : 4,
+  "name" : "테스트4",
+  "image" : "테스트 이미지 url4",
+  "thumb" : "테스트 썸네일 url4"
+} ]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_3_4_랜덤_이미지_요청_response_fields"><a class="link" href="#_3_4_랜덤_이미지_요청_response_fields">Response fields</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[*].id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">candidate 식별자</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[*].name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">candidate 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[*].image</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이미지 주소</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[*].thumb</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">썸네일 이미지 주소</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_error_11"><a class="link" href="#_error_11">Error</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>400 Bad Request</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">제약조건 미충족</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>401 Unauthorized</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">잘못된 인증 정보</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>404 Not Found</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">존재하지 않는 리소스</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_3_5_후보_목록_가져오기"><a class="link" href="#_3_5_후보_목록_가져오기">3 - 5 후보 목록 가져오기</a></h3>
+<div class="sect3">
+<h4 id="_3_5_후보_목록_가져오기_http_request"><a class="link" href="#_3_5_후보_목록_가져오기_http_request">HTTP request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /worldcups/1/candidates?page=1&amp;size=5&amp;sort=winCount&amp;direction=DESC&amp;keyword=&amp;_csrf=KXxIE7teVYZsGNWTYBl9yphiIKG_BORw5PQBZVAEbtbiOPP1GkkqIo9qZuVBeuGkWTRJr65aDZmGZdZdgs03AGgzXeWAAMqT HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Accept: application/json
+Content-Length: 25
+Host: secure-a-server.dolpick.com
+
+{
+  "password" : "1234"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_3_5_후보_목록_가져오기_path_parameters"><a class="link" href="#_3_5_후보_목록_가져오기_path_parameters">Path parameters</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. /worldcups/{worldCupId}/candidates</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Constraints</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>worldCupId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1이상</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">worldCup 식별자</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_3_5_후보_목록_가져오기_query_parameters"><a class="link" href="#_3_5_후보_목록_가져오기_query_parameters">Query parameters</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Constraints</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>page</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1이상</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">요청 페이지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1이상</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 당 데이터 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sort</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">createdAt(미입력 시),<br>
+winCount(제약조건 외 값 입력 시)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">winRatio(1대1 승률), finalWinRatio(최종 우승 비율), name(이름 순), matchUpWorldCupCount(월드컵 참가 횟수), matchUpGameCount(1대1 매칭 횟수), finalWinCount(최종 우승 횟수), createdAt(생성일시), winCount(1대1 승리 횟수</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 기준</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>direction</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DESC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ASC 또는 DESC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">정렬 방법</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>keyword</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">검색어 (name에서 검색)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_3_5_후보_목록_가져오기_request_fields"><a class="link" href="#_3_5_후보_목록_가져오기_request_fields">Request fields</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Constraints</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">미입력(null) 또는 4자리 숫자</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">worldCup 암호</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_3_5_후보_목록_가져오기_http_response"><a class="link" href="#_3_5_후보_목록_가져오기_http_response">HTTP response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Content-Length: 1493
+
+{
+  "pageInfo" : {
+    "first" : true,
+    "page" : 1,
+    "size" : 5,
+    "totalElements" : 10,
+    "totalPages" : 2,
+    "last" : false
+  },
+  "data" : [ {
+    "id" : 1,
+    "name" : "테스트후보명1",
+    "image" : "테스트이미지url1",
+    "thumb" : "테스트썸네일url1",
+    "finalWinCount" : 9,
+    "winCount" : 9,
+    "matchUpWorldCupCount" : 100,
+    "matchUpGameCount" : 100,
+    "worldCupId" : 1
+  }, {
+    "id" : 2,
+    "name" : "테스트후보명2",
+    "image" : "테스트이미지url2",
+    "thumb" : "테스트썸네일url2",
+    "finalWinCount" : 8,
+    "winCount" : 8,
+    "matchUpWorldCupCount" : 100,
+    "matchUpGameCount" : 100,
+    "worldCupId" : 1
+  }, {
+    "id" : 3,
+    "name" : "테스트후보명3",
+    "image" : "테스트이미지url3",
+    "thumb" : "테스트썸네일url3",
+    "finalWinCount" : 7,
+    "winCount" : 7,
+    "matchUpWorldCupCount" : 100,
+    "matchUpGameCount" : 100,
+    "worldCupId" : 1
+  }, {
+    "id" : 4,
+    "name" : "테스트후보명4",
+    "image" : "테스트이미지url4",
+    "thumb" : "테스트썸네일url4",
+    "finalWinCount" : 6,
+    "winCount" : 6,
+    "matchUpWorldCupCount" : 100,
+    "matchUpGameCount" : 100,
+    "worldCupId" : 1
+  }, {
+    "id" : 5,
+    "name" : "테스트후보명5",
+    "image" : "테스트이미지url5",
+    "thumb" : "테스트썸네일url5",
+    "finalWinCount" : 5,
+    "winCount" : 5,
+    "matchUpWorldCupCount" : 100,
+    "matchUpGameCount" : 100,
+    "worldCupId" : 1
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_3_5_후보_목록_가져오기_response_fields"><a class="link" href="#_3_5_후보_목록_가져오기_response_fields">Response fields</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageInfo.first</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">첫번째 페이지 여부</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageInfo.page</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">현재 페이지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageInfo.size</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">페이지 당 게시물 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageInfo.totalElements</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">총 게시물 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageInfo.totalPages</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">총 페이지 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pageInfo.last</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">마지막 페이지 여부</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[*].id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">candidate 식별자</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[*].name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">candidate 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[*].image</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이미지 주소</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[*].thumb</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">썸네일 이미지 주소</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[*].finalWinCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">최종 우승 횟수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[*].winCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1대1 승리 횟수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[*].matchUpWorldCupCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">월드컵 참가 횟수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[*].matchUpGameCount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1대1 매칭 횟수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data[*].worldCupId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">worldCup 식별자</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_error_12"><a class="link" href="#_error_12">Error</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>400 Bad Request</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">제약조건 미충족</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>401 Unauthorized</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">잘못된 인증 정보</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>404 Not Found</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">존재하지 않는 리소스</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_3_6_특정_후보_삭제"><a class="link" href="#_3_6_특정_후보_삭제">3 - 6 특정 후보 삭제</a></h3>
+<div class="sect3">
+<h4 id="_3_6_특정_후보_삭제_http_request"><a class="link" href="#_3_6_특정_후보_삭제_http_request">HTTP request</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /candidates/1 HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Host: secure-a-server.dolpick.com
+Content-Length: 102
+
+_csrf=XQPHx1Gk6pWyRC9myyJ3gkS1UJXM8JmpU6DmsAvKAO87VS5ZbDbx_mnA36KfJhde_Q9D4SGCffT1k_yEapDf0zP7YtsCNhhp</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_3_6_특정_후보_삭제_path_parameters"><a class="link" href="#_3_6_특정_후보_삭제_path_parameters">Path parameters</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. /candidates/{candidateId}</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Constraints</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>candidateId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1이상</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">candidate 식별자</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_3_6_특정_후보_삭제_http_response"><a class="link" href="#_3_6_특정_후보_삭제_http_response">HTTP response</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 204 No Content
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_error_13"><a class="link" href="#_error_13">Error</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>400 Bad Request</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">제약조건 미충족</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>401 Unauthorized</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">잘못된 인증 정보</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>404 Not Found</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">존재하지 않는 리소스</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-09-29 02:00:02 +0900
+Last updated 2023-09-30 23:00:28 +0900
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>

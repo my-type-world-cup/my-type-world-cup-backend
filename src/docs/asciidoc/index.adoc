@@ -38,7 +38,7 @@ operation::postWorldCup[snippets='http-request,request-fields,http-response,resp
 
 === 2 - 2. 특정 월드컵 수정
 
-operation::patchWorldCup[snippets='http-request,request-fields,http-response,response-fields']
+operation::patchWorldCup[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
 
 ==== Error
 
@@ -122,6 +122,119 @@ operation::getMyWorldCups[snippets='http-request,query-parameters,http-response,
 === 2 - 7. 특정 월드컵 삭제
 
 operation::deleteWorldCup[snippets='http-request,path-parameters,http-response']
+
+==== Error
+
+|===
+|Status |Description
+
+|`400 Bad Request`
+|제약조건 미충족
+
+|`401 Unauthorized`
+|잘못된 인증 정보
+
+|`404 Not Found`
+|존재하지 않는 리소스
+|===
+
+== 3. Candidate API
+
+=== 3 - 1. 후보 생성
+
+operation::postCandidate[snippets='http-request,request-fields,http-response,response-fields']
+
+==== Error
+
+|===
+|Status |Description
+
+|`400 Bad Request`
+|제약조건 미충족
+
+|`401 Unauthorized`
+|잘못된 인증 정보
+
+|`404 Not Found`
+|존재하지 않는 리소스
+|===
+
+=== 3 - 2. 특정 후보 수정
+
+operation::patchCandidate[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+
+==== Error
+
+|===
+|Status |Description
+
+|`400 Bad Request`
+|제약조건 미충족
+
+|`401 Unauthorized`
+|잘못된 인증 정보
+
+|`404 Not Found`
+|존재하지 않는 리소스
+|===
+
+=== 3 - 3. 월드컵 결과 반영
+
+operation::patchMatchResults[snippets='http-request,request-fields,http-response,response-fields']
+
+==== Error
+
+|===
+|Status |Description
+
+|`400 Bad Request`
+|제약조건 미충족
+
+|`404 Not Found`
+|존재하지 않는 리소스
+|===
+
+=== 3 - 4 랜덤 이미지 요청
+
+operation::requestRandomCandidatesByWorldCupId[snippets='http-request,path-parameters,query-parameters,request-fields,http-response,response-fields']
+
+==== Error
+
+|===
+|Status |Description
+
+|`400 Bad Request`
+|제약조건 미충족
+
+|`401 Unauthorized`
+|잘못된 인증 정보
+
+|`404 Not Found`
+|존재하지 않는 리소스
+|===
+
+=== 3 - 5 후보 목록 가져오기
+
+operation::requestCandidatesByWorldCupId[snippets='http-request,path-parameters,query-parameters,request-fields,http-response,response-fields']
+
+==== Error
+
+|===
+|Status |Description
+
+|`400 Bad Request`
+|제약조건 미충족
+
+|`401 Unauthorized`
+|잘못된 인증 정보
+
+|`404 Not Found`
+|존재하지 않는 리소스
+|===
+
+=== 3 - 6 특정 후보 삭제
+
+operation::deleteCandidate[snippets='http-request,path-parameters,http-response']
 
 ==== Error
 
