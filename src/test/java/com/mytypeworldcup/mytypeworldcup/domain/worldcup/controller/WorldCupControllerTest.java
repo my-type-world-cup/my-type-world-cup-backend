@@ -18,7 +18,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,12 +29,12 @@ import java.util.List;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -83,7 +82,7 @@ public class WorldCupControllerTest {
 
         // when
         ResultActions actions = mockMvc.perform(
-                RestDocumentationRequestBuilders.post("/worldcups")
+                post("/worldcups")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(csrf())
@@ -150,7 +149,7 @@ public class WorldCupControllerTest {
 
         // when
         ResultActions actions = mockMvc.perform(
-                RestDocumentationRequestBuilders.patch("/worldcups/{worldCupId}", worldCupId)
+                patch("/worldcups/{worldCupId}", worldCupId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(content)
@@ -217,7 +216,7 @@ public class WorldCupControllerTest {
 
         // when
         ResultActions actions = mockMvc.perform(
-                RestDocumentationRequestBuilders.get("/worldcups")
+                get("/worldcups")
                         .param("page", page)
                         .param("size", size)
                         .param("sort", sort)
@@ -305,7 +304,7 @@ public class WorldCupControllerTest {
 
         // when
         ResultActions actions = mockMvc.perform(
-                RestDocumentationRequestBuilders.get("/worldcups/{worldCupId}", worldCupId)
+                get("/worldcups/{worldCupId}", worldCupId)
                         .accept(MediaType.APPLICATION_JSON)
         );
 
@@ -356,7 +355,7 @@ public class WorldCupControllerTest {
 
         // when
         ResultActions actions = mockMvc.perform(
-                RestDocumentationRequestBuilders.get("/worldcups/{worldCupId}/details", worldCupId)
+                get("/worldcups/{worldCupId}/details", worldCupId)
                         .accept(MediaType.APPLICATION_JSON)
         );
 
@@ -497,7 +496,7 @@ public class WorldCupControllerTest {
 
         // when
         ResultActions actions = mockMvc.perform(
-                RestDocumentationRequestBuilders.delete("/worldcups/{worldCupId}", worldCupId)
+                delete("/worldcups/{worldCupId}", worldCupId)
                         .with(csrf())
         );
 
