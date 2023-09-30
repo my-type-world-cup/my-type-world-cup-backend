@@ -40,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(WorldCupController.class)
-@AutoConfigureRestDocs(uriScheme = "https", uriHost = "secure-a-server.dolpick.com")
+@AutoConfigureRestDocs(uriScheme = "https", uriHost = "secure-a-server.dolpick.com", uriPort = 0)
 @MockBean(JpaMetamodelMappingContext.class)
 @WithMockUser(roles = {"USER", "ADMIN"})
 public class WorldCupControllerTest {
