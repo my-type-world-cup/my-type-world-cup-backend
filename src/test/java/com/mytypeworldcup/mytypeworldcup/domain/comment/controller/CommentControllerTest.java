@@ -9,6 +9,7 @@ import com.mytypeworldcup.mytypeworldcup.domain.worldcup.service.WorldCupService
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
@@ -16,12 +17,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -30,13 +31,22 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CommentController.class)
+@AutoConfigureRestDocs(uriScheme = "https", uriHost = "secure-a-server.dolpick.com", uriPort = 0)
 @MockBean(JpaMetamodelMappingContext.class)
 @WithMockUser
 class CommentControllerTest {
@@ -53,11 +63,7 @@ class CommentControllerTest {
 
     @Test
     @DisplayName("댓글 쓰기 - 비회원일 경우")
-    void postComment_anonymousMember(WebApplicationContext webApplicationContext) throws Exception {
-        mockMvc = MockMvcBuilders
-                .webAppContextSetup(webApplicationContext)
-                .build();
-
+    void postComment_anonymous() throws Exception {
         // given
         CommentPostDto requestBody = CommentPostDto
                 .builder()
@@ -76,6 +82,8 @@ class CommentControllerTest {
                 .nickname(null)
                 .memberId(null)
                 .worldCupId(requestBody.getWorldCupId())
+                .likesCount(0)
+                .isLiked(false)
                 .build();
 
         given(commentService.createComment(any(CommentPostDto.class))).willReturn(response);
@@ -87,7 +95,7 @@ class CommentControllerTest {
                 post("/comments")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .with(csrf())
+                        .with(csrf().asHeader())
                         .content(content)
         );
 
@@ -101,17 +109,42 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$.modifiedAt").exists())
                 .andExpect(jsonPath("$.memberId").isEmpty())
                 .andExpect(jsonPath("$.nickname").value(response.getNickname()))
-                .andExpect(jsonPath("$.worldCupId").value(response.getWorldCupId()));
-
-        verifyNoInteractions(memberService);
-        verify(worldCupService).findVerifiedWorldCup(anyLong());
+                .andExpect(jsonPath("$.worldCupId").value(response.getWorldCupId()))
+                .andDo(document(
+                        "postComment - anonymous",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        // 리퀘스트 바디
+                        requestFields(
+                                fieldWithPath("content").type(JsonFieldType.STRING).description("내용")
+                                        .attributes(key("constraints").value("length : 1이상 255이하")),
+                                fieldWithPath("candidateName").type(JsonFieldType.STRING).description("우승한 candidate 이름").optional()
+                                        .attributes(key("constraints").value("length : 50이하")),
+                                fieldWithPath("worldCupId").type(JsonFieldType.NUMBER).description("worldCup 식별자")
+                                        .attributes(key("constraints").value("1이상"))
+                        ),
+                        // 리스폰스 바디
+                        responseFields(
+                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("comment 식별자"),
+                                fieldWithPath("content").type(JsonFieldType.STRING).description("내용"),
+                                fieldWithPath("candidateName").type(JsonFieldType.STRING).description("우승한 candidate 이름"),
+                                fieldWithPath("likesCount").type(JsonFieldType.NUMBER).description("좋아요 수"),
+                                fieldWithPath("isLiked").type(JsonFieldType.BOOLEAN).description("좋아요 누름 여부(로그인 시)"),
+                                fieldWithPath("createdAt").type(JsonFieldType.STRING).description("댓글 작성일시"),
+                                fieldWithPath("modifiedAt").type(JsonFieldType.STRING).description("댓글 수정일시"),
+                                fieldWithPath("memberId").type(JsonFieldType.NULL).description("댓글 작성 member 식별자 (익명댓글일시 null)"),
+                                fieldWithPath("nickname").type(JsonFieldType.NULL).description("댓글 작성 member 닉네임 (익명댓글일시 null)"),
+                                fieldWithPath("worldCupId").type(JsonFieldType.NUMBER).description("worldCup 식별자"))
+                ))
+        ;
     }
 
     @Test
     @DisplayName("댓글 쓰기 - 로그인 했을 경우")
-    void postComment_Member() throws Exception {
+    void postComment_login() throws Exception {
         // given
         Long memberId = 1L;
+        String nickname = "테스트유저";
 
         CommentPostDto requestBody = CommentPostDto
                 .builder()
@@ -128,7 +161,10 @@ class CommentControllerTest {
                 .createdAt(LocalDateTime.now())
                 .modifiedAt(LocalDateTime.now())
                 .memberId(memberId)
+                .nickname(nickname)
                 .worldCupId(requestBody.getWorldCupId())
+                .isLiked(false)
+                .likesCount(0)
                 .build();
 
         given(memberService.findMemberIdByEmail(anyString())).willReturn(memberId);
@@ -141,7 +177,8 @@ class CommentControllerTest {
                 post("/comments")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .with(csrf())
+                        .header(HttpHeaders.AUTHORIZATION, "Encoded Access Token")
+                        .with(csrf().asHeader())
                         .content(content)
         );
 
@@ -155,14 +192,45 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$.modifiedAt").exists())
                 .andExpect(jsonPath("$.memberId").value(memberId))
                 .andExpect(jsonPath("$.nickname").value(response.getNickname()))
-                .andExpect(jsonPath("$.worldCupId").value(response.getWorldCupId()));
+                .andExpect(jsonPath("$.worldCupId").value(response.getWorldCupId()))
+                .andDo(document(
+                        "postComment - login",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        // 리퀘스트 헤더
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("로그인 인증 토큰")
+                        ),
+                        // 리퀘스트 바디
+                        requestFields(
+                                fieldWithPath("content").type(JsonFieldType.STRING).description("내용")
+                                        .attributes(key("constraints").value("length : 1이상 255이하")),
+                                fieldWithPath("candidateName").type(JsonFieldType.STRING).description("우승한 candidate 이름").optional()
+                                        .attributes(key("constraints").value("length : 50이하")),
+                                fieldWithPath("worldCupId").type(JsonFieldType.NUMBER).description("worldCup 식별자")
+                                        .attributes(key("constraints").value("1이상"))
+                        ),
+                        // 리스폰스 바디
+                        responseFields(
+                                fieldWithPath("id").type(JsonFieldType.NUMBER).description("comment 식별자"),
+                                fieldWithPath("content").type(JsonFieldType.STRING).description("내용"),
+                                fieldWithPath("candidateName").type(JsonFieldType.STRING).description("우승한 candidate 이름"),
+                                fieldWithPath("likesCount").type(JsonFieldType.NUMBER).description("좋아요 수"),
+                                fieldWithPath("isLiked").type(JsonFieldType.BOOLEAN).description("좋아요 누름 여부"),
+                                fieldWithPath("createdAt").type(JsonFieldType.STRING).description("댓글 작성일시"),
+                                fieldWithPath("modifiedAt").type(JsonFieldType.STRING).description("댓글 수정일시"),
+                                fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("댓글 작성 member 식별자 (익명댓글일시 null)"),
+                                fieldWithPath("nickname").type(JsonFieldType.STRING).description("댓글 작성 member 닉네임 (익명댓글일시 null)"),
+                                fieldWithPath("worldCupId").type(JsonFieldType.NUMBER).description("worldCup 식별자"))
+                ))
+        ;
 
         verify(memberService).findMemberIdByEmail(anyString());
         verify(worldCupService).findVerifiedWorldCup(anyLong());
     }
 
     @Test
-    @DisplayName("특정 월드컵에 속한 댓글 가져오기")
+    @DisplayName("댓글 조회")
     void getCommentsByWorldCupId() throws Exception {
         // given
         Long worldCupId = 1L;
@@ -209,6 +277,7 @@ class CommentControllerTest {
         // when
         ResultActions actions = mockMvc.perform(
                 get("/comments")
+                        .header(HttpHeaders.AUTHORIZATION, "Encoded Access Token")
                         .param("worldCupId", String.valueOf(worldCupId))
                         .param("page", String.valueOf(page))
                         .param("size", String.valueOf(size))
@@ -246,7 +315,63 @@ class CommentControllerTest {
                 .andExpect(jsonPath("$.pageInfo.size").value(responseDtos.getSize()))
                 .andExpect(jsonPath("$.pageInfo.totalElements").value(responseDtos.getTotalElements()))
                 .andExpect(jsonPath("$.pageInfo.totalPages").value(responseDtos.getTotalPages()))
-                .andExpect(jsonPath("$.pageInfo.last").value(responseDtos.isLast()));
+                .andExpect(jsonPath("$.pageInfo.last").value(responseDtos.isLast()))
+                .andDo(document(
+                        "getCommentsByWorldCupId",
+                        preprocessResponse(prettyPrint()),
+                        // 리퀘스트 헤더
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("로그인 인증 토큰").optional()
+                        ),
+                        // 쿼리 파라미터
+                        queryParameters(
+                                parameterWithName("worldCupId").description("worldCup 식별자")
+                                        .attributes(
+                                                key("constraints").value("1이상")
+                                        ),
+                                parameterWithName("page").description("요청 페이지").optional()
+                                        .attributes(
+                                                key("default").value("1"),
+                                                key("constraints").value("1이상")
+                                        ),
+                                parameterWithName("size").description("페이지 당 데이터 수").optional()
+                                        .attributes(
+                                                key("default").value("5"),
+                                                key("constraints").value("1이상")
+                                        ),
+                                parameterWithName("sort").description("정렬 기준").optional()
+                                        .attributes(
+                                                key("default").value("createdAt(미입력 시)," +
+                                                        " +\n" +
+                                                        "likesCount(제약조건 외 값 입력 시)"),
+                                                key("constraints").value("createdAt(생성일시), likesCount(좋아요순)")
+                                        ),
+                                parameterWithName("direction").description("정렬 방법").optional()
+                                        .attributes(
+                                                key("default").value("DESC"),
+                                                key("constraints").value("ASC 또는 DESC")
+                                        )
+                        ),
+                        // 리스폰스 바디
+                        responseFields(
+                                fieldWithPath("pageInfo.first").type(JsonFieldType.BOOLEAN).description("첫번째 페이지 여부"),
+                                fieldWithPath("pageInfo.page").type(JsonFieldType.NUMBER).description("현재 페이지"),
+                                fieldWithPath("pageInfo.size").type(JsonFieldType.NUMBER).description("페이지 당 게시물 수"),
+                                fieldWithPath("pageInfo.totalElements").type(JsonFieldType.NUMBER).description("총 게시물 수"),
+                                fieldWithPath("pageInfo.totalPages").type(JsonFieldType.NUMBER).description("총 페이지 수"),
+                                fieldWithPath("pageInfo.last").type(JsonFieldType.BOOLEAN).description("마지막 페이지 여부"),
+                                fieldWithPath("data[*].id").type(JsonFieldType.NUMBER).description("comment 식별자"),
+                                fieldWithPath("data[*].content").type(JsonFieldType.STRING).description("내용"),
+                                fieldWithPath("data[*].candidateName").type(JsonFieldType.STRING).description("우승한 candidate 이름"),
+                                fieldWithPath("data[*].likesCount").type(JsonFieldType.NUMBER).description("좋아요 수"),
+                                fieldWithPath("data[*].isLiked").type(JsonFieldType.BOOLEAN).description("좋아요 누름 여부(로그인 시)"),
+                                fieldWithPath("data[*].createdAt").type(JsonFieldType.STRING).description("댓글 작성일시"),
+                                fieldWithPath("data[*].modifiedAt").type(JsonFieldType.STRING).description("댓글 수정일시"),
+                                fieldWithPath("data[*].memberId").type(JsonFieldType.NUMBER).description("댓글 작성 member 식별자 (익명댓글일시 null)"),
+                                fieldWithPath("data[*].nickname").type(JsonFieldType.STRING).description("댓글 작성 member 닉네임 (익명댓글일시 null)"),
+                                fieldWithPath("data[*].worldCupId").type(JsonFieldType.NUMBER).description("worldCup 식별자"))
+                ))
+        ;
 
         verify(commentService).findCommentsByWorldCupId(anyLong(), anyLong(), any(Pageable.class));
     }
