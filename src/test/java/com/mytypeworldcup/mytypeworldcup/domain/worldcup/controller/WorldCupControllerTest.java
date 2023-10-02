@@ -107,7 +107,7 @@ public class WorldCupControllerTest {
                         preprocessResponse(prettyPrint()),
                         // 리퀘스트 헤더
                         requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("로그인 인증 토큰")
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("액세스 토큰")
                         ),
                         // 리퀘스트 바디
                         requestFields(
@@ -179,7 +179,7 @@ public class WorldCupControllerTest {
                         preprocessResponse(prettyPrint()),
                         // 리퀘스트 헤더
                         requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("로그인 인증 토큰")
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("액세스 토큰")
                         ),
                         // 패스 파라미터
                         pathParameters(
@@ -390,7 +390,7 @@ public class WorldCupControllerTest {
                         preprocessResponse(prettyPrint()),
                         // 리퀘스트 헤더
                         requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("로그인 인증 토큰")
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("액세스 토큰")
                         ),
                         // 패스 파라미터
                         pathParameters(
@@ -453,7 +453,7 @@ public class WorldCupControllerTest {
                         preprocessResponse(prettyPrint()),
                         // 리퀘스트 헤더
                         requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("로그인 인증 토큰")
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("액세스 토큰")
                         ),
                         // 쿼리 파라미터
                         queryParameters(
@@ -535,7 +535,7 @@ public class WorldCupControllerTest {
                         "deleteWorldCup",
                         // 리퀘스트 헤더
                         requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("로그인 인증 토큰")
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("액세스 토큰")
                         ),
                         // 패스 파라미터
                         pathParameters(

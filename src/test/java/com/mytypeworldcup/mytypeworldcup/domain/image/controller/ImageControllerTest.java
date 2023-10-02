@@ -89,7 +89,7 @@ class ImageControllerTest {
                         preprocessResponse(prettyPrint()),
                         // 리퀘스트 헤더
                         requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("로그인 인증 토큰")
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("액세스 토큰")
                         ),
                         // 쿼리 파라미터
                         queryParameters(
