@@ -508,10 +508,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h4 id="_2_1_월드컵_생성_http_request"><a class="link" href="#_2_1_월드컵_생성_http_request">HTTP request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /worldcups?_csrf=4qN_cjIQpghURJcp0rUR5EPAmiWT742HoM4_jmJPQ5GYWTPJ2sVPQQAgxTt5Iq9I55gl03P4t0Sj3Ouqkf1buwZ5dqX6OlKq HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /worldcups HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
+Authorization: Encoded Access Token
 Content-Length: 141
+X-CSRF-TOKEN: 3j2XCqMotHlwxFIavHC2uEc_eM8a7OIWEkwhobaDL_n6LWKo7Qn2bMVL1RhdpTEthF2CgXALVa4i2YE7JX1Fk9O1G83IFFud
 Host: secure-a-server.dolpick.com
 
 {
@@ -521,6 +523,30 @@ Host: secure-a-server.dolpick.com
 }</code></pre>
 </div>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_2_1_월드컵_생성_request_headers"><a class="link" href="#_2_1_월드컵_생성_request_headers">Request headers</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">로그인 인증 토큰</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_2_1_월드컵_생성_request_fields"><a class="link" href="#_2_1_월드컵_생성_request_fields">Request fields</a></h4>
@@ -667,10 +693,12 @@ Content-Length: 171
 <h4 id="_2_2_특정_월드컵_수정_http_request"><a class="link" href="#_2_2_특정_월드컵_수정_http_request">HTTP request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /worldcups/1?_csrf=c5wqtVqrQbP2yHoqNFlhWlgmCBCAmuXoi76cN76up5WqpZX3FahO0WyYd4fb-EsSVXRVbGkeJSi4rofFu4yvD4rNk6WTkvGU HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /worldcups/1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
+Authorization: Encoded Access Token
 Content-Length: 101
+X-CSRF-TOKEN: KNKzwjz7qoWlADVsAbLvdbPRkguOOZlZoEJPp8z6_fUKnTVcGubQp17LzreINlBcM5_bF9LivzK2Wqh0wiR-kq6ZzMY9qgZr
 Host: secure-a-server.dolpick.com
 
 {
@@ -680,6 +708,30 @@ Host: secure-a-server.dolpick.com
 }</code></pre>
 </div>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_2_2_특정_월드컵_수정_request_headers"><a class="link" href="#_2_2_특정_월드컵_수정_request_headers">Request headers</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">로그인 인증 토큰</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_2_2_특정_월드컵_수정_path_parameters"><a class="link" href="#_2_2_특정_월드컵_수정_path_parameters">Path parameters</a></h4>
@@ -1239,9 +1291,58 @@ Content-Length: 136
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /worldcups/1/details HTTP/1.1
 Accept: application/json
+Authorization: Encoded Access Token
 Host: secure-a-server.dolpick.com</code></pre>
 </div>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_2_5_특정_월드컵_상세_정보_request_headers"><a class="link" href="#_2_5_특정_월드컵_상세_정보_request_headers">Request headers</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">로그인 인증 토큰</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_2_5_특정_월드컵_상세_정보_request_headers"><a class="link" href="#_2_5_특정_월드컵_상세_정보_request_headers">Request headers</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">로그인 인증 토큰</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_2_5_특정_월드컵_상세_정보_path_parameters"><a class="link" href="#_2_5_특정_월드컵_상세_정보_path_parameters">Path parameters</a></h4>
@@ -1375,9 +1476,34 @@ Content-Length: 145
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /members/worldcups?page=1&amp;size=5&amp;sort=playCount&amp;direction=DESC&amp;keyword=%EC%9B%94%EB%93%9C%EC%BB%B5 HTTP/1.1
 Accept: application/json
+Authorization: Encoded Access Token
 Host: secure-a-server.dolpick.com</code></pre>
 </div>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_2_6_나의_월드컵_보기_request_headers"><a class="link" href="#_2_6_나의_월드컵_보기_request_headers">Request headers</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">로그인 인증 토큰</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_2_6_나의_월드컵_보기_query_parameters"><a class="link" href="#_2_6_나의_월드컵_보기_query_parameters">Query parameters</a></h4>
@@ -1629,13 +1755,35 @@ Content-Length: 1446
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /worldcups/1 HTTP/1.1
-Content-Type: application/x-www-form-urlencoded
-Host: secure-a-server.dolpick.com
-Content-Length: 102
-
-_csrf=mk9ZVsU6tBYT0MGtaMv56Kb-oOycCS3t73N31W1ITspheOy8_npgZqMD1SY-s_DJX-bN3ZScjY34MUvA3kFP4w9xfK9VSoqM</code></pre>
+Authorization: Encoded Access Token
+X-CSRF-TOKEN: w1KMCpw12s-Z8LBhzXvjzd7ffoIsHGzMgzrOOFw3Q_l7VLzip2rub_4GuKq0ldQCrFbX_eu7U-MUeV_hslmvDjlTepxOY4ja
+Host: secure-a-server.dolpick.com</code></pre>
 </div>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_2_7_특정_월드컵_삭제_request_headers"><a class="link" href="#_2_7_특정_월드컵_삭제_request_headers">Request headers</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">로그인 인증 토큰</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_2_7_특정_월드컵_삭제_path_parameters"><a class="link" href="#_2_7_특정_월드컵_삭제_path_parameters">Path parameters</a></h4>
@@ -1718,10 +1866,12 @@ X-Frame-Options: DENY</code></pre>
 <h4 id="_3_1_후보_생성_http_request"><a class="link" href="#_3_1_후보_생성_http_request">HTTP request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /candidates?_csrf=w2IilRG8A4aZLMydutKyE5RndNIMSVvA8Ep5r240oNaCX6LHoFQVoXOONbC0HKn72f-GcaxWWbA8KGrtxn4YllwGweTmOsT- HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /candidates HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
+Authorization: Encoded Access Token
 Content-Length: 96
+X-CSRF-TOKEN: mhdkRW3MCsNy-5CfOVxhhUncuVdOyCOkM6iVMkFND1U-Vsli-HJcdln6OPtfzKevWHFVsHrslG9_-xSJApukUCR_OWUNMqpX
 Host: secure-a-server.dolpick.com
 
 {
@@ -1732,6 +1882,30 @@ Host: secure-a-server.dolpick.com
 }</code></pre>
 </div>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_3_1_후보_생성_request_headers"><a class="link" href="#_3_1_후보_생성_request_headers">Request headers</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">로그인 인증 토큰</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_3_1_후보_생성_request_fields"><a class="link" href="#_3_1_후보_생성_request_fields">Request fields</a></h4>
@@ -1913,10 +2087,12 @@ Content-Length: 205
 <h4 id="_3_2_특정_후보_수정_http_request"><a class="link" href="#_3_2_특정_후보_수정_http_request">HTTP request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /candidates/1?_csrf=zPs3tSLDfE75vs-pQ8Q2PpYKvVUzdpiYnpr-JkGz5IrzlrGO9ZkD1xSmGi3Ui6vNd-kCCqBokDQDRKi1rKidH3nS1e7EroW3 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /candidates/1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
+Authorization: Encoded Access Token
 Content-Length: 76
+X-CSRF-TOKEN: l84SpBARen8e_2d5y7jh5N6uHdwMwbdUVL1gjrCTk7lv-HUSovsqwigkTxwznlVN_JXV1O2aMOQ58od5ZIVSvtGip9pYzhEh
 Host: secure-a-server.dolpick.com
 
 {
@@ -1926,6 +2102,30 @@ Host: secure-a-server.dolpick.com
 }</code></pre>
 </div>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_3_2_특정_후보_수정_request_headers"><a class="link" href="#_3_2_특정_후보_수정_request_headers">Request headers</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">로그인 인증 토큰</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_3_2_특정_후보_수정_path_parameters"><a class="link" href="#_3_2_특정_후보_수정_path_parameters">Path parameters</a></h4>
@@ -2125,10 +2325,11 @@ Content-Length: 205
 <h4 id="_3_3_월드컵_결과_반영_http_request"><a class="link" href="#_3_3_월드컵_결과_반영_http_request">HTTP request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /candidates?_csrf=3q4IXAimCflFwi7E2uA_wE2ponfRTcF6yiBoKSMVuwCuYoqk7JduaWyQOsto-k39u80L9yvMj07iKKBX8hcLT0V3iDjNB7yV HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /candidates HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
 Content-Length: 242
+X-CSRF-TOKEN: 5uf8PvRQLtrq_nfYqOmH44EZmffK7r5htsO0NirNDKCu0mR3g9KaCcExGrzHmkW6zcSzgeQotM-oi4ZMgPKAUkmsPZWe4AFG
 Host: secure-a-server.dolpick.com
 
 [ {
@@ -2276,6 +2477,7 @@ Content-Length: 29
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
 Content-Length: 25
+X-CSRF-TOKEN: 3fZL55uehxX5n6_m2dA6iGItdykJXFEdFbY307eY9BAa7PNWvMF8g6r7sy3UqZ3U7P0O61BPWktoOWAwJNQFt4SuxCIu1cM1
 Host: secure-a-server.dolpick.com
 
 {
@@ -2483,10 +2685,11 @@ Content-Length: 486
 <h4 id="_3_5_후보_목록_가져오기_http_request"><a class="link" href="#_3_5_후보_목록_가져오기_http_request">HTTP request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /worldcups/1/candidates?page=1&amp;size=5&amp;sort=winCount&amp;direction=DESC&amp;keyword=&amp;_csrf=NMmsqZnpvK58ceWzxQnYK6NSCqLAOkLjuAP-S2sBYd8F6IpyAq_OyPvQ38tRE4SCpCTsHZNrJ5uhC3XO3WGcLwk5VO9m0b4X HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /worldcups/1/candidates?page=1&amp;size=5&amp;sort=winCount&amp;direction=DESC&amp;keyword= HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
 Content-Length: 25
+X-CSRF-TOKEN: UNcqSfWJfRib5098queNLU3fYpruN9M5uQOISQN-R91C2oDLNLETesHvTSi2hSlOmMq5Tn7vT_vaD7UU3We9fmZNcLt76rao
 Host: secure-a-server.dolpick.com
 
 {
@@ -2819,13 +3022,35 @@ Content-Length: 1493
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /candidates/1 HTTP/1.1
-Content-Type: application/x-www-form-urlencoded
-Host: secure-a-server.dolpick.com
-Content-Length: 102
-
-_csrf=iWzEAxfJB4VZx26x7xtSmnTZ52vI8A_NNkduD7bFKtMQMJf37FrwNSOtMOZ0_gqFiTZmrxC7ylPwwW7gBiNaaYekE-YlAK7H</code></pre>
+Authorization: Encoded Access Token
+X-CSRF-TOKEN: dt7ZHXFRKSgWZs-V3CJtzVdWE6lcksUE2p1vsap7qxSk5y9cTuzsf0BiHU07X_6lvQ9Z_GJkPshqpPYp6_xd189IyiyQ1BY_
+Host: secure-a-server.dolpick.com</code></pre>
 </div>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_3_6_특정_후보_삭제_request_headers"><a class="link" href="#_3_6_특정_후보_삭제_request_headers">Request headers</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">로그인 인증 토큰</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect3">
 <h4 id="_3_6_특정_후보_삭제_path_parameters"><a class="link" href="#_3_6_특정_후보_삭제_path_parameters">Path parameters</a></h4>
@@ -2912,7 +3137,7 @@ X-Frame-Options: DENY</code></pre>
 Content-Type: application/json;charset=UTF-8
 Accept: application/json
 Content-Length: 125
-X-CSRF-TOKEN: AK1wFsYTi_Z9C5U4vJOxSiuQZzmSI8PeURczNvspalYK3_8pMZwTcKch7cdQbvcM3r6Fex7zSgGmEvDzaCMDVclLCG4_usxI
+X-CSRF-TOKEN: ThbD2gFtXN0N9WjPMkPp_B9UelxWfZUXv9YR1bIGApCSwK-mfCH36DcJZb8gzF6sV27dnSkwVz1jTPc6h-8p4dBnYKbz8ZuU
 Host: secure-a-server.dolpick.com
 
 {
@@ -2988,8 +3213,8 @@ Content-Length: 313
   "candidateName" : "카리나",
   "likesCount" : 0,
   "isLiked" : false,
-  "createdAt" : "2023-10-02T00:46:57.122303",
-  "modifiedAt" : "2023-10-02T00:46:57.122315",
+  "createdAt" : "2023-10-02T13:23:43.196388",
+  "modifiedAt" : "2023-10-02T13:23:43.196398",
   "memberId" : null,
   "nickname" : null,
   "worldCupId" : 5
@@ -3103,7 +3328,7 @@ Content-Type: application/json;charset=UTF-8
 Accept: application/json
 Authorization: Encoded Access Token
 Content-Length: 124
-X-CSRF-TOKEN: LWl2BXupRVvpkp-4orohcAwE9mfHY1wnbOXKcw9_M8J9nK0fSApAMx6admLE8P3ekZcVRW4x2wWiVzgKCIH6QWkdAfQcpcsv
+X-CSRF-TOKEN: fRJAyUxo6vYtFV4J4Dzsxbc7Y7UdtVWx7OpSYyPlhhTqmzcKGyZwqH1Z0sQAI2s70xHY8YdaTowogmGc24tiBRTQ5SXc_wZv
 Host: secure-a-server.dolpick.com
 
 {
@@ -3195,7 +3420,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
-Content-Length: 321
+Content-Length: 322
 
 {
   "id" : 1,
@@ -3203,8 +3428,8 @@ Content-Length: 321
   "candidateName" : "카리나",
   "likesCount" : 0,
   "isLiked" : false,
-  "createdAt" : "2023-10-02T00:46:57.106608",
-  "modifiedAt" : "2023-10-02T00:46:57.10662",
+  "createdAt" : "2023-10-02T13:23:43.181746",
+  "modifiedAt" : "2023-10-02T13:23:43.181759",
   "memberId" : 1,
   "nickname" : "테스트유저",
   "worldCupId" : 5
@@ -3593,7 +3818,7 @@ Content-Length: 766
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-10-02 00:28:42 +0900
+Last updated 2023-10-02 13:22:13 +0900
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
