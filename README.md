@@ -1,5 +1,9 @@
 ![img](https://github.com/my-type-world-cup/my-type-world-cup-backend/assets/107738517/ddaeee3c-0af0-47ee-8bfc-9be784b56d0f)
 
+## **📗 API 문서**
+
+[API 문서 바로가기](https://secure-a-server.dolpick.com/docs/index.html)
+
 ## **🛠 ️기술 스택**
 
 ### Language & Framework
