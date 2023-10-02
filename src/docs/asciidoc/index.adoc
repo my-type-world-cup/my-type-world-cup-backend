@@ -18,6 +18,43 @@
 
 ***
 
+== 1. Member API
+
+=== 1 - 1. 로그인한 멤버 정보 가져오기
+
+operation::getLoginMember[snippets='http-request,request-headers,http-response,response-fields']
+
+==== Error
+
+|===
+|Status |Description
+
+|`401 Unauthorized`
+|잘못된 인증 정보
+
+|`404 Not Found`
+|존재하지 않는 리소스
+|===
+
+=== 1 - 2. 멤버 정보 수정하기
+
+operation::patchMember[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+
+==== Error
+
+|===
+|Status |Description
+
+|`400 Bad Request`
+|제약조건 미충족
+
+|`401 Unauthorized`
+|잘못된 인증 정보
+
+|`404 Not Found`
+|존재하지 않는 리소스
+|===
+
 == 2. WorldCup API
 
 === 2 - 1. 월드컵 생성
