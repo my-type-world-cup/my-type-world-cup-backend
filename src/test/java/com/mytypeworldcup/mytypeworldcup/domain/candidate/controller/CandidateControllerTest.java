@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -31,6 +32,8 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -88,7 +91,8 @@ class CandidateControllerTest {
                 post("/candidates")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .with(csrf())
+                        .header(HttpHeaders.AUTHORIZATION, "Encoded Access Token")
+                        .with(csrf().asHeader())
                         .content(content)
         );
 
@@ -107,6 +111,10 @@ class CandidateControllerTest {
                         "postCandidate",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        // 리퀘스트 헤더
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("로그인 인증 토큰")
+                        ),
                         // 리퀘스트 바디
                         requestFields(
                                 fieldWithPath("name").type(JsonFieldType.STRING).description("candidate 이름")
@@ -167,7 +175,8 @@ class CandidateControllerTest {
                 patch("/candidates/{candidateId}", candidateId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .with(csrf())
+                        .header(HttpHeaders.AUTHORIZATION, "Encoded Access Token")
+                        .with(csrf().asHeader())
                         .content(content)
         );
 
@@ -186,6 +195,10 @@ class CandidateControllerTest {
                         "patchCandidate",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        // 리퀘스트 헤더
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("로그인 인증 토큰")
+                        ),
                         // 패스 파라미터
                         pathParameters(
                                 parameterWithName("candidateId").description("candidate 식별자")
@@ -239,7 +252,7 @@ class CandidateControllerTest {
                 patch("/candidates")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .with(csrf())
+                        .with(csrf().asHeader())
                         .content(content)
         );
 
@@ -293,7 +306,7 @@ class CandidateControllerTest {
                         .queryParam("teamCount", String.valueOf(teamCount))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .with(csrf())
+                        .with(csrf().asHeader())
                         .content(content)
         );
 
@@ -374,7 +387,7 @@ class CandidateControllerTest {
                         .param("keyword", keyword)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .with(csrf())
+                        .with(csrf().asHeader())
                         .content(content)
         );
 
@@ -405,7 +418,7 @@ class CandidateControllerTest {
                                                 key("default").value("createdAt(미입력 시)," +
                                                         " +\n" +
                                                         "winCount(제약조건 외 값 입력 시)"),
-                                                key("constraints").value("winRatio(1대1 승률), finalWinRatio(최종 우승 비율), name(이름 순), matchUpWorldCupCount(월드컵 참가 횟수), matchUpGameCount(1대1 매칭 횟수), finalWinCount(최종 우승 횟수), createdAt(생성일시), winCount(1대1 승리 횟수")
+                                                key("constraints").value("winRatio(1대1 승률), finalWinRatio(최종 우승 비율), name(이름 순), matchUpWorldCupCount(월드컵 참가 횟수), matchUpGameCount(1대1 매칭 횟수), finalWinCount(최종 우승 횟수), createdAt(생성일시), winCount(1대1 승리 횟수)")
                                         ),
                                 parameterWithName("direction").description("정렬 방법").optional()
                                         .attributes(
@@ -416,8 +429,7 @@ class CandidateControllerTest {
                                         .attributes(
 //                                                key("default").value(""),
 //                                                key("constraints").value("")
-                                        ),
-                                parameterWithName("_csrf").ignored()
+                                        )
                         ),
                         // 리퀘스트 바디
                         requestFields(fieldWithPath("password").type(JsonFieldType.STRING).description("worldCup 암호")
@@ -461,13 +473,18 @@ class CandidateControllerTest {
         // when
         ResultActions actions = mockMvc.perform(
                 delete("/candidates/{candidateId}", candidateId)
-                        .with(csrf())
+                        .header(HttpHeaders.AUTHORIZATION, "Encoded Access Token")
+                        .with(csrf().asHeader())
         );
 
         // then
         actions.andExpect(status().isNoContent())
                 .andDo(document("deleteCandidate",
                         preprocessRequest(prettyPrint()),
+                        // 리퀘스트 헤더
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("로그인 인증 토큰")
+                        ),
                         // 패스 파라미터
                         pathParameters(
                                 parameterWithName("candidateId").description("candidate 식별자")

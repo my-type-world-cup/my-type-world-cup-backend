@@ -22,7 +22,7 @@
 
 === 2 - 1. 월드컵 생성
 
-operation::postWorldCup[snippets='http-request,request-fields,http-response,response-fields']
+operation::postWorldCup[snippets='http-request,request-headers,request-fields,http-response,response-fields']
 
 ==== Error
 
@@ -38,7 +38,7 @@ operation::postWorldCup[snippets='http-request,request-fields,http-response,resp
 
 === 2 - 2. 특정 월드컵 수정
 
-operation::patchWorldCup[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+operation::patchWorldCup[snippets='http-request,request-headers,path-parameters,request-fields,http-response,response-fields']
 
 ==== Error
 
@@ -86,7 +86,7 @@ operation::getWorldCupPreview[snippets='http-request,path-parameters,http-respon
 
 === 2 - 5. 특정 월드컵 상세 정보
 
-operation::getWorldCupDetails[snippets='http-request,path-parameters,http-response,response-fields']
+operation::getWorldCupDetails[snippets='http-request,request-headers,request-headers,path-parameters,http-response,response-fields']
 
 ==== Error
 
@@ -105,7 +105,7 @@ operation::getWorldCupDetails[snippets='http-request,path-parameters,http-respon
 
 === 2 - 6. 나의 월드컵 보기
 
-operation::getMyWorldCups[snippets='http-request,query-parameters,http-response,response-fields']
+operation::getMyWorldCups[snippets='http-request,request-headers,query-parameters,http-response,response-fields']
 
 ==== Error
 
@@ -121,7 +121,7 @@ operation::getMyWorldCups[snippets='http-request,query-parameters,http-response,
 
 === 2 - 7. 특정 월드컵 삭제
 
-operation::deleteWorldCup[snippets='http-request,path-parameters,http-response']
+operation::deleteWorldCup[snippets='http-request,request-headers,path-parameters,http-response']
 
 ==== Error
 
@@ -142,7 +142,7 @@ operation::deleteWorldCup[snippets='http-request,path-parameters,http-response']
 
 === 3 - 1. 후보 생성
 
-operation::postCandidate[snippets='http-request,request-fields,http-response,response-fields']
+operation::postCandidate[snippets='http-request,request-headers,request-fields,http-response,response-fields']
 
 ==== Error
 
@@ -161,7 +161,7 @@ operation::postCandidate[snippets='http-request,request-fields,http-response,res
 
 === 3 - 2. 특정 후보 수정
 
-operation::patchCandidate[snippets='http-request,path-parameters,request-fields,http-response,response-fields']
+operation::patchCandidate[snippets='http-request,request-headers,path-parameters,request-fields,http-response,response-fields']
 
 ==== Error
 
@@ -234,7 +234,106 @@ operation::requestCandidatesByWorldCupId[snippets='http-request,path-parameters,
 
 === 3 - 6 특정 후보 삭제
 
-operation::deleteCandidate[snippets='http-request,path-parameters,http-response']
+operation::deleteCandidate[snippets='http-request,request-headers,path-parameters,http-response']
+
+==== Error
+
+|===
+|Status |Description
+
+|`400 Bad Request`
+|제약조건 미충족
+
+|`401 Unauthorized`
+|잘못된 인증 정보
+
+|`404 Not Found`
+|존재하지 않는 리소스
+|===
+
+== 4. Comment API
+
+=== 4 - 1 댓글 작성(익명 유저)
+
+operation::postComment - anonymous[snippets='http-request,request-fields,http-response,response-fields']
+
+==== Error
+
+|===
+|Status |Description
+
+|`400 Bad Request`
+|제약조건 미충족
+
+|`404 Not Found`
+|존재하지 않는 리소스
+|===
+
+=== 4 - 2 댓글 작성(로그인 유저)
+
+operation::postComment - login[snippets='http-request,request-headers,request-fields,http-response,response-fields']
+
+==== Error
+
+|===
+|Status |Description
+
+|`400 Bad Request`
+|제약조건 미충족
+
+|`401 Unauthorized`
+|잘못된 인증 정보 (로그인한 사용자일 경우)
+
+|`404 Not Found`
+|존재하지 않는 리소스
+|===
+
+=== 4 - 3 댓글 조회
+
+operation::getCommentsByWorldCupId[snippets='http-request,request-headers,query-parameters,http-response,response-fields']
+
+==== Error
+
+|===
+|Status |Description
+
+|`400 Bad Request`
+|제약조건 미충족
+
+|`401 Unauthorized`
+|잘못된 인증 정보 (로그인한 사용자일 경우)
+
+|`404 Not Found`
+|존재하지 않는 리소스
+|===
+
+== 5. Like API
+
+=== 5 - 1 좋아요 누르기
+
+operation::postLike[snippets='http-request,request-headers,path-parameters,http-response']
+
+==== Error
+
+|===
+|Status |Description
+
+|`400 Bad Request`
+|제약조건 미충족
+
+|`401 Unauthorized`
+|잘못된 인증 정보
+
+|`404 Not Found`
+|존재하지 않는 리소스
+
+|`409 Conflict`
+|이미 좋아요를 누른 경우
+|===
+
+=== 5 - 2 좋아요 취소
+
+operation::deleteLike[snippets='http-request,request-headers,path-parameters,http-response']
 
 ==== Error
 
