@@ -12,9 +12,9 @@
 
 *깃허브* : https://github.com/my-type-world-cup/my-type-world-cup-backend
 
-*URI* : https://secure-a-server.dolpick.com
+*SERVER URI* : https://secure-a-server.dolpick.com
 
-기타 궁금한 사항은 메일 혹은 디스코드로 문의해 주세요.
+*오류* 발견 및 기타 *궁금한 사항* 은 메일 혹은 디스코드로 문의해 주세요.
 
 ***
 
@@ -385,4 +385,22 @@ operation::deleteLike[snippets='http-request,request-headers,path-parameters,htt
 
 |`404 Not Found`
 |존재하지 않는 리소스
+|===
+
+== 6. Image API
+
+=== 6 - 1 이미지 검색
+
+operation::getImages[snippets='http-request,request-headers,query-parameters,http-response,response-fields']
+
+==== Error
+
+|===
+|Status |Description
+
+|`400 Bad Request`
+|제약조건 미충족
+
+|`401 Unauthorized`
+|잘못된 인증 정보
 |===
