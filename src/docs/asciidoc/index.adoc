@@ -306,3 +306,46 @@ operation::getCommentsByWorldCupId[snippets='http-request,request-headers,query-
 |`404 Not Found`
 |존재하지 않는 리소스
 |===
+
+== 5. Like API
+
+=== 5 - 1 좋아요 누르기
+
+operation::postLike[snippets='http-request,request-headers,path-parameters,http-response']
+
+==== Error
+
+|===
+|Status |Description
+
+|`400 Bad Request`
+|제약조건 미충족
+
+|`401 Unauthorized`
+|잘못된 인증 정보
+
+|`404 Not Found`
+|존재하지 않는 리소스
+
+|`409 Conflict`
+|이미 좋아요를 누른 경우
+|===
+
+=== 5 - 2 좋아요 취소
+
+operation::deleteLike[snippets='http-request,request-headers,path-parameters,http-response']
+
+==== Error
+
+|===
+|Status |Description
+
+|`400 Bad Request`
+|제약조건 미충족
+
+|`401 Unauthorized`
+|잘못된 인증 정보
+
+|`404 Not Found`
+|존재하지 않는 리소스
+|===
