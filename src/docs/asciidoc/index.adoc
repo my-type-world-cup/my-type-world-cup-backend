@@ -18,9 +18,40 @@
 
 ***
 
-== 1. Member API
+== 1. Auth API
 
-=== 1 - 1. 로그인한 멤버 정보 가져오기
+=== 1 - 1. 리프레쉬 - 액세스 토큰 재발급
+
+operation::refresh[snippets='http-request,request-cookies,http-response,response-fields']
+
+==== Error
+
+|===
+|Status |Description
+
+|`401 Unauthorized`
+|잘못된 인증 정보, 만료된 리프레쉬 토큰
+
+|`404 Not Found`
+|존재하지 않는 리소스
+|===
+
+=== 1 - 2. 로그아웃
+
+operation::logout[snippets='http-request,request-headers,http-response']
+
+==== Error
+
+|===
+|Status |Description
+
+|`404 Not Found`
+|존재하지 않는 리소스
+|===
+
+== 2. Member API
+
+=== 2 - 1. 로그인한 멤버 정보 가져오기
 
 operation::getLoginMember[snippets='http-request,request-headers,http-response,response-fields']
 
@@ -36,7 +67,7 @@ operation::getLoginMember[snippets='http-request,request-headers,http-response,r
 |존재하지 않는 리소스
 |===
 
-=== 1 - 2. 멤버 정보 수정하기
+=== 2 - 2. 멤버 정보 수정하기
 
 operation::patchMember[snippets='http-request,request-headers,request-fields,http-response,response-fields']
 
@@ -55,9 +86,9 @@ operation::patchMember[snippets='http-request,request-headers,request-fields,htt
 |존재하지 않는 리소스
 |===
 
-== 2. WorldCup API
+== 3. WorldCup API
 
-=== 2 - 1. 월드컵 생성
+=== 3 - 1. 월드컵 생성
 
 operation::postWorldCup[snippets='http-request,request-headers,request-fields,http-response,response-fields']
 
@@ -73,7 +104,7 @@ operation::postWorldCup[snippets='http-request,request-headers,request-fields,ht
 |잘못된 인증 정보
 |===
 
-=== 2 - 2. 특정 월드컵 수정
+=== 3 - 2. 특정 월드컵 수정
 
 operation::patchWorldCup[snippets='http-request,request-headers,path-parameters,request-fields,http-response,response-fields']
 
@@ -92,7 +123,7 @@ operation::patchWorldCup[snippets='http-request,request-headers,path-parameters,
 |존재하지 않는 리소스
 |===
 
-=== 2 - 3. 월드컵 검색
+=== 3 - 3. 월드컵 검색
 
 operation::getWorldCups[snippets='http-request,query-parameters,http-response,response-fields']
 
@@ -105,7 +136,7 @@ operation::getWorldCups[snippets='http-request,query-parameters,http-response,re
 |제약조건 미충족
 |===
 
-=== 2 - 4. 특정 월드컵 미리보기
+=== 3 - 4. 특정 월드컵 미리보기
 
 operation::getWorldCupPreview[snippets='http-request,path-parameters,http-response,response-fields']
 
@@ -121,9 +152,9 @@ operation::getWorldCupPreview[snippets='http-request,path-parameters,http-respon
 |존재하지 않는 리소스
 |===
 
-=== 2 - 5. 특정 월드컵 상세 정보
+=== 3 - 5. 특정 월드컵 상세 정보
 
-operation::getWorldCupDetails[snippets='http-request,request-headers,request-headers,path-parameters,http-response,response-fields']
+operation::getWorldCupDetails[snippets='http-request,request-headers,path-parameters,http-response,response-fields']
 
 ==== Error
 
@@ -140,7 +171,7 @@ operation::getWorldCupDetails[snippets='http-request,request-headers,request-hea
 |존재하지 않는 리소스
 |===
 
-=== 2 - 6. 나의 월드컵 보기
+=== 3 - 6. 나의 월드컵 보기
 
 operation::getMyWorldCups[snippets='http-request,request-headers,query-parameters,http-response,response-fields']
 
@@ -156,7 +187,7 @@ operation::getMyWorldCups[snippets='http-request,request-headers,query-parameter
 |잘못된 인증 정보
 |===
 
-=== 2 - 7. 특정 월드컵 삭제
+=== 3 - 7. 특정 월드컵 삭제
 
 operation::deleteWorldCup[snippets='http-request,request-headers,path-parameters,http-response']
 
@@ -175,9 +206,9 @@ operation::deleteWorldCup[snippets='http-request,request-headers,path-parameters
 |존재하지 않는 리소스
 |===
 
-== 3. Candidate API
+== 4. Candidate API
 
-=== 3 - 1. 후보 생성
+=== 4 - 1. 후보 생성
 
 operation::postCandidate[snippets='http-request,request-headers,request-fields,http-response,response-fields']
 
@@ -196,7 +227,7 @@ operation::postCandidate[snippets='http-request,request-headers,request-fields,h
 |존재하지 않는 리소스
 |===
 
-=== 3 - 2. 특정 후보 수정
+=== 4 - 2. 특정 후보 수정
 
 operation::patchCandidate[snippets='http-request,request-headers,path-parameters,request-fields,http-response,response-fields']
 
@@ -215,7 +246,7 @@ operation::patchCandidate[snippets='http-request,request-headers,path-parameters
 |존재하지 않는 리소스
 |===
 
-=== 3 - 3. 월드컵 결과 반영
+=== 4 - 3. 월드컵 결과 반영
 
 operation::patchMatchResults[snippets='http-request,request-fields,http-response,response-fields']
 
@@ -231,7 +262,7 @@ operation::patchMatchResults[snippets='http-request,request-fields,http-response
 |존재하지 않는 리소스
 |===
 
-=== 3 - 4 랜덤 이미지 요청
+=== 4 - 4 랜덤 이미지 요청
 
 operation::requestRandomCandidatesByWorldCupId[snippets='http-request,path-parameters,query-parameters,request-fields,http-response,response-fields']
 
@@ -250,7 +281,7 @@ operation::requestRandomCandidatesByWorldCupId[snippets='http-request,path-param
 |존재하지 않는 리소스
 |===
 
-=== 3 - 5 후보 목록 가져오기
+=== 4 - 5 후보 목록 가져오기
 
 operation::requestCandidatesByWorldCupId[snippets='http-request,path-parameters,query-parameters,request-fields,http-response,response-fields']
 
@@ -269,7 +300,7 @@ operation::requestCandidatesByWorldCupId[snippets='http-request,path-parameters,
 |존재하지 않는 리소스
 |===
 
-=== 3 - 6 특정 후보 삭제
+=== 4 - 6 특정 후보 삭제
 
 operation::deleteCandidate[snippets='http-request,request-headers,path-parameters,http-response']
 
@@ -288,9 +319,9 @@ operation::deleteCandidate[snippets='http-request,request-headers,path-parameter
 |존재하지 않는 리소스
 |===
 
-== 4. Comment API
+== 5. Comment API
 
-=== 4 - 1 댓글 작성(익명 유저)
+=== 5 - 1 댓글 작성(익명 유저)
 
 operation::postComment - anonymous[snippets='http-request,request-fields,http-response,response-fields']
 
@@ -306,7 +337,7 @@ operation::postComment - anonymous[snippets='http-request,request-fields,http-re
 |존재하지 않는 리소스
 |===
 
-=== 4 - 2 댓글 작성(로그인 유저)
+=== 5 - 2 댓글 작성(로그인 유저)
 
 operation::postComment - login[snippets='http-request,request-headers,request-fields,http-response,response-fields']
 
@@ -325,7 +356,7 @@ operation::postComment - login[snippets='http-request,request-headers,request-fi
 |존재하지 않는 리소스
 |===
 
-=== 4 - 3 댓글 조회
+=== 5 - 3 댓글 조회
 
 operation::getCommentsByWorldCupId[snippets='http-request,request-headers,query-parameters,http-response,response-fields']
 
@@ -344,9 +375,9 @@ operation::getCommentsByWorldCupId[snippets='http-request,request-headers,query-
 |존재하지 않는 리소스
 |===
 
-== 5. Like API
+== 6. Like API
 
-=== 5 - 1 좋아요 누르기
+=== 6 - 1 좋아요 누르기
 
 operation::postLike[snippets='http-request,request-headers,path-parameters,http-response']
 
@@ -368,7 +399,7 @@ operation::postLike[snippets='http-request,request-headers,path-parameters,http-
 |이미 좋아요를 누른 경우
 |===
 
-=== 5 - 2 좋아요 취소
+=== 6 - 2 좋아요 취소
 
 operation::deleteLike[snippets='http-request,request-headers,path-parameters,http-response']
 
@@ -387,9 +418,9 @@ operation::deleteLike[snippets='http-request,request-headers,path-parameters,htt
 |존재하지 않는 리소스
 |===
 
-== 6. Image API
+== 7. Image API
 
-=== 6 - 1 이미지 검색
+=== 7 - 1 이미지 검색
 
 operation::getImages[snippets='http-request,request-headers,query-parameters,http-response,response-fields']
 
