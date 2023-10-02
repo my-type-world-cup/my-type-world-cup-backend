@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -28,6 +29,8 @@ import java.util.List;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -85,7 +88,8 @@ public class WorldCupControllerTest {
                 post("/worldcups")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .with(csrf())
+                        .header(HttpHeaders.AUTHORIZATION, "Encoded Access Token")
+                        .with(csrf().asHeader())
                         .content(content)
         );
 
@@ -101,6 +105,10 @@ public class WorldCupControllerTest {
                         "postWorldCup",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        // 리퀘스트 헤더
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("로그인 인증 토큰")
+                        ),
                         // 리퀘스트 바디
                         requestFields(
                                 fieldWithPath("title").type(JsonFieldType.STRING).description("worldCup 제목")
@@ -152,8 +160,9 @@ public class WorldCupControllerTest {
                 patch("/worldcups/{worldCupId}", worldCupId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, "Encoded Access Token")
+                        .with(csrf().asHeader())
                         .content(content)
-                        .with(csrf())
         );
 
         // then
@@ -168,6 +177,10 @@ public class WorldCupControllerTest {
                         "patchWorldCup",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
+                        // 리퀘스트 헤더
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("로그인 인증 토큰")
+                        ),
                         // 패스 파라미터
                         pathParameters(
                                 parameterWithName("worldCupId").description("worldCup 식별자")
@@ -252,7 +265,7 @@ public class WorldCupControllerTest {
                                                 key("default").value("createdAt(미입력 시)," +
                                                         " +\n" +
                                                         "playCount(제약조건 외 값 입력 시)"),
-                                                key("constraints").value("createdAt, commentCount, playCount")
+                                                key("constraints").value("createdAt(생성일시), commentCount(댓글수), playCount(플레이횟수)")
                                         ),
                                 parameterWithName("direction").description("정렬 방법").optional()
                                         .attributes(
@@ -361,6 +374,7 @@ public class WorldCupControllerTest {
         ResultActions actions = mockMvc.perform(
                 get("/worldcups/{worldCupId}/details", worldCupId)
                         .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, "Encoded Access Token")
         );
 
         // then
@@ -374,6 +388,10 @@ public class WorldCupControllerTest {
                 .andDo(document(
                         "getWorldCupDetails",
                         preprocessResponse(prettyPrint()),
+                        // 리퀘스트 헤더
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("로그인 인증 토큰")
+                        ),
                         // 패스 파라미터
                         pathParameters(
                                 parameterWithName("worldCupId").description("worldCup 식별자")
@@ -424,6 +442,7 @@ public class WorldCupControllerTest {
                         .param("direction", direction)
                         .param("keyword", keyword)
                         .accept(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.AUTHORIZATION, "Encoded Access Token")
         );
 
         // then
@@ -432,6 +451,10 @@ public class WorldCupControllerTest {
                 .andDo(document(
                         "getMyWorldCups",
                         preprocessResponse(prettyPrint()),
+                        // 리퀘스트 헤더
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("로그인 인증 토큰")
+                        ),
                         // 쿼리 파라미터
                         queryParameters(
                                 parameterWithName("page").description("요청 페이지").optional()
@@ -501,7 +524,8 @@ public class WorldCupControllerTest {
         // when
         ResultActions actions = mockMvc.perform(
                 delete("/worldcups/{worldCupId}", worldCupId)
-                        .with(csrf())
+                        .header(HttpHeaders.AUTHORIZATION, "Encoded Access Token")
+                        .with(csrf().asHeader())
         );
 
         // then
@@ -509,6 +533,10 @@ public class WorldCupControllerTest {
                 .andExpect(status().isNoContent())
                 .andDo(document(
                         "deleteWorldCup",
+                        // 리퀘스트 헤더
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("로그인 인증 토큰")
+                        ),
                         // 패스 파라미터
                         pathParameters(
                                 parameterWithName("worldCupId").description("worldCup 식별자")
